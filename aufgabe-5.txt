@@ -1,0 +1,70 @@
+Ausgabe: Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffce98ecf20
+Heap-Variable: 0x56229af842a0
+Statische Variable: 0x562299cbf010
+Differenz zwischen Stack und Heap: 46017598098560
+Differenz zwischen Stack und statischer Variable: 46017617780496
+Differenz zwischen Heap und statischer Variable: 19681936
+
+Wachstumsrichtungen:
+Adresse von var1: 0x7ffce98ecee8
+Adresse von var2: 0x7ffce98eceec
+Der Stack wächst in Richtung niedrigerer Adressen.
+
+
+Diese Adressen zeigen uns, dass die Variablen in verschiedenen Speicherbereichen liegen:
+
+Stack: Der Stack wächst in der Regel in Richtung niedrigerer Adressen (siehe auch die Wachstumsrichtung weiter unten). Stack-Variablen werden bei jedem Funktionsaufruf angelegt und bei der Rückkehr aus der Funktion wieder entfernt.
+
+Heap: Der Heap wächst normalerweise in Richtung höherer Adressen und wird dynamisch zur Laufzeit durch Funktionen wie malloc oder calloc verwaltet. Speicher im Heap bleibt erhalten, bis er manuell freigegeben wird (durch free()).
+
+Statische Variablen: Diese werden in einem speziellen Bereich des Speichers gespeichert, der in der Regel vor dem Stack und Heap angelegt wird. Statische Variablen behalten ihren Wert während der gesamten Programmausführung.
+
+2. Adressdifferenzen:
+Die Adressdifferenzen zwischen den verschiedenen Variablen sind wie folgt:
+
+Differenz zwischen Stack und Heap: 46017598098560
+
+Differenz zwischen Stack und statischer Variable: 46017617780496
+
+Differenz zwischen Heap und statischer Variable: 19681936
+
+Diese Differenzen zeigen uns, dass der Stack, Heap und die statischen Variablen ziemlich weit voneinander entfernt sind, was auf die Trennung der Speicherbereiche hinweist. Der Heap und die statischen Variablen befinden sich in der Nähe voneinander, was darauf hindeutet, dass sie im selben Bereich des Speichers (obwohl sie sich an unterschiedlichen Stellen befinden) verwaltet werden.
+
+3. Wachstumsrichtung des Stacks:
+Die Adressen von var1 und var2 zeigen:
+
+Adresse von var1: 0x7ffce98ecee8
+
+Adresse von var2: 0x7ffce98eceec
+
+Da var1 eine niedrigere Adresse hat als var2, bedeutet das, dass der Stack in Richtung niedrigerer Adressen wächst. Dies ist eine typische Speicherorganisation, da der Stack üblicherweise in Richtung der niedrigeren Adressen wächst (und der Heap in Richtung höherer Adressen).
+
+. Was sagt die Ausgabe über die Organisation des Speichers in Ihrem Betriebssystem aus?
+Die Ausgabe zeigt uns die Organisation des Speichers in einem typischen modernen Betriebssystem, das eine Trennung zwischen verschiedenen Speicherbereichen (Stack, Heap, statische Daten) vornimmt.
+
+Der Stack wächst in Richtung niedrigerer Adressen, was bedeutet, dass der Betriebssystem- oder Compiler-Mechanismus den Stack so verwaltet, dass der Platz für lokale Variablen dynamisch innerhalb eines Funktionsaufrufs zugewiesen und bei Rückkehr wieder freigegeben wird.
+
+Der Heap wächst in Richtung höherer Adressen und ermöglicht die dynamische Speicherzuweisung (z. B. mit malloc()), der bis zur expliziten Freigabe (free()) im Speicher bleibt.
+
+Statische Variablen sind in einem separaten Bereich des Speichers, der konstant bleibt und über die gesamte Programmausführung hinweg zugänglich ist.
+
+2. Warum liegen die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen?
+Stack: Der Stack ist für lokale Variablen und Funktionsaufrufe zuständig. Er wächst und schrumpft dynamisch bei Funktionsaufrufen und -rückgaben. Die Adressen des Stacks sind daher unterschiedlich und liegen typischerweise in einem Bereich des Speichers, der bei jedem Funktionsaufruf verändert wird.
+
+Heap: Der Heap wird zur dynamischen Speicherzuweisung verwendet, und dieser Bereich ist größer und für die Verwaltung von Speicher erforderlich, der nicht an Funktionsaufrufe gebunden ist. Der Heap wächst normalerweise in Richtung höherer Adressen.
+
+Statische Variablen: Diese sind in einem speziellen Bereich, der von der Laufzeitumgebung des Programms verwaltet wird. Statische Variablen haben eine festgelegte Adresse, die während der gesamten Programmausführung konstant bleibt.
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Auswirkungen eines Speicherlecks:
+
+Ein Speicherleck tritt auf, wenn Speicher zugewiesen wird, aber nicht wieder freigegeben wird. Dies führt dazu, dass der zugewiesene Speicher im Heap nicht mehr zugänglich ist und somit nicht mehr genutzt oder freigegeben werden kann. Wenn dies über längere Zeit geschieht, kann der Heap erschöpft werden, was zu einem Out of Memory (OOM)-Fehler führen kann, der das Programm oder sogar das Betriebssystem zum Absturz bringen kann.
+
+Betriebssystemumgang mit Speicherlecks:
+
+Das Betriebssystem hat keine direkte Kontrolle über Speicherlecks, die innerhalb eines Programms auftreten. Es kann jedoch Mechanismen wie den Speicher-Manager und Garbage Collection (in einigen Programmiersprachen wie Java) einsetzen, um sicherzustellen, dass Speicher effizient genutzt wird. In C gibt es jedoch keine automatische Garbage Collection, weshalb es entscheidend ist, dass der Entwickler sicherstellt, dass alle zugewiesenen Speicherbereiche auch wieder freigegeben werden.
+
+In modernen Betriebssystemen gibt es Werkzeuge zur Überwachung des Speicherverbrauchs, wie z.B. Valgrind, das Speicherlecks erkennen und helfen kann, diese zu beheben.
+

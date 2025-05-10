@@ -1,0 +1,63 @@
+Ausgabe: Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546231
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 09:27:25
+Letzte Änderung: 2025-05-10 09:27:25
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 161 Bytes
+Inode-Nummer: 546231
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 09:27:25
+Letzte Änderung: 2025-05-10 09:27:25
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 161 Bytes
+Inode-Nummer: 546231
+Anzahl der Hardlinks: 2
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 09:27:25
+Letzte Änderung: 2025-05-10 09:27:25
+
+Änderungen an den Metadaten nach dem Anhängen von Text:
+Die Dateigröße ist um den hinzugefügten Text angewachsen (von 96 Bytes auf 161 Bytes).
+
+Die Inode-Nummer bleibt gleich, weil die Datei selbst unverändert bleibt, es wurde nur der Inhalt geändert.
+
+Die Anzahl der Hardlinks bleibt vor und nach dem Anhängen des Textes gleich, da keine neuen Hardlinks erzeugt wurden.
+
+Zugriffsrechte, Letzter Zugriff und Letzte Änderung bleiben gleich, wenn keine neuen Dateiattribute explizit geändert wurden.
+
+Erklärung des Unterschieds zwischen Inode-Nummer und Dateiname:
+Inode-Nummer: Eine Inode ist eine Datenstruktur, die alle Metadaten einer Datei speichert, mit Ausnahme ihres Namens und ihres Inhalts. Jede Datei im Dateisystem hat eine einzigartige Inode, die von der Datei selbst unabhängig ist. Die Inode enthält Informationen wie die Dateigröße, die Zugriffsrechte, Zeitstempel, und den Ort der Datei im Speicher.
+
+Dateiname: Der Dateiname ist der für den Benutzer sichtbare Name einer Datei, der jedoch nur ein Verweis auf die Inode im Dateisystem ist. Der Name selbst wird nicht in der Inode gespeichert, sondern in einer speziellen Datei namens „Verzeichnis“ (Directory), die die Namen und Inodes der Dateien enthält.
+
+Wenn zwei Dateien die gleiche Inode-Nummer haben, bedeutet das, dass es sich um Hardlinks handelt. Beide Dateien verweisen auf denselben Speicherort im Dateisystem, und der Inhalt beider Dateien ist identisch. Wenn eine der Dateien gelöscht wird, bleibt der Inhalt durch den Hardlink weiterhin zugänglich, da der Speicherort nicht gelöscht wird, solange noch ein Hardlink darauf verweist.
+
+Unterschied bei der Verwendung eines symbolischen Links (Symlink) im Vergleich zu einem Hardlink:
+Hardlink: Ein Hardlink ist eine zweite Referenz auf dieselbe Inode. Beide Dateien teilen sich dieselbe Inode-Nummer und beziehen sich auf denselben Inhalt im Dateisystem. Wenn die Originaldatei gelöscht wird, bleibt der Inhalt der Datei noch über den Hardlink zugänglich, da der Inhalt erst gelöscht wird, wenn alle Verweise (Hardlinks) entfernt sind.
+
+Symbolischer Link (Symlink): Ein Symlink ist eine Datei, die auf eine andere Datei verweist, indem sie den Pfad zu dieser Datei speichert. Der Symlink hat eine eigene Inode und zeigt lediglich auf die Originaldatei. Ein Symlink speichert nicht den Inhalt der Originaldatei, sondern lediglich den Pfad zu dieser Datei.
+
+Unterschiede in den Metadaten:
+
+Der Symlink hat eine eigene Inode-Nummer und ist als „Symbolischer Link“ im Dateisystem gekennzeichnet.
+
+Die Dateigröße des Symlinks ist die Länge des Pfades, den er speichert.
+
+Die Zugriffsrechte des Symlinks sind üblicherweise nur für das Lesen und Verfolgen des Links (z.B. lrwxrwxrwx).
+
+Verhalten beim Löschen der Originaldatei:
+
+Wenn die Originaldatei gelöscht wird, wird der Symlink ungültig (er „zeigt ins Leere“). Der Symlink kann jedoch nicht mehr auf den Inhalt zugreifen, weil er nicht direkt den Inhalt speichert, sondern nur den Pfad. Bei einem Hardlink bleibt der Inhalt weiterhin zugänglich, solange der Hardlink existiert.
