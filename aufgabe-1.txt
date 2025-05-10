@@ -1,0 +1,64 @@
+Interne Speicherfragmentierung:
+  - Erklärung:
+    Damit ist gemeint, wenn ein Block nicht ganz von einem Programm/Datei genutzt wird.
+    Das hat zur Folge, dass dieser Speicherplatz verschwendet wird und von niemandem genutzt werden kann.
+  - Beispiel:
+    Nehmen wir an, dass das Filesystem eine Blockgrösse voon 4096 Bytes hat. Würden wir jetzt eine Datei mit der
+    grösse von 4000 Bytes dort ablegen, wären 96 Bytes nicht mehr nutzbar.
+
+Externe Speicherfragmentierung:
+  - Erklärung:
+    Es mag zwar insgesamt genug freier Speicher vorhanden sein, um eine Anfrage zu erfüllen.
+    Jedoch existiert kein einzelner zusammenhängender Block freier Speicher, der gross genug ist, 
+    um die Anfrage zu bedienen.
+  - Beispiel:
+    Ein konkretes Beispiel für externe Fragmentierung ergibt sich aus dem Prozess des Swapping,
+    bei dem Prozesse zwischen dem Hauptspeicher (RAM) und der Festplatte verschoben werden.
+    Somit müssen immer wieder Daten von der Festplatte, als auch vom RAM gelesen werden.
+    Damit wird das Programm deutlisch langsamer.
+
+Speicherfragmentierung reduzieren:
+  - Paging - Seitenbasierte Speicherverwaltung:
+    - Funktionsweise:
+      Paging ist eine Technik der virtuellen Speicher benötigt.
+      Der Adressraum eines jeden Programms wird in Abschnitte fester Grösse, sogenannten Seiten ("pages"), unterteilt.
+      Der physische Speicher (RAM) wird ebenfalls in gleich grosse Einheiten, sogenannte "page frames", unterteilt.
+      Paging ermöglicht es, dass die Seiten eines Programms nicht zusammenhängend im physischen Speicher abgelegt werden müssen.
+      Die Hardware, insbesondere die MMU (Memory Management Unit), übersetzt virtuelle Adressen (Seitennummer + Offset)
+      in physische Adressen (Page Frame Nummer + Offset) mithilfe von Seitentabellen ("page tables")
+    - Reduziert/Vermeidet Fragmentierung:
+      Diese Methode vermeidet externe Fragmentierung im physischen Speicher.
+      Weil der Speicher in festen, gleich grossen "page frames" zugewiesen wird,
+      gibt es keine unregelmässigen "Löcher" variabler Grösse, die das Problem der externen Fragmentierung verursachen würden,
+      wie es bei der zusammenhängenden Speicherbelegung der Fall ist.
+      Jede freie Page Frame kann verwendet werden, um jede Seite aufzunehmen.
+      Interne Fragmentierung wird bei dieser Methode auf den ungenutzten Raum in der letzten Seite eines Prozesses reduziert.
+    - Vorteile:
+      1. Ermöglicht es Grosse Programme auch mit nicht genug Speicher auszuführen.
+         Es werden nur die jeweils relevanten Daten geladen.
+      2. Das Multitasking ist viel effizienter, da nur die aktuell notwendigenn Pages im Speicher sind
+         und es so möglich wird Programme parallel auszuführen ohne andere Systeme zu beeinflussen.
+      3. Vereifacht die Speicherverwaltung des Betriebssystemes, da dieses sich um immer gleich grosse
+         Pages kümmern muss.
+    - Nachteile:
+      1. Es ist eine sehr komplexe Implementierung
+      2. Interne Fragmentierung exisitert immer noch. Am ende der jeweiligen Blöcke.
+      3. Die MMU (Memory Management Unit) muss diese Art von Speicherverwaltung unterstützen.
+
+  - Defragmentierung:
+    - Funktionsweise:
+      Hier ist ein Algorithmus im einsatz, welder in gewissen Zeitabständen nach Fragmentierung sucht.
+      Wenn dieser eine Fragmentierung festgestellt hat, versucht er die Dateien auf der Festplatte wieder
+      schön hintereinander anzuorden.
+    - Reduziert/Vermeidet Fragmentierung:
+      Mit dieser Methoode wird die externe Fragmentierung auf dem Filesystem reduziert.
+      Es wird nicht die Entstehung von Fragmenten gelöst, sondern nach dem erstellen wird aufgeräumt
+      so gut es geht.
+    - Vorteile:
+      1. Verbesert die Leseleistung, da alles schön hintereinander gelesen werden kann.
+      2. Kann das Bilden von unschönen kleinen Lücken vermeiden.
+    - Nachteile:
+      1. Kann je nach Fragmentierung sehr Zeitaufwändig und Ressourcenintensiv sein.
+      2. Wenn die Dateien zu gross sind wird temporär mehr Speicher verwendet, oder es gar nicht möglich
+         diese zu entfragemtieren, da kein Speicher vorhanden ist.
+      3. Es ist keine Dauerhafte Lösung. Die Ausfürung muss immer wieder stattfinden.

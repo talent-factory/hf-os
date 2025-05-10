@@ -1,0 +1,56 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße:         96 Bytes
+Inode-Nummer:       546264
+Hardlink-Anzahl:    1
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-10 12:19:59
+Letzte Änderung:    2025-05-10 12:19:59
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße:         135 Bytes
+Inode-Nummer:       546264
+Hardlink-Anzahl:    1
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-10 12:19:59
+Letzte Änderung:    2025-05-10 12:19:59
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße:         135 Bytes
+Inode-Nummer:       546264
+Hardlink-Anzahl:    2
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-10 12:19:59
+Letzte Änderung:    2025-05-10 12:19:59
+
+-----
+
+Beschreiben Sie die Ausgabe des Programms.
+Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+
+Die Datei wird grösser und die Letzte Änderung würde sich ändern, wenn es nicht so schnell
+laufen würde.
+
+-----
+
+Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen.
+Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+Die Inode-Nummer ist wichtig für das Filesystem um genau zu wissen, was und welche Dateei es ist.
+Der Name muss zwar in jedem Verzeichnis einziartig sein, lässt aber keine eindeutige 
+indentifierzung der Datei zu.
+Das es sich um das gleiche Datei handelt. Ein Symlink ist ja keine eigene Datei.
+
+-----
+
+Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden?
+Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+Der Symlink wäre ungülig und würde ins Leere zeigen, sobald die Originaldatei nicht mehr existiert.
+Somit ist er unbrauchbar. Die Metadaten von der Ursprünlgichen Datei wären auch nicht mehr vorhanden.

@@ -1,0 +1,27 @@
+Beschreiben Sie die Ausgabe des Programms.
+Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+1. Das OS nutzt einen virtuellen Adressraum mit klar getrennten Bereichen für 
+   Stack, Heap und statische Daten.
+2. Es gibt großzügige Adressabstände zwischen Segmenten,
+   was Speicherfehler schwerer ausnutzbar macht.
+3. Der Speicher wird on-demand durch Paging/Mapping verwaltet – große Lücken 
+   kosten keinen realen RAM.
+4. Das Verhalten ist konsistent mit einem 64-Bit Linux-System mit ASLR.
+
+Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch)
+in unterschiedlichen Speicherbereichen liegen.
+
+1. Die Tennung hilft bei der Trennung von logischen Datenarten.
+2. Es macht es möglich, sicherere und effizientere Verwaltung
+   durch das Betriebssystem,
+3. Es es ein Schutz für z.B. Buffer Overflows eingebaut.
+
+
+Welche Auswirkungen hat das absichtlich erzeugte Speicherleck?
+Es wird viel zu viel Speicher verbraten der füfr nichts genutzt wird.
+Das kann dazu führen dass das OS abstürtzt.
+
+Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Sobald ein Programm einen Festgelgten weren an Ressourcen überschreitet,
+wird es vom Betriebssystem gekillt/terminiert.
+

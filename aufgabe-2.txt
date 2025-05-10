@@ -1,0 +1,41 @@
+insgesamt 20
+     1     2   3        3      5   6   7   8    9
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 11:30 .
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 11:29 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:30 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:30 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 11:29 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 11:30 symlink.txt -> original.txt
+
+Erklärung der Spalten:
+  1. Das kleine 'd' am Anfang bedeutet, dass es sich um ein Verzeichnis handelt
+     Der '-' bedeutet es handelt sich um eine Datei.
+     Beim 'l' ist es ein Symlink.
+     Danach kommen die Berechtigungen für Benutzer, Gruppe und Jeden.
+  2. Diese Nummer steht für die Anzal an Hardlinks die dafür bestehen.
+  3. Der Aktuell gesetzt Benutzer
+  4. Die Aktuell gesetzt Gruppe
+  5. Die Grösse der Datei. Bei Verzeichnissen ist es immer die Block grösse.
+  6, 7, 8. Sind zusammen und zeigen den Tag und das Jahr die Uhrzeit zu welcher
+     die Dateien verändert/erstellt wurden.
+  9. Der Name der Verzeichnis/Datei mit Verweis ob es ein Symlink ist oder nicht.
+     Wie bei symlink.txt ersichtlich.
+
+Unterschied der Dateien:
+  Das 'original.txt' hat die gleichen Berechtigungen wie auch der Hardlink.
+  (rw vom Benutzer und r für die Gruppe.)
+  Der Hardlink wurde in der gleichen Minute erstellt, wie auch die Original Datei.
+  Der Symlink hat rwx auf allen User, Gruppen und Jeden.
+  Weil der Symlink keine eigene Datei ist und nur auf eine zeigt ist sein inoe kleiner.
+
+Erklärung der Befehle:
+  1. echo "Neuer Inhalt" > original.txt
+     Fügt den Text 'Neuer Inhalt' in die original.txt ein
+  2. cat symlink.txt hardlink.txt
+     Zeigt den Inhalt der Dateien in stdout an.
+  3. mv original.txt ../original.txt
+     Verschiebt diese Datein in ein Verzeichnis Oberhhalbt vom aktuellen.
+  4. cat symlink.txt hardlink.txt 2>&1
+     Zeigt den Inhalt des Symlinks und Hardlinks im stdout an, da der error mit 2>&1
+     umgeleitet wird.
+     Die symlink.txt wift einen Fehler, da die Datei verschoben wurde.
