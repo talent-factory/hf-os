@@ -1,0 +1,35 @@
+Aufgabe 2 – Speicherfragmentierung und Lösungsansätze
+
+1. Unterschied zwischen interner und externer Speicherfragmentierung
+
+Interne Fragmentierung:
+Beim Zuweisen von Speicherblöcken an Prozesse bleibt oft ein kleiner ungenutzter Teil innerhalb eines Blocks übrig.
+Beispiel: Ein Prozess benötigt 18 KB, aber der nächste verfügbare Block ist 20 KB groß. Die restlichen 2 KB werden verschwendet.
+
+Externe Fragmentierung:
+Obwohl insgesamt genug Speicher vorhanden ist, ist dieser in kleinere, nicht zusammenhängende Blöcke aufgeteilt.
+Beispiel: Es gibt freie Blöcke von 4 KB, 8 KB und 6 KB (insgesamt 18 KB), aber ein Prozess benötigt 16 KB am Stück. Da kein einzelner Block groß genug ist, kann der Prozess nicht geladen werden.
+
+2. Zwei Strategien zur Vermeidung von Fragmentierung
+
+a) Paging:
+Der Speicher wird in gleich große Seiten (Pages) aufgeteilt. Prozesse arbeiten mit virtuellen Adressen, die in physische Seiten übersetzt werden.
+Vorteile:
+- Vermeidet externe Fragmentierung.
+- Flexible Speicherverwaltung.
+Nachteile:
+- Interne Fragmentierung möglich (am Ende jeder Seite).
+- Page-Tables benötigen zusätzlichen Speicherplatz.
+
+b) Speicherkompaktierung:
+Das Betriebssystem verschiebt Prozesse im Speicher, um zusammenhängenden freien Speicher zu schaffen.
+Vorteile:
+- Beseitigt externe Fragmentierung.
+Nachteile:
+- Rechenaufwendig und langsam.
+- Prozesse müssen unterbrochen und verschoben werden.
+- In modernen Systemen selten verwendet.
+
+Fazit:
+Moderne Systeme setzen vor allem auf Paging, da es effizienter mit virtueller Speicherverwaltung kombiniert werden kann. Speicherkompaktierung ist eher in speziellen Umgebungen relevant.
+
