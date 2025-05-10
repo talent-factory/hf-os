@@ -1,0 +1,28 @@
+Ausgabe:
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffee2e4d854
+Heap-Variable: 0x4f282a0
+Statische Variable: 0x404038
+Differenz Stack - Heap:   140732622067124
+Differenz Stack - Static: 140732700858396
+Differenz Heap - Static:  78791272       
+
+Wachstumsrichtungen:
+Adresse von local1: 0x7ffee2e4d824       
+Adresse von local2: 0x7ffee2e4d820       
+Der Stack wächst nach unten (zu kleineren Adressen).
+
+1. Beschreibung der Ausgabe:
+Die Adressen zeigen, dass Stack, Heap und statische Variablen in klar getrennten Speicherbereichen liegen. Die Stack-Adressen sind hoch, Heap liegt im mittleren Bereich, statische Variablen unten. Die Adressen der lokalen Variablen zeigen, dass der Stack nach unten wächst.
+
+
+2. Erklärung der Speicherbereiche:
+
+Stack: Für lokale Variablen, wächst nach unten.
+Heap: Für dynamische Speicherzuweisung, wächst nach oben.
+Statisch: Fester Bereich im Speicher.
+Diese Trennung verhindert Überschneidungen und erleichtert die Verwaltung.
+
+3. Auswirkungen des Speicherlecks:
+Nicht freigegebener Speicher bleibt reserviert und kann zu Ressourcenverschwendung führen. Das Betriebssystem gibt den Speicher erst beim Beenden des Prozesses frei; während der Laufzeit helfen Tools wie valgrind, solche Lecks zu finden.

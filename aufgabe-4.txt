@@ -1,0 +1,24 @@
+Wir teilen die virtuelle Adresse in Seitennummer (Page Number) und Offset auf (Seitengröße: 4096 Bytes = 2¹²):
+
+Page Number = virtuelle Adresse / 4096
+Offset = virtuelle Adresse % 4096
+Die Page Number wird in der Seitentabelle nachgeschlagen, der Frame ergibt die physische Adresse:
+Physische Adresse = Frame × 4096 + Offset
+
+1. Virtuelle Adresse: 12300
+Page Number: 12300 / 4096 = 3
+Offset: 12300 % 4096 = 12
+Laut Seitentabelle: Page 3 → Frame 6
+Physische Adresse: 6 × 4096 + 12 = 24588
+
+2. Virtuelle Adresse: 16384
+Page Number: 16384 / 4096 = 4
+Offset: 16384 % 4096 = 0
+Laut Seitentabelle: Page 4 → Frame 4
+Physische Adresse: 4 × 4096 + 0 = 16384
+
+3. Virtuelle Adresse: 32800
+Page Number: 32800 / 4096 = 8
+Offset: 32800 % 4096 = 32
+Laut Seitentabelle: Page 8 ist nicht im Speicher (Present-Bit = 0)
+Ergebnis: Page Fault (kein physischer Zugriff möglich)

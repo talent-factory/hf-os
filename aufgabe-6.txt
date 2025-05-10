@@ -1,0 +1,56 @@
+Ausgabe:
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt  
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 125308
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 644
+Letzter Zugriff: 2025-05-10 09:56:11
+Letzte Änderung: 2025-05-10 09:56:11
+
+Metadaten nach der Änderung:        
+Metadaten für Datei: testdatei.txt  
+------------------------
+Dateigröße: 132 Bytes
+Inode-Nummer: 125308
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 644
+Letzter Zugriff: 2025-05-10 09:56:11
+Letzte Änderung: 2025-05-10 09:56:11
+
+Hardlink erstellt: testdatei_hardlink.txt
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 132 Bytes
+Inode-Nummer: 125308
+Anzahl der Hardlinks: 2
+Zugriffsrechte (oktal): 644
+Letzter Zugriff: 2025-05-10 09:56:11
+Letzte Änderung: 2025-05-10 09:56:11
+
+1. Beschreibung der Ausgabe und Metadaten-Änderungen
+Nach dem Anhängen von Text an die Datei steigt die Dateigröße von 96 auf 132 Bytes. Die Inode-Nummer, die Anzahl der Hardlinks und die Zugriffsrechte bleiben gleich. Die Zeitstempel für letzten Zugriff und letzte Änderung bleiben in dieser Ausgabe gleich (könnten sich aber je nach System aktualisieren).
+
+2. Inode-Nummer vs. Dateiname
+Inode-Nummer:
+Identifiziert eindeutig den Speicherort und die Metadaten einer Datei im Dateisystem (z. B. Grösse, Rechte, Zeitstempel, Datenblöcke).
+
+Dateiname:
+Ist nur ein Verzeichniseintrag, der auf einen Inode zeigt.
+
+Gleiche Inode-Nummer:
+Wenn zwei Dateinamen die gleiche Inode-Nummer haben, sind sie Hardlinks und zeigen auf exakt dieselbe Datei und denselben Inhalt. Änderungen an einer Datei wirken sich immer auf beide Namen aus.
+
+3. Unterschied zu einem symbolischen Link (Symlink)
+Symlink:
+Ist eine eigene Datei mit eigenem Inode, die nur den Pfad zur Zieldatei speichert.
+
+Metadaten:
+Symlinks haben eigene Metadaten (Größe, Zeitstempel, Rechte), die sich von der Zieldatei unterscheiden.
+
+Verhalten beim Löschen:
+Wird das Original gelöscht, zeigt der Symlink ins Leere ("dangling link") und der Zugriff schlägt fehl.
+Bei Hardlinks bleibt der Inhalt erhalten, solange mindestens ein Hardlink existiert.

@@ -1,0 +1,27 @@
+Interne Fragemntierung tritt auf, wenn einem Prozess ein Speicherblock zugewiesen wird, der grösser ist als was tatsächlich benötigt wird. Der nicht genutzte Teil innerhalb des Blocks ist verschwendet weil er nicht für andere Prozesse verwendet werden kann. Externe Fragmentierung ist, wenn der freie Speicher zwar insgesamt gross genug ist, aber in viele kleine, nicht zusammenhängende Stücke (Fragmente) aufgeteilt ist. Dadurch kann kein ausreichend grosser zusammenhängender Block für einen neuen Prozess gefunden werden. Das ist der Unterschied.
+
+Ein Beispiel für interne Fragmentierung ist, wenn das Betriebssystem den Hauptspeicher in festen Blöcken verwaltet (z.B. 4 KB grosse Seiten). Ein Prozess benötigt aber nur 6 KB Speicher. Dafür werden ihm zwei Seiten (insgesamt 8 KB) zugewiesen. Die verbleibenden 2 KB in der zweiten Seite bleiben ungenutzt. 
+
+Ein Beispiel für externe Fragmentierung ist, wenn im Hauptspeicher Prozesse geladen und wieder entfernt werden. Es entstehen viele kleine freie Bereiche zwischen belegten Speicherblöcken. Ein neuer Prozess benötigt 10 KB zusammenhängenden Speicher, aber es gibt nur 5 KB + 3 KB + 4 KB an verschiedenen Stellen – insgesamt 12 KB, aber nicht zusammenhängend. Der Prozess kann nicht geladen werden.
+
+
+Strategien zur Reduktion oder Vermeidung von Speicherfragmentierung
+
+Paging: Der physische Speicher wird in gleich grosse Blöcke (Seiten) unterteilt. Prozesse erhalten beliebige Seiten, die nicht zusammenhängend sein müssen. Die Zuordnung wird durch eine Seitentabelle verwaltet. Da gibt es vor allem zwei Vorteile: 
+- Vermeidung externer Fragmentierung -> Da jede Seite überall im physischen Speicher liegen kann, gibt es keine externen Lücken
+- Einfache Speicherverwaltung (Feste Seitengrösse vereinfacht die Verwaltung)
+
+Die Nachteile sind die folgenden: 
+- Interne Fragmentierung -> Die letzte Seite eines Prozesses ist oft nicht vollständig belegt
+- Die Verwaltung der Seitentabellen benötigt zusätzlichen Speicher und Rechenzeit
+- Leistungseinbußen -> Bei sehr großen Seitentabellen (z.B. bei 64-Bit-Systemen) kann die Verwaltung aufwendig werden
+
+Speicherkompaktierung (Compaction/Defragmentierung): Das Betriebssystem verschiebt belegte Speicherblöcke, um alle freien Bereiche zu einem grossen zusammenhängenden Block zu vereinen. Das kann beispielsweise beim Swapping oder bei bestimmten Speicherverwaltungsalgorithmen geschehen. Da haben wir folgende Vorteile:
+- Reduktion externer Fragmentierung (Nach der Kompaktierung steht wieder ein grosser Block zur Verfügung)
+- Effizientere Speichernutzung -> Prozesse können auch dann geladen werden, wenn vorher nur fragmentierter Speicher frei war
+
+Die Nachteile sind die folgenden:
+- Leistungsaufwand ->Das Verschieben von Speicherinhalten ist zeitaufwendig und kann Prozesse unterbrechen
+- Komplexität -> Die Verwaltung und Aktualisierung aller Referenzen auf verschobene Speicherbereiche ist komplex
+- Nicht immer möglich -> Bei manchen Systemen ist Kompaktierung nicht machbar.
+

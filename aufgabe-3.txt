@@ -1,0 +1,79 @@
+Erklärung zu den Befehlen:
+mkdir -p test/subdir && cd test
+→ Erstellt das Verzeichnis test mit Unterverzeichnis subdir und wechselt in test.
+Konzept: Verzeichnisstruktur.
+
+echo "Inhalt-$(date +%s)" > original.txt
+→ Erstellt/überschreibt original.txt mit aktuellem Zeitstempel im Inhalt.
+Konzept: Datei anlegen und schreiben.
+
+ln -s original.txt symlink.txt
+→ Erstellt einen symbolischen Link auf original.txt.
+Konzept: Symlink (Softlink).
+
+ln original.txt hardlink.txt
+→ Erstellt einen Hardlink auf original.txt.
+Konzept: Hardlink (gleicher Inode).
+
+chmod 640 original.txt
+→ Setzt Rechte auf rw-r----- (Besitzer: lesen/schreiben, Gruppe: lesen).
+Konzept: Dateiberechtigungen.
+
+touch -d "2 days ago" original.txt
+→ Setzt den Zeitstempel von original.txt (und Hardlink) auf „vor 2 Tagen“.
+Konzept: Zeitstempel.
+
+ls -la
+→ Zeigt alle Dateien und Metadaten im Verzeichnis.
+
+Ausgabe:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 11:09 .
+drwxr-xr-x 3 vmadmin vmadmin 4096 Mai 10 11:09 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:10 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:10 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 11:09 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 11:09 symlink.txt -> original.txt
+
+Spalten:
+Rechte | Link Count | Besitzer | Gruppe | Größe | Datum | Name
+
+Unterschiede:
+original.txt und hardlink.txt:
+Gleicher Inode (Link Count 2), gleiche Rechte, gleicher Zeitstempel, gleicher Inhalt.
+
+
+symlink.txt:
+Eigener Inode, Link Count 1, Rechte immer lrwxrwxrwx, Zeitstempel = Erstellungszeit des Links, zeigt nur auf das Ziel.
+
+Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+Hardlinks zeigen auf denselben Inode (echte Kopie des Dateinamens, nicht des Inhalts).
+Symlinks dagegen sind eigene Dateien, die nur einen Pfad speichern.
+
+echo "Neuer Inhalt" > original.txt
+→ Überschreibt den Inhalt im Inode.
+hardlink.txt zeigt denselben Inhalt, symlink.txt zeigt auf den Dateinamen und liest auch den neuen Inhalt.
+
+cat symlink.txt hardlink.txt
+→ Gibt zweimal „Neuer Inhalt“ aus, da beide auf denselben Inhalt zeigen.
+
+mv original.txt ../original.txt
+→ Verschiebt original.txt aus dem Verzeichnis.
+hardlink.txt bleibt gültig (zeigt weiter auf den Inode),
+symlink.txt ist jetzt ungültig (zeigt ins Leere).
+
+cat symlink.txt hardlink.txt 2>&1
+→ Fehler für symlink.txt („No such file or directory“),
+aber hardlink.txt zeigt weiterhin den Inhalt.
+
+Unterschied Symlink vs. Hardlink in diesem Szenario
+Hardlink: Bleibt immer gültig, solange der Inode existiert (im gleichen Dateisystem).
+Symlink: Kann ins Leere zeigen, wenn das Ziel verschoben/gelöscht wird.
+
+Mögliche Fehlerquellen:
+Symlink ist nach dem Verschieben von original.txt ungültig.
+Hardlinks funktionieren nicht über Dateisystemgrenzen (Bonus).
+
+Bonus-Frage:
+Hardlinks funktionieren nur im selben Dateisystem.
+Symlinks funktionieren auch über Dateisystemgrenzen, können aber ins Leere zeigen.
