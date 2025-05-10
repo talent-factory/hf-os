@@ -1,0 +1,52 @@
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ ./aufgabe4                
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7fff6737c1b0
+Heap-Variable:     0x59c78bad02a0
+Statische Variable: 0x59c78af93010
+
+Adressdifferenzen (in Bytes):
+Stack - Heap:    42021348359952
+Stack - Static:  42021360144800
+Heap  - Static:  11784848
+
+Wachstumsrichtungen:
+Adresse local1: 0x7fff6737c178
+Adresse local2: 0x7fff6737c17c
+Stack wächst nach unten (höhere Adresse bei zuerst deklarierter Variable).
+
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ 
+
+
+
+1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Die Ausgabe zeigt, dass die drei Variablen in klar voneinander getrennten Speicherbereichen liegen:
+- Die Stack-Variable hat eine hohe Adresse im Bereich 0x7fff..., typisch für den Stack.
+- Die Heap-Variable liegt im Bereich 0x59c7..., typisch für dynamisch allozierten Speicher.
+- Die statische Variable ist ebenfalls bei 0x59c7..., aber deutlich weiter entfernt vom Heap, was für statisch reservierten Speicher (Data-Segment) üblich ist.
+
+Die Adressdifferenzen und die Beobachtung, dass der Stack nach unten wächst, bestätigen die klassische Speicherorganisation eines Prozesses: Text → Data → Heap → (freie Zone) → Stack (von oben).
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+Das Betriebssystem organisiert den Speicher in Segmente:
+- Statische Variablen werden im Data-Segment gespeichert, das beim Start des Programms festgelegt wird.
+- Heap-Variablen befinden sich im Heap, einem Bereich für dynamisch zur Laufzeit allokierten Speicher. Dieser wächst nach oben.
+- Stack-Variablen liegen im Stack, einem Bereich für Funktionsaufrufe und lokale Variablen. Der Stack wächst nach unten.
+
+Diese Trennung erlaubt eine effizientere Speicherverwaltung und erhöht die Sicherheit und Stabilität eines Programms.
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+Ein Speicherleck entsteht, wenn Speicher mit malloc() reserviert, aber nie mit free() freigegeben wird.
+Die Folge:
+- Speicher bleibt belegt, obwohl er nicht mehr verwendet wird.
+- Bei vielen Leaks kann es zu einem Memory Exhaustion kommen – das Programm oder sogar das System wird langsamer oder stürzt ab.
+
+Das Betriebssystem selbst erkennt Leaks nicht automatisch zur Laufzeit, aber:
+- Es kann Tools wie Valgrind oder ASAN (Address Sanitizer) verwendet werden, um Leaks zu erkennen.
+- Beim Programmende gibt das Betriebssystem den gesamten Prozessspeicher (inkl. Leaks) wieder frei – aber nur auf Prozessebene, nicht innerhalb der Programmlogik.
+
+
+
