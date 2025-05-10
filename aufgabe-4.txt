@@ -1,0 +1,76 @@
+Aufgabe 4: Logische und Physische Adressen
+
+Wir haben eine Page Table (Abbildung) mit virtuellen und physischen Adressräumen:
+
+- Virtuelle Seiten:
+  - Jede Seite ist 8 KB groß.
+  - Virtuelle Adresse = (Seitenzahl * 8KB) + Offset.
+
+- Physische Seiten (Rahmen):
+  - Auch 8 KB groß.
+
+-------------------------------------------
+1️1- Virtuelle Adresse: 12300 (Dezimal)
+
+Schritt 1: Berechne die Seitennummer:
+12300 / 8192 = 1,501 → Seite 1
+
+Schritt 2: Offset:
+12300 - (1 * 8192) = 4108
+
+Schritt 3: Laut Page Table:
+Virtuelle Seite 1 → Physischer Rahmen 2
+
+Schritt 4: Physische Adresse:
+(2 * 8192) + 4108 = 16384 + 4108 = 20492
+
+Ergebnis: Physische Adresse = 20492
+
+-------------------------------------------
+2- Virtuelle Adresse: 16384 (Dezimal)
+
+Schritt 1: Berechne die Seitennummer:
+16384 / 8192 = 2,0 → Seite 2
+
+Schritt 2: Offset:
+16384 - (2 * 8192) = 0
+
+Schritt 3: Laut Page Table:
+Virtuelle Seite 2 → Physischer Rahmen 5
+
+Schritt 4: Physische Adresse:
+(5 * 8192) + 0 = 40960
+
+ Ergebnis: Physische Adresse = 40960
+
+-------------------------------------------
+ 3- Virtuelle Adresse: 32800 (Dezimal)
+
+Schritt 1: Berechne die Seitennummer:
+32800 / 8192 = 4,002 → Seite 4
+
+Schritt 2: Offset:
+32800 - (4 * 8192) = 32800 - 32768 = 32
+
+Schritt 3: Laut Page Table:
+Virtuelle Seite 4 → Physischer Rahmen 3
+
+Schritt 4: Physische Adresse:
+(3 * 8192) + 32 = 24576 + 32 = 24608
+ Ergebnis: Physische Adresse = 24608
+
+-------------------------------------------
+
+ Zusammenfassung:
+
+| Virtuelle Adresse | Virtuelle Seite | Offset | Physischer Rahmen | Physische Adresse |
+|-------------------|-----------------|--------|-------------------|-------------------|
+| 12300            | 1               | 4108   | 2                 | 20492             |
+| 16384            | 2               | 0      | 5                 | 40960             |
+| 32800            | 4               | 32     | 3                 | 24608             |
+
+Erklärung der Konzepte:
+
+- Virtuelle Adressen bestehen aus einer virtuellen Seitennummer + Offset innerhalb dieser Seite.
+- Der Offset bleibt immer gleich; nur die Basisadresse ändert sich je nach Page Table.
+- Jede Seite und jeder Rahmen sind hier 8 KB (8192 Bytes) groß.
