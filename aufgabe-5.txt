@@ -1,0 +1,5 @@
+Aussage Ausgabe: Mein Speicher hat eine erhöhende Wachstumsrichtung. 
+
+Erklärung Variablen: Die Variablen sind unterschiedlich gross und wurden wahrscheinlich nach dem "Best fit" Algorithmus sortiert.
+
+Speicherleck: Das Speicherleck führt zu einem Crash des Programms. Das OS kann damit umgehen, indem es bei zu viel gefordertem Speicher das Programm terminiert.
