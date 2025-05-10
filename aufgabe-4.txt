@@ -1,0 +1,3 @@
+12300 -> virtuelle Seite 3 -> physische Seite 3 -> 12300
+16384 -> virtuelle Seite 4 -> physische Seite 4 -> 16384
+32800 -> virtuelle Seite 8 -> X (nicht geladen) -> Page Fault
