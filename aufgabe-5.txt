@@ -1,0 +1,18 @@
+Das Programm zeigt die Adressen von Variablen im Stack, Heap und statischem Speicher. 
+Der Unterschied in den Adressen liegt darin, dass der Stack und der Heap in unterschiedlichen 
+Bereichen des Speichers liegen. Der Stack wächst normalerweise nach unten, während der Heap nach 
+oben wächst. Die statische Variable hat eine feste Adresse im statischen Speicherbereich.
+
+Für die Adressdifferenz zwischen Stack und Heap wird einfach die Differenz der Adressen berechnet. 
+Das hilft, die relative Position der beiden Bereiche im Speicher zu sehen.
+
+Die Wachstumsrichtung des Stacks kann überprüft werden, indem man zwei benachbarte Variablen auf 
+dem Stack deklariert und ihre Adressen vergleicht. Wenn die Adresse der ersten Variable größer 
+ist als die der zweiten, wächst der Stack nach unten, andernfalls nach oben.
+
+Ein Speicherleck entsteht, wenn Speicher mit malloc() zugewiesen, aber nie mit free() freigegeben 
+wird. Das führt dazu, dass der Speicher blockiert bleibt und nicht wiederverwendet werden kann, 
+was im Laufe der Zeit den verfügbaren Speicher erschöpfen kann.
+
+Das Betriebssystem kann Speicherlecks erkennen, aber in C gibt es keine automatische 
+Speicherbereinigung. Daher ist es wichtig, den Speicher manuell freizugeben, um Probleme zu vermeiden.
