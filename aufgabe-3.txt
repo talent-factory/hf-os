@@ -1,0 +1,45 @@
+Befehle
+
+mkdir -p test/subdir && cd test: Erstellen des Verzeichnisses "test" und des Sub-Verzeichnisses "subdir". Durch "-p" wird kein Fehler erzeugt, wenn die Verzeichnisse schon existieren und notwendige Eltern-Verzeichnisse werden erstellt. Mit "cd test" wird dann in das Verzeichnis "test" gewechselt.
+
+echo "Inhalt-$(date +%s)" > original.txt: Führt den "echo" befehl aus, um den Text und das Resultat vom substituierten Befehl "date" in die Datei "original.txt" zu speichern. Hierbei wird die Datei überschrieben.
+
+ln -s original.txt symlink.txt: Erstellen eines Soft-Links der Datei "original.txt" mit dem Namen "symlink.txt"
+
+ln original.txt hardlink.txt: Erstellen eines Hard-Links der Datei "original.txt" mit dem Namen "hardlink.txt".
+
+chmod 640 original.txt: Zuweisen der Berechtigungen 6(Besitzer kann lesen und schreiben), 4(Gruppe kann lesen), 0(Jeder andere hat keinen Zugriff).
+
+touch -d "2 days ago" original.txt: Verändern des Erstellungsdatums der Datei "original.txt" auf zwei Tage vor dem Original-Datum
+
+ls -la: Ausgabe aller Dateien, Verzeichnisse und versteckter Elemente im Verzeichnis inkl. Angaben wie Speicher, Berechtigungen, etc.
+
+------ AUSGABE ------
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 11:11 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 11:10 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:11 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 11:11 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 11:02 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 11:10 symlink.txt -> original.txt
+---------------------
+
+Erklärung der Spalten:
+1: Angabe der Berechtigungen jeder Datei/jedes Verzeichnis
+2: Anzahl an Links zu der Datei/dem Verzeichnis
+3: Besitzer der Datei/des Verzeichnis
+4: Gruppe der Datei/des Verzeichnis
+5: Grösse der Datei/des Verzeichnis
+6: Datum (Monat)
+7: Datum (Tag)
+8: Uhrzeit
+9: Name bzw. Verlinkung
+
+Unterschiede:
+Original und Hardlink teilen sich alle Eigenschaften, Softlink teilt sich nur den Inhalt der Datei.
+
+Unterschiedliche Inode Nummer: Aufgrund der unterschiedlichen Anzahl an Links zu der Datei/dem Verzeichnis
+
+Ausgabe "cat symlink.txt hardlink.txt": Die Ausgabe ist identisch, beide Dateien zeigen den neuen Inhalt an, der mit dem vorherigen Befehl eingegeben wurde. Dies liegt daran, weil beide Dateien auf "original.txt" zeigen.
+
+Ausgabe "cat symlink.txt hardlink.txt 2>&1": Nur der hardlink gibt eine Ausgabe aus, der softlink nicht. Dies liegt daran, dass der Hardlink eine "Hard copy" ist von der Originaldatei. Es wird nicht einfach nur auf die Datei verwiesen, wie es beim Symlink der Fall ist. Darum schlägt der Symlink auch fehl, da die Originaldatei nicht mehr in dem Pfad ist, den der Link gespeichert hat. 
