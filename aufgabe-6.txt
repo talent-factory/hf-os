@@ -1,0 +1,5 @@
+Veränderung der Meta-Daten: Die Grösse hat sich verändert, sonst ist alles gleich geblieben.
+
+Unterschied Inode und Dateinamen: Es bedeutet, dass beide Dateien dieselbe Dateistruktur haben.
+
+Unterschied wenn es Symlink wäre: Beim Löschen der Datei wäre der Symlink unbrauchbar im Vergleich zu einem hardlink. Ebenfalls wäre die Inode Nummer anders, da ein Symlink anders aufgebaut ist. Auch die Metadaten würden etwas anderes zeigen, da ein Symlink nur ein Verweis auf die Datei ist, d.h. nicht den Inhalt der Originaldatei beinhaltet.
