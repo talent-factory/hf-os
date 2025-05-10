@@ -1,0 +1,202 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable: %p\n", (void*)stack_var);
+    printf("Heap-Variable: %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+    
+    // Berechnen der Differenz zwischen den Adressen
+    unsigned long stack_to_heap = (unsigned long)heap_var - (unsigned long)stack_var;
+    unsigned long heap_to_static = (unsigned long)static_var - (unsigned long)heap_var;
+    unsigned long stack_to_static = (unsigned long)static_var - (unsigned long)stack_var;
+    
+    printf("Differenz Stack zu Heap: %lu Bytes\n", stack_to_heap);
+    printf("Differenz Heap zu Statisch: %lu Bytes\n", heap_to_static);
+    printf("Differenz Stack zu Statisch: %lu Bytes\n", stack_to_static);
+    
+    printf("\nWachstumsrichtungen:\n");
+    // Deklaration von zwei lokalen Variablen zur Bestimmung der Stack-Wachstumsrichtung
+    int local_var1 = 10;
+    int local_var2 = 20;
+    
+    printf("Lokale Variable 1: %p\n", (void*)&local_var1);
+    printf("Lokale Variable 2: %p\n", (void*)&local_var2);
+    
+    if ((unsigned long)&local_var1 > (unsigned long)&local_var2) {
+        printf("Stack wächst nach unten (von höheren zu niedrigeren Adressen)\n");
+    } else {
+        printf("Stack wächst nach oben (von niedrigeren zu höheren Adressen)\n");
+    }
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+    // Stack-Variable
+    int stack_variable = 200;
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+    
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+    
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        // Absichtliches Speicherleck erzeugen
+        int* leak = (int*)malloc(1024 * sizeof(int)); // 4KB Speicher allokieren
+        if (leak != NULL) {
+            *leak = i; // Irgendwas in den Speicher schreiben
+            printf("Speicherleck %d erzeugt: %p (%d)\n", i, (void*)leak, *leak);
+            // Kein free(leak) - dies verursacht ein Speicherleck
+        }
+    }
+    
+    // Speicher freigeben
+    free(heap_variable);
+    return 0;
+}
+
+
+
+
+### Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Die Ausgabe zeigt:
+- Verschiedene Speicheradressen für Stack-, Heap- und statische Variablen
+- Numerische Differenzen zwischen diesen Adressen
+- Die Wachstumsrichtung des Stacks
+- Die erzeugten Speicherlecks
+
+Diese Ausgabe offenbart die grundlegende Speicherorganisation in modernen Betriebssystemen:
+1. Der virtuelle Adressraum ist in distinkte Segmente aufgeteilt
+2. Typischerweise sieht man folgende Anordnung (von niedrigen zu hohen Adressen):
+   - Text-Segment (Programmcode)
+   - Daten-Segment (statische/globale Variablen)
+   - Heap (wächst nach oben zu höheren Adressen)
+   - Stack (wächst nach unten zu niedrigeren Adressen)
+3. Die großen Adressdifferenzen zwischen den Bereichen zeigen, dass das Betriebssystem Schutzabstände zwischen verschiedenen Speicherbereichen einfügt, um Pufferüberläufe zu erschweren und die Speicherverwaltung zu erleichtern.
+
+### Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+**Stack-Variablen:**
+- Werden im Stack-Segment gespeichert
+- Automatische Speicherverwaltung: Variablen werden bei Funktionsaufrufen erstellt und beim Verlassen der Funktion automatisch entfernt
+- LIFO-Prinzip (Last In, First Out) ermöglicht effiziente Speicherzuweisung/-freigabe
+- Begrenzte Lebensdauer (Funktionsaufrufkontext)
+- Feste und begrenzte Größe (typischerweise einige MB)
+- Gut für kleine, kurzzeitige Daten
+
+**Heap-Variablen:**
+- Werden im Heap-Segment gespeichert
+- Manuelle Speicherverwaltung durch den Programmierer (malloc/free, new/delete)
+- Flexible Lebensdauer (existieren, bis sie explizit freigegeben werden)
+- Dynamische Größe (kann während der Laufzeit wachsen)
+- Ermöglicht die Speicherung großer oder langlebiger Daten
+- Potenziell fragmentierter Speicher durch willkürliche Allokation/Freigabe
+
+**Statische Variablen:**
+- Werden im Daten-Segment gespeichert
+- Existieren während der gesamten Programmlaufzeit
+- Werden beim Programmstart initialisiert
+- Haben globale Sichtbarkeit oder Funktions-Scope mit statischer Lebensdauer
+- Ideal für Konstanten und Daten, die während der gesamten Programmausführung benötigt werden
+
+Die Trennung dieser Bereiche verbessert:
+- Sicherheit (Verhinderung von Stack-Overflow in den Heap)
+- Effizienz (optimierte Zugriffsmuster für jeden Bereich)
+- Flexibilität (verschiedene Verwaltungsstrategien für verschiedene Speicherbedürfnisse)
+
+### Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+**Auswirkungen des Speicherlecks:**
+- Kontinuierlich steigender Speicherverbrauch (5 x 4KB = 20KB in diesem Beispiel)
+- Bei längerer Laufzeit oder in größeren Anwendungen:
+  - Reduzierte Systemleistung durch weniger verfügbaren Speicher
+  - Erhöhte Auslagerung (Paging/Swapping) auf die Festplatte
+  - Im Extremfall: Out-of-Memory-Fehler oder Programmabsturz
+  - Fragmentierung des Heap-Speichers
+  - Degradierte Cache-Performance
+
+**Umgang des Betriebssystems mit Speicherlecks:**
+1. **Prozessbeendigung**:
+   - Automatische Speicherbereinigung, wenn der Prozess beendet wird
+   - Der gesamte Speicher wird dem System zurückgegeben
+
+2. **Laufzeitstrategien**:
+   - **Virtuelle Speicherverwaltung**: Nur tatsächlich genutzte Seiten belegen physischen Speicher
+   - **Speicherüberbuchung (Overcommit)**: Betriebssystem verspricht mehr virtuellen Speicher, als physisch verfügbar ist
+   - **Auslagerung (Swapping)**: Selten genutzte Speicherseiten werden auf die Festplatte ausgelagert
+
+3. **Erkennungs- und Präventionsmechanismen**:
+   - **Out-of-Memory Killer**: Beendet Prozesse, wenn der Speicher knapp wird (Linux)
+   - **Ressourcenlimits**: Begrenzung des maximalen Speicherverbrauchs pro Prozess
+   - **Memory Cgroups**: Gruppierung und Limitierung von Prozessen (Container-Technologie)
+
+4. **Modernere Ansätze**:
+   - **Garbage Collection**: Automatische Speicherbereinigung (in Sprachen wie Java, C#, Go)
+   - **Smart Pointers**: Automatische Ressourcenverwaltung in C++ (RAII-Prinzip)
+   - **Leak-Sanitizer**: Laufzeit-Instrumentierung zur Erkennung von Speicherlecks
+
+Es ist wichtig zu verstehen, dass das Betriebssystem während der Laufzeit eines Programms nicht unterscheiden kann, ob nicht freigegebener Speicher noch benötigt wird oder ein Leck darstellt. Daher sind Entwicklerwerkzeuge wie Valgrind, AddressSanitizer oder LeakSanitizer entscheidend für die Erkennung und Behebung von Speicherlecks während der Entwicklung.
+
+Adressdifferenzberechnung:
+
+Ich habe die Differenzen zwischen allen drei Speicherbereichen berechnet
+Typecasting zu unsigned long wurde verwendet, um die Adressen als Zahlen zu behandeln
+Das Ergebnis wird in Bytes angezeigt
+
+
+Stack-Wachstumsrichtung:
+
+Zwei lokale Variablen wurden deklariert: local_var1 und local_var2
+Die Adressen werden verglichen, um zu bestimmen, ob der Stack nach oben oder unten wächst
+Typischerweise wächst der Stack nach unten (von höheren zu niedrigeren Adressen)
+
+
+Speicherleck-Demonstration:
+
+In der Schleife werden fünf Speicherblöcke von je 4KB (1024 Ints) angelegt
+Der zugewiesene Speicher wird nie freigegeben (free() wird nicht aufgerufen)
+Dies ist ein absichtliches Speicherleck
+
+
+
+Erwartete Ausgabe und Erklärung:
+Nach der Ausführung würde das Programm die Adressen der verschiedenen Variablen und ihre Differenzen anzeigen. Hier sind die Erklärungen zu den Fragen:
+
+Organisation des Speichers:
+
+Die Ausgabe zeigt, dass der virtuelle Adressraum in verschiedene Bereiche aufgeteilt ist
+Typischerweise werden Sie sehen, dass der Stack sich im oberen Teil des Adressraums befindet
+Der Heap liegt im mittleren Teil des Adressraums
+Statische Variablen befinden sich im unteren Teil des Adressraums (im Datenbereich)
+
+
+Verschiedene Speicherbereiche für verschiedene Variablentypen:
+
+Stack-Variablen: Werden automatisch verwaltet, haben eine begrenzte Lebensdauer und sind für lokale Variablen bestimmt
+Heap-Variablen: Werden dynamisch zur Laufzeit allokiert, haben eine vom Programmierer kontrollierte Lebensdauer
+Statische Variablen: Existieren während der gesamten Programmlaufzeit, werden im Datenbereich des Programms gespeichert
+
+
+Auswirkungen des Speicherlecks:
+
+Jede Iteration der Schleife allokiert 4KB Speicher, der nicht mehr freigegeben wird
+Dies führt zu einem kontinuierlichen Anstieg des Speicherverbrauchs
+Bei längerem Ausführen oder in größeren Anwendungen kann dies zu Speicherknappheit führen
+Umgang des Betriebssystems:
+
+Modern Betriebssysteme geben den Speicher beim Beenden des Programms frei
+Während der Laufzeit kann ein Betriebssystem keinen Speicher zurückgewinnen, ohne das Programm zu beenden
+In größeren Anwendungen werden Speicherlecks mit Tools wie Valgrind oder AddressSanitizer erkannt
+Einige Betriebssysteme haben Mechanismen wie "Garbage Collection" oder "Overcommit", die mit bestimmten Arten von Speicherlecks umgehen können
