@@ -1,0 +1,71 @@
+mkdir -p test/subdir && cd test:
+erstellt ein neues Verzeichnis und darin ein Unterverzeichnis. -p sorgt dafür, dass alle übergeordneten Verzeichnisse automatisch erstellt werden und danach wechselt es in das test-Verzeichnis
+
+echo "Inhalt-$(date +%s)" > original.txt:
+date +%s gibt den aktuellen UNIX-Zeitstempel in Sekunden seit dem 1.1.1970 aus.
+echo gibt den Text aus: z. B. Inhalt-1715379200.
+> leitet die Ausgabe in die Datei original.txt um (Dateiumleitung).
+Existiert die Datei noch nicht → wird sie neu erstellt.
+Existiert sie → wird sie überschrieben
+
+ln -s original.txt symlink.txt:
+Erstellt einen symbolischen Link (Symlink) namens symlink.txt, der auf original.txt zeigt.
+
+ln original.txt hardlink.txt
+Erstellt einen Hardlink namens hardlink.txt zur Datei original.txt.
+
+chmod 640 original.txt
+setzt die Zugriffsrechte von original.txt auf Owner=read+write, Group=read und Others=no access
+
+touch -d "2 days ago" original.txt
+Ändert den Zugriffs- und Änderungszeitstempel (atime + mtime) der Datei original.txt auf den Zeitpunkt 2 Tage in der Vergangenheit.
+
+ls -la
+zeigt alle Dateien im aktuellen Verzeichnis an, inkl versteckte.
+
+
+
+
+Ausgabe der letzten Befehle:
+insgesamt 16
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:46 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:44 ..
+-rw-r----- 1 vmadmin vmadmin   18 Mai  8 08:46 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:44 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:46 symlink.txt -> original.txt
+
+zuerst sieht man die Inode-Nummer, die verweist auf einen
+Eintrag im Inode-Table der Metadaten enthält. Danach die Zugriffsrechte und Dateityp
+zeigt wer Zugriff von Owner, Group und Others hat. Danach sieht man den Hard-Link Zähler
+zeigt wie viele Verzeichniseinträge auf diesen Inode zeigen. Der Besitzer und
+Gruppe wird danach angegeben und der Zeitstempel vom letzten Veränderungszeitpunkt.
+und zuletzt noch der Dateiname.
+
+original und hardlink haben die gleiche Inode, weil es dieselbe Datei ist. Symlink hat eine andere und verweist nur auf einen Pfad. Symlink ist auch ein
+symbolischer Link und keine normale Datei wie die anderen zwei. Manchen Dateien haben
+die gleiche Inode-Nummer wegen Hardlink (gleiche Datei)und unterschiedliche wenn es einen anderen Inhalt oder Link-Typ hat.
+
+
+
+
+echo "Neuer Inhalt" > original.txt
+überschreibt den Inhalt der Datei original.txt komplett
+kein neuer Inode, bleibt gleich nur mtime änder sicht
+
+cat symlink.txt hardlink.txt
+gibt zwei Mal den gleichen Inhalt aus
+
+mv original.txt ../original.txt
+verschiebt die Datei original.txt in das übergeordnete Verzeichnis, Hardlink (hardlink.txt) bleibt erhalten, weil der Inode noch von diesem Verzeichniseintrag referenziert wird.
+original.txt existiert im aktuellen Verzeichnis nicht mehr – nur noch unter ../original.txt.
+
+cat symlink.txt hardlink.txt 2>&1
+symlink.txt schlägt fehl Fehler auf STDERR
+hardlink.txt sollte den Inhalt anzeigen
+symlink.txt ist ein Pfadzeiger – da der Zielpfad gelöscht wurde, zeigt er ins Leere.
+hardlink.txt referenziert immer noch denselben Inode, kein Problem.
+
+Mögliche Fehler
+Symlink kaputt → zeigt auf nicht existierenden Pfad (relativ!)
+Versuch, cat symlink.txt nach dem mv → Fehler: Datei nicht gefunden
+Viele glauben fälschlich, ein Symlink „zeigt auf die Datei“, dabei zeigt er nur auf einen Pfadnamen – Pfadauflösung ist entscheidend.
