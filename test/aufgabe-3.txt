@@ -53,4 +53,56 @@ symlink.txt ist anders. Er zeigt nur auf den Namen original.txt, hat aber einen 
 symlink.txt hat eine andere Inode-Nummer, weil er nur eine Art Verknüpfung ist. Er speichert nicht den Inhalt, sondern nur den Pfad zur echten Datei. Darum hat er auch eigene Metadaten und einen eigenen Zeitstempel.
 
 die nächsten Befehlen:
+Befehl 1: echo "Neuer Inhalt" > original.txt
+Dieser Befehl überschreibt den Inhalt von original.txt mit dem Text "Neuer Inhalt".
+Weil hardlink.txt der gleiche Inhalt ist (gleicher Speicher/Inode), wird auch hardlink.txt überschrieben.
+symlink.txt zeigt weiterhin auf original.txt, also auch auf den neuen Inhalt.
+
+Befehl 2: cat symlink.txt hardlink.txt
+Dieser Befehl zeigt den Inhalt von symlink.txt und hardlink.txt an.
+Beide zeigen jetzt den gleichen neuen Inhalt, also wird "Neuer Inhalt" zweimal ausgegeben.
+
+Befehl 3: mv original.txt ../original.txt
+Dieser Befehl verschiebt original.txt in den übergeordneten Ordner.
+symlink.txt zeigt aber weiter auf den alten Pfad, wo original.txt jetzt nicht mehr existiert.
+hardlink.txt bleibt erhalten, weil er den Speicher teilt und nicht den Pfad verwendet.
+
+Befehl 4: cat symlink.txt hardlink.txt 2>&1
+Dieser Befehl versucht erneut, den Inhalt von symlink.txt und hardlink.txt zu zeigen.
+- symlink.txt gibt einen Fehler aus, weil die Zieldatei (original.txt) am alten Ort nicht mehr existiert.
+- hardlink.txt zeigt weiterhin "Neuer Inhalt", weil es direkt auf den Speicher zeigt, una
+
+Frage 1:
+Ausgabe: 
+cat symlink.txt hardlink.txt
+Neuer Inhalt
+Neuer Inhalt
+
+cat symlink.txt hardlink.txt 2>&1
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+- hardlink.txt zeigt direkt auf den Speicher und bleibt immer gültig.
+- symlink.txt zeigt nur auf den Dateinamen und funktioniert nur, solange der Pfad existiert
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+
+- original.txt und hardlink.txt teilen sich den gleichen Inode, weil sie beide auf denselben Speicher zeigen.
+- symlink.txt bekommt einen eigenen Inode, da er nur einen Pfad speichert und nicht den Inhalt selbst.
+- Beim Verschieben von original.txt bleibt der Inode von hardlink.txt erhalten. Der Inode von symlink.txt bleibt ebenfalls bestehen, aber der gespeicherte Pfad zeigt ins Leere.
+
+
+Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+
+- Harte Links wie hardlink.txt bleiben funktionsfähig, auch wenn original.txt verschoben wird, weil sie direkt mit dem Speicher verbunden sind.
+- Symbolische Links wie symlink.txt funktionieren nur, wenn das Ziel noch am gleichen Ort liegt. Wird original.txt verschoben, zeigt der symlink ins Leere und es kommt zu Fehlern.
+
+
+Welche Fehler könnten auftreten und warum?
+
+- Bei symlink.txt kommt ein Fehler „Datei oder Verzeichnis nicht gefunden“, wenn das Ziel verschoben oder gelöscht wurde, weil der Link nur den Pfad speichert.
+- Bei hardlink.txt tritt kein Fehler auf, weil er unabhängig vom Dateinamen direkt auf die Daten zeigt.
+
+Bonus Frage:
+- Ich würde sagen, dass harte Links nicht über verschiedene Dateisysteme funktionieren, weil sie nur im gleichen Dateisystem erlaubt sind. Symbolische Links funktionieren aber auch über mehrere Dateisysteme, weil sie nur den Pfad merken. Trotzdem kann ein symbolischer Link kaputtgehen, wenn das Ziel verschoben oder gelöscht wird.
 
