@@ -1,0 +1,49 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546294
+Anzahl der Hardlinks: 1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 09:11:52
+Letzte Änderung: 2025-05-10 09:11:52
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 149 Bytes
+Inode-Nummer: 546294
+Anzahl der Hardlinks: 1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 09:11:52
+Letzte Änderung: 2025-05-10 09:11:52
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 149 Bytes
+Inode-Nummer: 546294
+Anzahl der Hardlinks: 2
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 09:11:52
+Letzte Änderung: 2025-05-10 09:11:52
+
+
+Fragen und Antworten
+
+1. Was zeigt die Ausgabe?
+Die Datei wird zuerst erstellt, dann erweitert.  
+Die Größe und das Änderungsdatum ändern sich.  
+Das zeigt, dass das System die Metadaten automatisch verwaltet.
+
+2. Was ist der Unterschied zwischen Inode und Dateiname?
+Der Dateiname ist nur der Name.  
+Der Inode zeigt auf den Inhalt.  
+Wenn zwei Dateien den gleichen Inode haben, sind sie technisch die gleiche Datei.
+
+3. Was wäre anders mit einem Symlink?
+Ein Symlink zeigt nur auf den Namen, nicht auf den Inhalt.  
+Wenn das Original gelöscht wird, ist der Symlink kaputt.  
+Ein Hardlink bleibt immer funktionsfähig, auch wenn das Original weg ist.
+
