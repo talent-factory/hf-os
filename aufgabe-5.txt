@@ -1,0 +1,62 @@
+Speicheradressanalyse:
+-----------------------
+Stack-Variable: 0x7fff5f082418
+Heap-Variable: 0x55cf541812a0
+Statische Variable: 0x55cf530e8010
+
+Adressunterschiede:
+Stack -> Heap: 46385830302072 Bytes
+Heap -> Static: 17404560 Bytes
+Static -> Stack: 18446697687861844984 Bytes
+
+Wachstumsrichtung des Stacks:
+Der Stack wächst nach oben.
+
+
+1️⃣ Organisation des Speichers im Betriebssystem
+Das Programm zeigt:
+
+Stack-Variable: Hoher Adressbereich (0x7fff...), genutzt für lokale Variablen.
+
+Heap-Variable: Mittlerer Adressbereich (0x55cf...), genutzt für dynamische Allokierung.
+
+Statische Variable: Ähnlich zum Heap, aber im Datensegment.
+
+Fazit:
+
+Der Stack wächst nach oben.
+
+Der Heap verwaltet dynamische Daten.
+
+Statische Variablen sind im Datensegment, global verfügbar.
+
+🔹 2️⃣ Warum unterschiedliche Speicherbereiche?
+Jeder Bereich hat einen Zweck:
+
+Stack: Schnell, temporär, lokal.
+
+Heap: Flexibel, dynamisch, aber langsamer.
+
+Statisch: Global, bleibt während der gesamten Laufzeit.
+
+🔹 3️⃣ Auswirkungen des Speicherlecks
+Im Code:
+
+c
+Copy
+Edit
+for (int i = 0; i < 5; i++) {
+    malloc(sizeof(int)); // Kein free(), Speicherleck
+}
+Speicher wird belegt, aber nie freigegeben.
+
+Führt zu Speicherverbrauch und möglichen Abstürzen bei vielen Lecks.
+
+🔹 4️⃣ Wie kann das OS das handhaben?
+Garbage Collection: Automatische Bereinigung.
+
+Paging und Swapping: Verlagerung auf die Festplatte.
+
+Valgrind: Tool zur Erkennung von Speicherlecks.
+
+
