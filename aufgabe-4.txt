@@ -1,0 +1,52 @@
+Erklärung der Speicherabbildung (Page Table):
+Die gezeigte Grafik zeigt:
+
+Links: Virtueller Adressraum in 4KB-Blöcken (Seiten).
+
+Rechts: Physikalische Adressen in 4KB-Blöcken (Seitenrahmen).
+
+Der virtuelle Adressraum wird über die Page Table auf die physikalischen Speicheradressen abgebildet.
+
+Gegebene Adressen:
+Die Adressen sind in dezimaler Darstellung angegeben:
+
+1230010
+
+1638410
+
+3280010
+
+Schritt-für-Schritt Umrechnung:
+Jede Seite hat eine Größe von 4KB (4096 Bytes), also 2^12.
+
+Adresse 1230010:
+Seiten-Nummer: 1230010 / 4096 = 300 → Rest: 2514
+
+Virtuelle Seite 300 entspricht dem Bereich 48KB–52KB.
+
+In der Abbildung ist diese Seite mit X markiert, also nicht im Speicher.
+
+Ergebnis: → Seitenfehler (Page Fault), Adresse nicht im Speicher.
+
+Adresse 1638410:
+Seiten-Nummer: 1638410 / 4096 = 400 → Rest: 10
+
+Virtuelle Seite 400 entspricht dem Bereich 56KB–60KB.
+
+In der Abbildung ist diese Seite mit X markiert, also nicht im Speicher.
+
+Ergebnis: → Seitenfehler (Page Fault), Adresse nicht im Speicher.
+
+Adresse 3280010:
+Seiten-Nummer: 3280010 / 4096 = 800 → Rest: 2010
+
+Virtuelle Seite 800 liegt nicht im gezeigten Bereich von 0KB–64KB.
+
+Ergebnis: → Ungültige Adresse (nicht im definierten virtuellen Bereich).
+
+Zusammenfassung der Antworten:
+
+1230010	300	Nicht im Speicher	→ Seitenfehler (Page Fault)
+1638410	400	Nicht im Speicher	→ Seitenfehler (Page Fault)
+3280010	800	Ungültig im virtuellen Adressraum	→ Fehler (Nicht abgebildet)
+
