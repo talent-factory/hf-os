@@ -1,0 +1,33 @@
+
+Externe Fragmentierung:
+Externe Fragmentierung tritt auf, wenn der freie Speicher in viele kleine, nicht zusammenhängende Blöcke zerstreut ist, die sich zwischen den belegten Speicherbereichen befinden.
+Das Problem ist, dass die Grösse dieser einzelnen freien Blöcke möglicherweise nicht ausreicht, um einen Prozess aufzunehmen, der einen grossen, zusammenhängenden Speicherbereich benötigt, obwohl die Summe der freien Blöcke gross genug wäre.
+
+Beispiel:
+In einem System, das Prozesse oder Segmente unterschiedlicher Grösse in den Speicher lädt und entlädt (ähnlich dem Swapping ganzer Prozesse, das Löcher erzeugt), entstehen freie Bereiche ("Löcher"). Wenn neue Prozesse geladen werden, füllen sie diese Löcher, hinterlassen aber möglicherweise kleinere Restlöcher. Über die Zeit kann sich der freie Speicher in viele kleine, verstreute Bereiche aufteilen. Die fragmentierung_demo() im Beispielprogramm simuliert dieses Problem, indem sie abwechselnd Speicherblöcke allokiert und freigibt, was die Entstehung solcher nicht zusammenhängender freier Bereiche demonstriert, die auf Speicherfragmentierung hindeuten können. Ein Prozess, der nun einen sehr grossen zusammenhängenden Block benötigt, kann nicht geladen werden, obwohl die Gesamtmenge der freien kleinen Löcher ausreicht.
+
+Interne Fragmentierung tritt auf, wenn Speicher in festen Einheiten zugewiesen wird, aber der zugewiesene Speicherblock grösser ist als der tatsächlich benötigte Speicherplatz. Der unbenutzte Platz innerhalb des zugewiesenen Blocks ist die interne Fragmentierung.
+Diese Art der Fragmentierung tritt typischerweise in Systemen auf, die Paging verwenden.
+
+Beispiel: 
+In einem Paging-System wird der Adressraum eines Programms in Abschnitte fester Grösse, sogenannte Seiten (pages), unterteilt. Der physische Speicher wird ebenfalls in gleich grosse Einheiten (Frames) unterteilt. Wenn ein Prozess Speicher anfordert, werden ihm ganze Seiten zugewiesen. Wenn die Grösse des benötigten Speichers kein exaktes Vielfaches der Seitengrösse ist, wird für den letzten Teil des benötigten Speichers eine komplette Seite zugewiesen, obwohl nur ein Teil dieser Seite tatsächlich genutzt wird. Der verbleibende, ungenutzte Platz auf dieser letzten Seite stellt interne Fragmentierung dar. Dieser ungenutzte Platz kann keinem anderen Prozess zugewiesen werden, solange die Seite dem ursprünglichen Prozess gehört.
+
+Strategien:
+1. Speicherverdichtung (Memory Compaction)
+◦
+Diese Technik wird eingesetzt, wenn durch das Auslagern von Prozessen (Swapping) mehrere kleine freie Bereiche ("Löcher") im Speicher entstehen. Bei der Speicherverdichtung werden die belegten Speicherblöcke (Prozesse/Segmente) im physischen Speicher verschoben, um die kleinen freien Löcher zu einem grossen, zusammenhängenden freien Block zusammenzufassen. Abbildung 16 visualisiert, wie Löcher entstehen und durch Verdichtung behoben werden können.
+
+Auswirkung auf Fragmentierung: Diese Methode reduziert oder eliminiert externe Fragmentierung, da sie die verstreuten freien Bereiche konsolidiert. Sie hat keinen Einfluss auf interne Fragmentierung.
+
+Vorteile: Schafft grössere, zusammenhängende freie Speicherbereiche, die für die Allokation grosser Prozesse benötigt werden [implied by consolidating small holes into a large one]. Erhöht die nutzbare Kapazität des physischen Speichers.
+
+Nachteile (Ressourcenverbrauch, Leistung, Komplexität): Das Verschieben von Speicherblöcken ist ein zeitaufwändiger Prozess [implied by "moving all processes down as far as possible" in 132, 39]. Alle Adressen innerhalb der verschobenen Blöcke müssen angepasst werden [implied by the nature of memory addresses changing when blocks are moved, compare with address relocation concept in 37, 130]. Dies führt zu einem erheblichen Overhead [implied by the process of moving and updating addresses], der die Systemleistung beeinträchtigen kann. Die Komplexität liegt in der Durchführung des Verschiebens und der Aktualisierung aller abhängigen Adressen.
+2.Virtueller Speicher mit Paging
+
+Virtueller Speicher erlaubt die Ausführung von Programmen, auch wenn sie sich nur teilweise im Hauptspeicher befinden. Der Adressraum eines Programms wird in feste Einheiten namens Seiten (pages) unterteilt, die auf gleich grosse, verfügbare physikalische Speicherbereiche (Frames) abgebildet werden können. Die physikalischen Frames müssen nicht zusammenhängend sein [implied by ability to place pages into any available frame].
+
+Auswirkung auf Fragmentierung: Durch die Zuweisung in festen, gleich grossen Einheiten (Frames) vermeidet Paging effektiv externe Fragmentierung. Jeder freie Frame ist gleichwertig und kann eine beliebige Seite aufnehmen. Allerdings führt Paging interne Fragmentierung ein [implied by fixed page size and the definition of internal fragmentation from our conversation], da die letzte Seite eines Prozesses oft nicht vollständig genutzt wird, der ungenutzte Platz innerhalb dieser zugewiesenen Seite aber nicht anderweitig verwendet werden kann.
+
+Vorteile (Leistung, Komplexität): Ermöglicht die Ausführung von Programmen, die grösser sind als der physische Speicher. Vereinfacht die Speicherverwaltung im Vergleich zu Methoden, die variable Grössen verwalten müssen [implied by using fixed-size units in 91 vs variable segments mentioned in the context of external fragmentation]. Unterstützt effizientes Multiprogramming [implied by allowing multiple programs to reside partially in memory simultaneously].
+
+Nachteile (Ressourcenverbrauch, Komplexität, Leistung): Führt zu interner Fragmentierung [derived, see above]. Erfordert zusätzliche Hardware (wie eine MMU) und erheblichen Betriebssystem-Overhead für die Verwaltung der Seitentabellen und die Adressübersetzung [implied by the concept of mapping virtual to physical addresses and managing page tables, though specific hardware/OS complexity details for Paging itself are not deeply detailed in sources beyond address translation mechanisms like base/limit registers 37, 130]. Das Auslagern von Seiten auf die Festplatte ("Paging-Out") bei Bedarf ist sehr langsam, da Festplatten-I/O (typisch mehrere hundert MB/s für SATA) bedeutet, dass das Auslagern oder Einlagern eines 1-GB-Programms Sekunden dauern kann.

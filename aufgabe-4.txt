@@ -1,0 +1,87 @@
+12300
+Als erstes Rechnen wir die Zahl in das Binärsystem 
+
+12300 ÷ 2 = 6150 Rest 0  
+6150 ÷ 2 = 3075 Rest 0  
+3075 ÷ 2 = 1537 Rest 1  
+1537 ÷ 2 = 768  Rest 1  
+768 ÷ 2 = 384   Rest 0  
+384 ÷ 2 = 192   Rest 0  
+192 ÷ 2 = 96    Rest 0  
+96 ÷ 2 = 48     Rest 0  
+48 ÷ 2 = 24     Rest 0  
+24 ÷ 2 = 12     Rest 0  
+12 ÷ 2 = 6      Rest 0  
+6 ÷ 2 = 3       Rest 0  
+3 ÷ 2 = 1       Rest 1  
+1 ÷ 2 = 0       Rest 1  
+
+= 0011 0000 0000 1100 
+Die ersten vier Stellen werden nun verwendet um den Virtuellen Adressraum auszurechnen 0011 -> 3 = 12KB-16KB führt zu 0KB-4KB
+
+Damit wir eine Startzahl haben, rechnen wir die Bytes aus = 1024*0 =0
+
+Als nächstes wird das Offset berechnet. Dafür rechnen wir die anderen Stellen -> 0000 0000 1100 in binär = 12
+
+Als letztes addirern wir 0+12 = 12 
+Die Physische Speicheradresse von 12300 ist 12
+
+
+16384
+
+Als erstes Rechnen wir die Zahl in das Binärsystem
+
+16384 ÷ 2 = 8192   → Rest 0  
+8192 ÷ 2  = 4096   → Rest 0  
+4096 ÷ 2  = 2048   → Rest 0  
+2048 ÷ 2  = 1024   → Rest 0  
+1024 ÷ 2  = 512    → Rest 0  
+512 ÷ 2   = 256    → Rest 0  
+256 ÷ 2   = 128    → Rest 0  
+128 ÷ 2   = 64     → Rest 0  
+64 ÷ 2    = 32     → Rest 0  
+32 ÷ 2    = 16     → Rest 0  
+16 ÷ 2    = 8      → Rest 0  
+8 ÷ 2     = 4      → Rest 0  
+4 ÷ 2     = 2      → Rest 0  
+2 ÷ 2     = 1      → Rest 0  
+1 ÷ 2     = 0      → Rest 1
+
+= 0100 0000 0000 0000
+
+Die ersten vier Stellen werden nun verwendet um den Virtuellen Adressraum auszurechnen 0100 -> 4 = 16KB-20KB führt zu 16KB-20KB
+
+Damit wir eine Startzahl haben, rechnen wir die Bytes aus = 1024*16 =16384
+
+Als nächstes wird das Offset berechnet. Dafür rechnen wir die anderen Stellen -> 0000 0000 0000 in binär = 0
+
+Als letztes addirern wir 16386+0 = 16384
+Die Physische Speicheradresse von 16384 bleibt 16384
+
+32800
+
+Als erstes Rechnen wir die Zahl in das Binärsystem
+
+32800 ÷ 2 = 16400   → Rest 0  
+16400 ÷ 2 = 8200    → Rest 0  
+8200 ÷ 2 = 4100     → Rest 0  
+4100 ÷ 2 = 2050     → Rest 0  
+2050 ÷ 2 = 1025     → Rest 0  
+1025 ÷ 2 = 512      → Rest 1  
+512 ÷ 2 = 256       → Rest 0  
+256 ÷ 2 = 128       → Rest 0  
+128 ÷ 2 = 64        → Rest 0  
+64 ÷ 2 = 32         → Rest 0  
+32 ÷ 2 = 16         → Rest 0  
+16 ÷ 2 = 8          → Rest 0  
+8 ÷ 2 = 4           → Rest 0  
+4 ÷ 2 = 2           → Rest 0  
+2 ÷ 2 = 1           → Rest 0  
+1 ÷ 2 = 0           → Rest 1
+
+= 1000 0000 0010 0000
+
+Die ersten vier Stellen werden nun verwendet um den Virtuellen Adressraum auszurechnen 1000 -> 8 = 32KB-36KB ist nicht gemappt kann also nicht als physische Adresse abgebildet werden
+
+Es kommt zu einerm Page Fault
+
