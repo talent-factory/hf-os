@@ -1,0 +1,29 @@
+Der grösste Unterschied zwischen interner und externer Speicherfragmentierung ist:
+Interne Fragmentierung verschwendet Speicher innerhalb zugeteilter Blöcke, externe Fragmentierung entsteht zwischen belegten Blöcken durch zerstreute freie Bereiche.
+
+Interne Fragmentierung:
+entsteht, wenn einem Prozess ein fester Speicherblock zugewiesen wird, der grösser ist als nötig – der nicht genutzte Teil im Block bleibt ungenutzt.
+Ein Beispiel dafür ist Paging mit festen Seitengrössen.
+
+Externe Fragmentierung:
+tritt auf, wenn zwar insgesamt genug Speicher frei ist, dieser aber in viele kleine, verstreute Lücken aufgeteilt ist.
+Dadurch kann kein ausreichend grosser, zusammenhängender Block mehr gefunden werden, etwa bei dynamischer Segmentvergabe mit First-Fit.
+
+Beide Arten führen zu verschwendetem Speicher und können durch optimierte Zuweisungsstrategien oder Kompaktierung verringert werden.
+
+
+
+Eine Strategie zur Reduktion von Speicherfragmentierung ist das Paging.
+Hier wird der virtuelle Speicher in gleich grosse Seiten und der physische Speicher in gleich grosse Page Frames unterteilt.
+Dadurch gibt es keine externe Fragmentierung, da Seiten beliebig im physischen Speicher platziert werden können.
+Der Vorteil liegt in der einfachen Speicherverwaltung und der besseren Ausnutzung des Speichers.
+Nachteilig ist jedoch, dass es zu interner Fragmentierung am Ende einer Seite kommen kann.
+Zudem verursacht die Verwaltung der Seitentabellen einen gewissen Ressourcen- und Leistungsaufwand, vor allem bei grossen Programmen.
+
+Eine zweite Strategie ist die Speicherkompaktierung (Compaction), bei der freie Speicherbereiche regelmässig zusammengeführt werden, um grössere, zusammenhängende Blöcke zu schaffen.
+Das verhindert externe Fragmentierung und ermöglicht die Aufnahme grosser Prozesse.
+Der Vorteil ist eine bessere Speicherverfügbarkeit für variabel grosse Prozesse.
+Der Nachteil ist der hohe Rechenaufwand, da viele Daten im Speicher verschoben werden müssen, was die Leistung beeinträchtigen kann – besonders bei häufigem Einsatz.
+
+Beide Methoden zeigen, dass zwischen Effizienz, Komplexität und Systemleistung sorgfältig abgewogen werden muss.
+
