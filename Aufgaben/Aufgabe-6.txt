@@ -1,0 +1,43 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Größe:             96 Bytes
+Inode-Nummer:      546380
+Hardlinks:         1
+Rechte (oktale):   664
+Letzter Zugriff:   2025-05-10 09:31:18
+Letzte Änderung:   2025-05-10 09:31:18
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Größe:             206 Bytes
+Inode-Nummer:      546380
+Hardlinks:         1
+Rechte (oktale):   664
+Letzter Zugriff:   2025-05-10 09:31:18
+Letzte Änderung:   2025-05-10 09:31:18
+
+Hardlink erstellt: testdatei_hardlink.txt
+
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Größe:             206 Bytes
+Inode-Nummer:      546380
+Hardlinks:         2
+Rechte (oktale):   664
+Letzter Zugriff:   2025-05-10 09:31:18
+Letzte Änderung:   2025-05-10 09:31:18
+
+
+Als erstes werden die Metadaten von der datei testdatei.txt ausgegeben.
+Als nächstes wird Text zur Datei hinzugefügt und wieder die Metadaten ausgegeben.
+Zum schluss wird ein Hardlink erstellt und dessen Metadaten ausgegeben.
+
+Die inode nummer ist der node, in welchem die Datei gespeichert ist.
+Wenn es die selbe ist, ist es die selbe Datei. Dies hängt nicht mit dem Dateinamen zusammen.
+
+Wenn ein symlink erstellt werden würde, gäbe es einen Fehler, wenn die original datei gelöscht wird.
+Die Inode nummer wäre nicht die selbe, da es nicht die selbe Datei ist, sondern der symlink nur auf die datei verweist.
+Auch die berechtigungen und Zeitstempel wären sepparat, da der symlink nur auf die Datei verweist. 

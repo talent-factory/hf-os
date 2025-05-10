@@ -3,8 +3,25 @@ Die interne Speicherfragmentierung geschieht im RAM, durch Methoden wie "First F
 Bei der externen Speicherfragmentierung ist die Rede von der Festplatte, auf welcher die Daten mit der Zeit überall verteilt sein können.
 
 
-Strategiern:
-Memory Compaction
+Strategien:
 
-Paging
+# Memory Compaction
+Das Betriebssystem verschiebt die Blöcke so, dass blöcke freiwerden (defragmentierung)
 
+Vorteile:
+	Reduziert externe Fragmentierung.
+	Ermöglicht große Speicheranforderungen auch bei fragmentierter Situation.
+Nachteile:
+	Hohe Komplexität: Prozesse müssen ggf. gestoppt und verschoben werden.
+	Leistungsaufwendig: Erfordert Kopiervorgänge und Anpassung von Adressen (besonders bei Realzeit-Anwendungen ungünstig).
+
+
+# Paging
+Beim Paging werden gleich grosse blöcke erstellt und die ganzern blöcke verschoben.
+
+Vorteile:
+	Vermeidet externe Fragmentierung, da jede Seite beliebig im RAM liegen kann.
+	Einfaches Speicherhandling bei modernen MMUs (Memory Management Units).
+Nachteile:
+	Führt zu interner Fragmentierung, wenn Prozesse Seiten nicht vollständig ausnutzen.
+	Erfordert Seitentabellen, die zusätzlichen Speicher und Verwaltungsaufwand benötigen.

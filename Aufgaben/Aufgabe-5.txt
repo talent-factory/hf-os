@@ -14,8 +14,11 @@ Adresse von local1: 0x7fffe505e7a8
 Adresse von local2: 0x7fffe505e7ac
 Der Stack wächst nach oben (höhere Adressen)
 
-
+1. Adressen werden angezeigt und ihre Differenzen berechnet.
+2. Die Richtung des Stack-Wachstums wird ermittelt (typischerweise "nach unten").
+3. Fünf Speicherlecks werden bewusst erzeugt 
 
 Am Anfang wird ein Speicherbereich reserviert. Wenn dieser zu klein ist, werden die variablen in einem anderen Bereich gespeichert.
 Die Informationen, welche in einem anderen Speicherbereich gespeichert werden, können theoretisch von anderen Programmen oder dem Betriebssystem überschreiben werden. Dies würde zu einem programmfehler führen.
+
 
