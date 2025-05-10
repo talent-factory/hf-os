@@ -1,0 +1,58 @@
+"➜  test ls -la
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 10 08:47 .
+drwxr-x--- 22 vmadmin vmadmin 4096 Mai 10 08:48 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 08:48 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 08:48 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 10 08:46 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 10 08:47 symlink.txt -> original.txt"
+
+"mkdir -p test/subdir && cd test" mit diese commande wird ein Verzeichnis test und darin subdir 
+erstellt, dann wechselt man in das test-Verzeichnis. Es geht hier um Verzeichniserstellung und 
+Navigation.
+
+"echo "Inhalt-$(date +%s)" > original.txt"
+schreibt den Text mit dem aktuellen Zeitstempel in die Datei original.txt. Hier wird eine Datei 
+erstellt und mit dynamischen Inhalten beschrieben.
+
+"ln -s original.txt symlink.txt"
+erstellt einen symbolischen Link namens symlink.txt, der auf original.txt verweist. Ein symbolischer 
+Link ist ein Verweis auf einen anderen Dateipfad.
+
+"ln original.txt hardlink.txt" erstellt ein hartes Link zu original.txt, beide Dateien haben denselben
+Inode. Ein hartes Link zeigt auf denselben Datenblock der Datei.
+
+"chmod 640 original.txt" setzt die Berechtigungen für original.txt, sodass der Besitzer lesen und 
+schreiben kann, die Gruppe nur lesen und andere keinen Zugriff haben.
+
+"touch -d "2 days ago" original.txt"
+ ändert das Änderungsdatum von original.txt auf vor zwei Tagen.
+
+"ls -la" zeigt detaillierte Dateiinformationen an, wie Rechte, Besitzer, Zeitstempel und Inode-Nummern.
+Symbolische Links haben eine andere Inode-Nummer als die Originaldatei, harte Links teilen sich 
+die gleiche Inode-Nummer.
+
+"echo "Neuer Inhalt" > original.txt" überschreibt den Inhalt von original.txt. Der Inode bleibt 
+gleich, da es sich um dieselbe Datei handelt.
+
+"cat symlink.txt hardlink.txt" zeigt den Inhalt von symlink.txt und hardlink.txt an. 
+Der symbolische Link zeigt den Inhalt von original.txt, das harte Link ebenfalls, da es 
+denselben Inode hat.
+
+"mv original.txt ../original.txt" 
+verschiebt die Datei in ein anderes Verzeichnis. Wenn es auf derselben Partition bleibt, 
+bleibt der Inode gleich.
+
+"cat symlink.txt hardlink.txt 2>&1" 
+zeigt den Inhalt beider Links an. Wenn original.txt verschoben wurde, könnte der symbolische Link 
+einen Fehler anzeigen, das harte Link bleibt jedoch intakt.
+
+Symbolische Links sind einfach Verknüpfungen zu Dateien, während harte Links direkt auf denselben 
+Inode zeigen und keinen Fehler erzeugen, wenn der Originaldatei bewegt wird. Wenn Dateien auf 
+verschiedenen Dateisystemen liegen, können keine harten Links über Dateisystemgrenzen hinweg 
+erstellt werden.
+
+Bonus: Wenn die Dateien auf verschiedenen Dateisystemen liegen, können keine harten Links zwischen 
+ihnen erstellt werden, weil harte Links nur innerhalb eines Dateisystems funktionieren. 
+Bei symbolischen Links ist es jedoch kein Problem, da sie einfach einen Pfad zu einer Datei 
+angeben und über Dateisystemgrenzen hinweg funktionieren können.
