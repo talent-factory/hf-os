@@ -1,0 +1,52 @@
+1.
+Der gröste Unterschied zwischen interner und externer Speicher Fragementierung liegt darin, wo und wie ungenutzter Speicherplatz verschwendet wird. 
+
+Interne Fragmentierung
+Bei interner Fragmentierung wird mehr Speicher zugewiesen, als tatsächlich benötigt wird, der ungenutzte Rest innerhalb des zugewiesenen Blocks geht verloren.
+Als Beispiel, ein Dateisystem hat eine feste Blockgrösse von 4KB. Eine Datei ist 2.6 KB gross, sie belegt trotzdem einen ganzen 4KB-Block, weil Blöcke nicht geteilt werden.  --> 1.4KB bleiben innerhalb des Blocks ungenutzt, deshabl interne Fragmentierung.
+
+
+Externe Fragmentierung
+Externe Fragmentierung entsteht, wenn genügend freier Speicher insgesamt vorhanden ist, aber nicht zusammenhängend, um eine neue Datei oder einen neuen Prozess vollständig unterzubringen.
+Wenn jetzt zum Beispiel ein Speicherbereich folgermassen aufgeteilt ist: 
+- Zuerst kommt ein belegter Block mit 10 KB,
+danach ein freier Block mit 5 KB,
+dann wieder ein belegter Block mit 8 KB,
+und schließlich ein weiterer freier Block mit 6 KB.
+
+Insgesamt sind also 11 KB frei – 5 KB an einer Stelle und 6 KB an einer anderen.
+Jetzt möchtest du ein Programm laden, das 8 KB Speicher braucht.
+
+Obwohl der Speicher insgesamt genug freien Platz bietet, gibt es keinen einzigen zusammenhängenden Block, der groß genug ist.
+Das Programm kann nicht geladen werden, obwohl rein rechnerisch genug Speicher frei ist – der freie Speicher ist einfach zu stark verteilt --> Externe Fragemntierung. 
+
+
+2.
+Paging 
+Beim Paging wird der virtuelle Adressraum eines Prozesses in gleich grosse Einheiten, sogenannte Seiten (z. B. 4 KB), unterteilt. Der physische Speicher wird entsprechend in Seitenrahmen aufgeteilt. Die einzelnen Seiten eines Prozesses können unabhängig voneinander in beliebige Seitenrahmen im Hauptspeicher geladen werden. Dadurch ist keine zusammenhängende Speicherbelegung erforderlich.
+
+Vorteile:
+Externe Fragmentierung wird vollständig vermieden.
+Flexibles Laden und Entfernen von Speicherseiten ermöglicht effizientes Speichermanagement.
+Unterstützt effektives Multitasking und Speicherverwaltung durch Swapping und Demand Paging.
+
+Nachteile:
+Es kann interne Fragmentierung entstehen, insbesondere wenn der tatsächliche Speicherbedarf kleiner als eine Seite ist.
+Erhöhter Verwaltungsaufwand durch Seitentabellen und Adressübersetzung.
+Zusätzliche Hardwarekomponenten wie eine Memory Management Unit (MMU) sind notwendig.
+
+Dazu benötigte Leistugn ist hoch, die Komplexität Mitellmässig sowie auch der Ressourcenverbauch.
+
+Speicherkompaktierung
+Bei der Speicherkompaktierung werden belegte Speicherblöcke im physischen Speicher verschoben, um größere zusammenhängende freie Bereiche zu schaffen. Diese Methode wird verwendet, um externe Fragmentierung zu reduzieren und um große Prozesse oder Datenstrukturen unterzubringen.
+
+Vorteile:
+Externe Fragmentierung wird reduziert oder vollständig beseitigt.
+Es entstehen größere zusammenhängende Speicherblöcke, wodurch größere Programme oder Datenmengen geladen werden können.
+
+Nachteile:
+Der Vorgang ist ressourcenintensiv, da Speicherinhalte kopiert und verschoben werden müssen.
+Die Kompaktierung beansprucht die CPU erheblich und kann die Systemleistung beeinträchtigen.
+Die Verwaltung ist komplex, insbesondere bei laufenden Prozessen, da deren Adressen angepasst werden müssen.
+
+Für die Speicherkompaktierung wird keine Hohe leistung benötigt, dafür aber ist es sehr komplex und braucht viele Ressourcen. 
