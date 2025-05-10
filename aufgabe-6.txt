@@ -1,0 +1,43 @@
+Aufgabe 6:
+Ausgabe des Programms aufgabe-6:
+
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Grösse: 96 Bytes
+Inode: 546294
+Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 11:58:39
+Letzte Änderung: 2025-05-10 11:58:39
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Grösse: 134 Bytes
+Inode: 546294
+Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 11:58:39
+Letzte Änderung: 2025-05-10 11:58:39
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Grösse: 134 Bytes
+Inode: 546294
+Hardlinks: 2
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-10 11:58:39
+Letzte Änderung: 2025-05-10 11:58:39
+
+"Aufgaben nach der Ausführung":
+1. "Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?"
+Nach dem Anhängen ist die Dateigrösse von 96 auf 134 Bytes gewachsen. Die Inode-Nummer und Rechte bleiben gleich. Obwohl geschrieben wurde, bleiben die Zeitstempel gleich – das liegt daran, weil das Programm alles direkt hintereinander ausführt und es zu schnell ist (in der gleichen Sekunde).
+
+2. "Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?"
+Der Dateiname ist nur ein Verweis im Verzeichnis. Die eigentlichen Dateiinformationen (inkl. Inhalt) liegen im Inode. Zwei Dateien mit der gleichen Inode-Nummer zeigen auf dieselben Daten – es sind Hardlinks.
+
+3. "Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei."
+Ein Symlink hat eine eigene Inode-Nummer und zeigt nur auf den Pfad der Originaldatei. Wird das Original gelöscht, zeigt der Symlink ins Leere. Die Metadaten des Symlinks beschreiben den Link selbst, nicht die Ziel-Datei.
