@@ -1,0 +1,31 @@
+Gegeben ist eine Page Table mit einer virtuellen Adressraumgröße von 64 KB und einer Seitengröße von 4 KB (4096 Bytes). 
+Das bedeutet, dass jede virtuelle Adresse aus einer virtuellen Seitennummer (Page Number) und einem Offset innerhalb der Seite besteht.
+
+Da 4 KB = 2¹², werden die unteren 12 Bits für den Offset verwendet. Die oberen Bits geben die Seitennummer an.
+
+Um die physische Adresse zu berechnen, benötigt man die Page Table, aus der hervorgeht, welche virtuelle Seite auf welchen Page Frame (physische Seite) abgebildet wird.
+
+Berechnung für jede Adresse:
+
+Virtuelle Adresse: 12300₁₀
+- Seite: 12300 / 4096 = 3,0039 ⇒ virtuelle Seite 3
+- Offset: 12300 % 4096 = 12
+- Laut Page Table: Seite 3 → Frame 0 ⇒ physische Basisadresse = 0
+- Physische Adresse = 0 + 12 = **12**
+
+Virtuelle Adresse: 16384₁₀
+- Seite: 16384 / 4096 = 4 ⇒ virtuelle Seite 4
+- Offset: 0
+- Seite 4 → Frame 1 ⇒ physische Basisadresse = 4096
+- Physische Adresse = 4096 + 0 = **4096**
+
+Virtuelle Adresse: 32800₁₀
+- Seite: 32800 / 4096 = 8,0078 ⇒ virtuelle Seite 8
+- Offset: 32800 % 4096 = 32800 - 32768 = 32
+- Seite 8 → Frame 6 ⇒ physische Basisadresse = 6 * 4096 = 24576
+- Physische Adresse = 24576 + 32 = **24608**
+
+Ergebnisse:
+- Virtuelle Adresse 12300 → Physische Adresse 12
+- Virtuelle Adresse 16384 → Physische Adresse 4096
+- Virtuelle Adresse 32800 → Physische Adresse 24608

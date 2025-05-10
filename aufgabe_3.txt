@@ -1,0 +1,90 @@
+mkdir -p test/subdir && cd test
+- Erstellt das Verzeichnis „test“ und darin rekursiv „subdir“, falls nicht vorhanden.
+- Wechselt anschließend in das Verzeichnis „test“.
+- Konzepte: Verzeichnishierarchie, Pfaderstellung, Navigation im Dateisystem.
+
+echo "Inhalt-$(date +%s)" > original.txt
+- Erstellt die Datei „original.txt“ mit Inhalt inklusive aktuellem Zeitstempel.
+- Konzept: Dateierstellung, Standardausgabeumleitung, Unix-Zeit.
+
+ln -s original.txt symlink.txt
+- Erstellt symbolischen Link „symlink.txt“, der auf „original.txt“ verweist.
+- Konzept: Symbolische Verknüpfung (Softlink), Pfadbasierter Verweis.
+
+ln original.txt hardlink.txt
+- Erstellt harten Link „hardlink.txt“, der denselben Inode wie „original.txt“ verwendet.
+- Konzept: Harte Verknüpfung, Inode-Sharing.
+
+chmod 640 original.txt
+- Setzt Berechtigungen: Eigentümer = lesen/schreiben, Gruppe = lesen, andere = kein Zugriff.
+- Konzept: Dateirechte, POSIX-Berechtigungen.
+
+touch -d "2 days ago" original.txt
+- Ändert das Änderungsdatum von „original.txt“ auf vor zwei Tagen.
+- Konzept: Zeitmetadaten (mtime).
+
+ls -la
+- Zeigt eine detaillierte Liste aller Dateien inkl. versteckter Dateien an.
+- Konzept: Dateiattribute, Inode, Links, Rechte, Zeitstempel.
+
+Spaltenbedeutung:
+- 1. Spalte: Dateityp und Rechte
+- 2. Spalte: Linkanzahl (für harte Links relevant)
+- 3./4. Spalte: Eigentümer/Gruppenzugehörigkeit
+- 5. Spalte: Dateigrösse in Bytes
+- 6.-8. Spalte: Änderungszeit
+- 9. Spalte: Dateiname (mit Zielpfad bei Symlinks)
+
+Unterschiede:
+- Inode: original.txt und hardlink.txt teilen denselben Inode. symlink.txt hat eigenen.
+- Rechte: Symbolischer Link zeigt eigene Rechte (rw-rw-rw), ist aber nicht relevant für Zugriff.
+- Zeit: touch wirkt auf original.txt, daher auch hardlink.txt betroffen.
+
+echo "Neuer Inhalt" > original.txt
+- Überschreibt den Inhalt.
+- Auswirkungen: Inode bleibt gleich, Inhalt ändert sich für alle harten Links.
+
+cat symlink.txt hardlink.txt
+- Gibt „Neuer Inhalt“ zweimal aus, wenn symlink gültig ist.
+
+mv original.txt ../original.txt
+- Verschiebt original.txt in übergeordnetes Verzeichnis.
+- harter Link bleibt funktional, symbolischer Link ist nun „broken“.
+
+cat symlink.txt hardlink.txt 2>&1
+- symlink.txt: Fehler „Datei nicht gefunden“.
+- hardlink.txt: Gibt weiterhin „Neuer Inhalt“ aus.
+
+Auswirkungen auf Inode-Tabelle
+- Inhalt bleibt erhalten, da hardlink.txt denselben Inode referenziert.
+- symlink.txt verweist auf Pfad – nach Verschiebung ungültig.
+
+Unterschiede: symbolische vs. harte Links
+
+| Eigenschaft          | Symbolischer Link       | Harter Link            |
+|----------------------|--------------------------|-------------------------|
+| Verweist auf         | Pfad                     | Inode                  |
+| Gültigkeit nach mv   | Ungültig (broken link)   | Bleibt gültig          |
+| Dateisystemgrenzen   | Erlaubt                  | Nicht erlaubt          |
+| Inode geteilt        | Nein                     | Ja                     |
+
+6. Fehlerquellen
+- symlink.txt wird „broken“, wenn Ziel nicht mehr vorhanden.
+- mv über Partitionen kann Inode verändern (bei symbolischem Link unproblematisch).
+
+Bonus: Verhalten bei verschiedenen Dateisystemen
+- Harte Links nur innerhalb desselben Dateisystems möglich.
+- Symbolische Links funktionieren über Partitionen hinweg, da Pfad verwendet wird.
+
+
+ausgabe von ls -la nach dem ausführen der commands:
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 10:57 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 10:57 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:57 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:57 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 10:57 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 10:57 symlink.txt -> original.txt
+
+
