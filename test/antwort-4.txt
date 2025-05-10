@@ -1,0 +1,77 @@
+Analyse der Page Table
+In der Page Table sehen wir:
+
+Links: Virtueller Adressraum (in 4KB-Blöcken)
+Mitte: Page Table Einträge (Zahlen oder X für nicht zugeordnete Seiten)
+Rechts: Physische Speicheradressen (Seitenrahmen)
+
+Adressumrechnung für 12300₁₀
+
+Bestimme die Seite und den Offset:
+
+12300₁₀ ÷ 4096 = 3 mit Rest 12
+Seite: 3 (liegt im Bereich 12KB-16KB)
+Offset: 12
+
+
+Prüfe die Page Table:
+
+Der Eintrag für 12KB-16KB ist "0"
+Dies verweist auf Seitenrahmen 0KB-4KB
+
+
+Berechne physische Adresse:
+
+Physische Adresse = (Seitenrahmen × 4096) + Offset
+= (0 × 4096) + 12
+= 12
+
+
+
+Die physische Adresse für 12300₁₀ ist 12.
+Adressumrechnung für 16384₁₀
+
+Bestimme die Seite und den Offset:
+
+16384₁₀ ÷ 4096 = 4 mit Rest 0
+Seite: 4 (liegt am Anfang des Bereichs 16KB-20KB)
+Offset: 0
+
+
+Prüfe die Page Table:
+
+Der Eintrag für 16KB-20KB ist "4"
+Dies verweist auf Seitenrahmen 16KB-20KB
+
+
+Berechne physische Adresse:
+
+Physische Adresse = (Seitenrahmen × 4096) + Offset
+= (4 × 4096) + 0
+= 16384
+
+
+
+Die physische Adresse für 16384₁₀ ist 16384.
+Adressumrechnung für 32800₁₀
+
+Bestimme die Seite und den Offset:
+
+32800₁₀ ÷ 4096 = 8 mit Rest 32
+Seite: 8 (liegt im Bereich 32KB-36KB)
+Offset: 32
+
+
+Prüfe die Page Table:
+
+Der Eintrag für 32KB-36KB ist "X"
+Das bedeutet, diese Seite ist nicht im physischen Speicher vorhanden
+
+
+
+In diesem Fall gibt es keine gültige physische Adresse für 32800₁₀, da ein Page Fault auftritt. Die CPU würde eine Ausnahme (Exception) auslösen, da diese virtuelle Adresse nicht im physischen Speicher verfügbar ist.
+Zusammenfassung der Ergebnisse:
+
+12300₁₀ → 12 (physische Adresse)
+16384₁₀ → 16384 (physische Adresse)
+32800₁₀ → Page Fault (keine gültige physische Adresse)
