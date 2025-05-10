@@ -1,0 +1,25 @@
+Umwandlung der Adressen in Binär:
+
+12300 -> 0011 0000 0000 1100
+16384 -> 0100 0000 0000 0000
+32800 -> 1000 0000 0010 0000
+
+Trennung Offset und Seiten bits
+
+0011 -> Seite 3: 000
+0100 -> Seite 4: 100
+1000 -> Seite 8: 000
+
+Zusammenführung Seiten und Offset bits
+
+0000 0000 0000 1100
+0100 0000 0000 0000
+0000 0000 0010 0000
+
+Umrechnung in Dezimal
+
+0000 0000 0000 1100 -> 12
+0100 0000 0000 0000 -> 16384
+0000 0000 0010 0000 -> 32
+
+
