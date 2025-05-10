@@ -1,0 +1,2 @@
+1. Was macht der Befehl und welche Konzepte des Dateisystems werden dabei angewendet?
+1.1 
