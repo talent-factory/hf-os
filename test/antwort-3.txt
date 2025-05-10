@@ -1,0 +1,126 @@
+➜  LB2 git:(hfi2024c/gür-mehmetali) 
+➜  LB2 git:(hfi2024c/gür-mehmetali) mkdir -p test/subdir && cd test
+➜  test git:(hfi2024c/gür-mehmetali) echo "Inhalt-$(date +%s)" > original.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ ln -s original.txt symlink.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ ln original.txt hardlink.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ chmod 640 original.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ touch -d "2 days ago" original.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:42 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:41 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:42 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:42 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:41 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:42 symlink.txt -> original.txt
+➜  test git:(hfi2024c/gür-mehmetali) ✗ 
+➜  test git:(hfi2024c/gür-mehmetali) ✗ 
+
+Ich werde dir helfen, jeden Befehl zu verstehen und die Konzepte zu erklären. Lass uns Schritt für Schritt vorgehen.
+
+## Befehl 1: `mkdir -p test/subdir && cd test`
+
+Dieser Befehl führt zwei Aktionen aus:
+1. `mkdir -p test/subdir`: Erstellt das Verzeichnis "test" und darin das Unterverzeichnis "subdir". Die Option `-p` (parents) sorgt dafür, dass übergeordnete Verzeichnisse automatisch erstellt werden, falls sie noch nicht existieren.
+2. `&&`: Logischer UND-Operator, der den zweiten Befehl nur ausführt, wenn der erste erfolgreich war.
+3. `cd test`: Wechselt in das soeben erstellte "test"-Verzeichnis.
+
+**Konzepte**: Verzeichnishierarchie, Verzeichniserstellung, Verzeichniswechsel
+
+## Befehl 2: `echo "Inhalt-$(date +%s)" > original.txt`
+
+Dieser Befehl:
+1. `date +%s`: Gibt den aktuellen Zeitstempel als Unix-Zeit (Sekunden seit 1.1.1970) aus.
+2. `echo "Inhalt-$(date +%s)"`: Gibt den Text "Inhalt-" gefolgt vom Unix-Zeitstempel aus.
+3. `> original.txt`: Leitet die Ausgabe in die Datei "original.txt" um (überschreibt vorhandene Inhalte).
+
+**Konzepte**: Befehlssubstitution, Ausgabeumleitung, Dateierstellung
+
+## Befehl 3: `ln -s original.txt symlink.txt`
+
+Erstellt einen symbolischen Link (Symlink) namens "symlink.txt", der auf "original.txt" zeigt.
+- Ein symbolischer Link ist wie eine Verknüpfung, die auf den Pfad einer anderen Datei verweist.
+
+**Konzepte**: Symbolische Links, Dateisystemreferenzen
+
+## Befehl 4: `ln original.txt hardlink.txt`
+
+Erstellt einen harten Link namens "hardlink.txt" zur Datei "original.txt".
+- Ein harter Link ist eine direkte Referenz auf den gleichen Inode der Originaldatei. Beide Dateien teilen sich die gleichen Daten auf der Festplatte.
+
+**Konzepte**: Harte Links, Inodes, Dateisystemreferenzen
+
+## Befehl 5: `chmod 640 original.txt`
+
+Ändert die Zugriffsrechte der Datei "original.txt" auf 640:
+- 6 (rw-) für den Eigentümer: Lesen und Schreiben
+- 4 (r--) für die Gruppe: Nur Lesen
+- 0 (---) für andere: Keine Rechte
+
+**Konzepte**: Dateiberechtigungen, Zugriffskontrolle
+
+## Befehl 6: `touch -d "2 days ago" original.txt`
+
+Ändert den Zeitstempel der Datei "original.txt" auf 2 Tage in der Vergangenheit.
+- `touch` aktualisiert die Zugriffs- und Änderungszeit einer Datei.
+- Die Option `-d` erlaubt das Setzen eines bestimmten Datums.
+
+**Konzepte**: Datei-Metadaten, Zeitstempel
+
+## Befehl 7: `ls -la`
+
+Zeigt alle Dateien (auch versteckte) im aktuellen Verzeichnis mit detaillierten Informationen an.
+
+Die Ausgabe zeigt:
+```
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:42 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:41 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:42 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:42 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:41 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:42 symlink.txt -> original.txt
+```
+
+## Analyse der Ausgabe
+
+### Bedeutung jeder Spalte:
+1. **Dateityp und Berechtigungen**: z.B. `-rw-r-----` 
+   - Erstes Zeichen: Dateityp (- für reguläre Datei, d für Verzeichnis, l für symbolischen Link)
+   - Nächste 3 Zeichen: Berechtigungen für den Eigentümer (rw-)
+   - Nächste 3 Zeichen: Berechtigungen für die Gruppe (r--)
+   - Letzte 3 Zeichen: Berechtigungen für andere (---)
+
+2. **Anzahl der Hardlinks**: z.B. `2` bei hardlink.txt und original.txt
+
+3. **Eigentümer**: `vmadmin`
+
+4. **Gruppe**: `vmadmin`
+
+5. **Dateigröße in Bytes**: z.B. `18` oder `4096` für Verzeichnisse
+
+6. **Datum und Zeit der letzten Änderung**: z.B. `Mai 8 08:42`
+
+7. **Dateiname**: z.B. `original.txt`
+
+### Unterschiede zwischen den drei Dateien:
+
+1. **Inode**: Obwohl nicht direkt in der Ausgabe sichtbar, haben original.txt und hardlink.txt die gleiche Inode-Nummer (erkennbar an der "2" in der zweiten Spalte, die die Anzahl der Hardlinks angibt), während symlink.txt eine eigene Inode hat.
+
+2. **Berechtigungen**:
+   - original.txt: -rw-r----- (640)
+   - hardlink.txt: -rw-r----- (640) - gleich wie original.txt, da es der gleiche Inode ist
+   - symlink.txt: lrwxrwxrwx (777) - symbolische Links haben standardmäßig andere Berechtigungen
+
+3. **Zeitstempel**:
+   - original.txt: Mai 8 08:42 (durch `touch -d "2 days ago"` auf 2 Tage zurückgesetzt)
+   - hardlink.txt: Mai 8 08:42 (gleich wie original.txt, da gleicher Inode)
+   - symlink.txt: Mai 10 08:42 (Erstellungszeit des Links selbst)
+
+### Warum haben bestimmte Dateien die gleiche Inode-Nummer?
+
+Original.txt und hardlink.txt haben die gleiche Inode-Nummer, weil ein harter Link direkt auf denselben Inode zeigt. Sie sind effektiv zwei Namen für dieselben Daten auf der Festplatte. Änderungen an einer der beiden Dateien ändern den gemeinsamen Inhalt.
+
+Symlink.txt hat eine eigene Inode-Nummer, weil ein symbolischer Link eine separate Datei ist, die nur den Pfad zur Originaldatei enthält.
+
+
