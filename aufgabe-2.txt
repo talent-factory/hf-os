@@ -1,0 +1,38 @@
+Aufgabe 2 – Speicherfragmentierung und Lösungsansätze
+
+1. Unterschied zwischen interner und externer Speicherfragmentierung
+
+- Interne Fragmentierung:
+  Entsteht, wenn einem Prozess mehr Speicher zugewiesen wird, als er tatsächlich benötigt.
+  Der ungenutzte Speicher innerhalb eines Speicherblocks ist verschwendet.
+  Beispiel: Ein Prozess bekommt einen Block von 4 KB, benötigt aber nur 3,5 KB → 0,5 KB gehen verloren.
+
+- Externe Fragmentierung:
+  Entsteht, wenn viele kleine freie Speicherbereiche entstehen, die nicht zusammenhängend sind.
+  Obwohl insgesamt genug freier Speicher vorhanden ist, kann kein großer Prozess untergebracht werden.
+  Beispiel: Nach mehreren Starts und Beendigungen von Programmen entstehen viele kleine Lücken im RAM.
+
+2. Zwei Strategien zur Vermeidung oder Reduzierung von Fragmentierung
+
+- Strategie 1: Paging
+  Der Speicher wird in gleich große Seiten (z. B. 4 KB) aufgeteilt. Prozesse erhalten beliebige freie Seiten.
+  Vorteile:
+    • Keine externe Fragmentierung
+    • Einfache Allokation und Verwaltung
+  Nachteile:
+    • Interne Fragmentierung möglich
+    • Overhead durch Seitentabellen
+
+- Strategie 2: Kompaktierung (Memory Compaction)
+  Freie Speicherbereiche werden verschoben, sodass große zusammenhängende Blöcke entstehen.
+  Vorteile:
+    • Externe Fragmentierung wird beseitigt
+    • Große Prozesse können wieder ausgeführt werden
+  Nachteile:
+    • Zeit- und rechenintensiv
+    • Nicht geeignet für Systeme mit Echtzeitanforderungen
+
+Bewertung:
+Paging ist eine gängige, effiziente Lösung mit gutem Kompromiss.
+Kompaktierung ist stark, aber teuer – wird oft nur als letzter Ausweg eingesetzt.
+
