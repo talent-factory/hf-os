@@ -1,0 +1,33 @@
+Aufgabe 4 – Logische und Physische Adressen
+
+Gegeben: Page Table (siehe Abbildung)
+Jede Seite ist 4 KB = 4096 Bytes groß.
+
+Virtuelle Adresse = (Seitennummer × 4096) + Offset  
+Physische Adresse = (Seitenrahmennummer × 4096) + Offset  
+
+1. Adresse: 12300₁₀  
+→ Virtuelle Seite = 12300 ÷ 4096 = 3 (Ganzzahliger Anteil), Offset = 12300 % 4096 = 12  
+→ Page Table: Seite 3 → Rahmen 1  
+→ Physische Adresse = (1 × 4096) + 12 = **4108**
+
+2. Adresse: 16384₁₀  
+→ Virtuelle Seite = 16384 ÷ 4096 = 4, Offset = 0  
+→ Page Table: Seite 4 → Rahmen 3  
+→ Physische Adresse = (3 × 4096) + 0 = **12288**
+
+3. Adresse: 32800₁₀  
+→ Virtuelle Seite = 32800 ÷ 4096 = 8, Offset = 32800 % 4096 = 32800 - (8 × 4096) = 32800 - 32768 = 32  
+→ Page Table: Seite 8 → Rahmen 5  
+→ Physische Adresse = (5 × 4096) + 32 = **20480 + 32 = 20512**
+
+---
+
+Zusammenfassung der Ergebnisse:
+
+| Virtuelle Adresse | Virtuelle Seite | Offset | Physischer Rahmen | Physische Adresse |
+|-------------------|------------------|--------|--------------------|-------------------|
+| 12300             | 3                | 12     | 1                  | 4108              |
+| 16384             | 4                | 0      | 3                  | 12288             |
+| 32800             | 8                | 32     | 5                  | 20512             |
+
