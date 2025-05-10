@@ -1,0 +1,34 @@
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7ffef512d1e0
+Heap-Variable:     0x55ef103b02a0
+➜  LB2 git:(hfi2024c/tim-baumann) ✗ gcc aufgabe-4.c -o aufgabe4
+➜  LB2 git:(hfi2024c/tim-baumann) ✗ ./aufgabe4 
+Statische Variable:0x55ef0f2c8010
+
+Adressdifferenzen (Bytes):
+Stack - Heap:      46247752224576
+Stack - Static:    46247769952720
+Heap  - Static:    17728144
+
+Wachstumsrichtungen:
+Der Stack wächst nach oben (höhere Adressen)
+
+
+1.
+Die Ausgabe zeigt, dass Stack-, Heap- und statische Variablen in klar getrennten Speicherbereichen liegen.
+Die Stack-Adresse liegt hoch (z. B. 0x7fff...), der Heap mittig (z. B. 0x600...), und die statische Variable niedrig (z. B. 0x100...).
+Zwei lokale Variablen zeigen, dass der Stack nach unten wächst.
+
+2. 
+Diese Trennung erhöht Sicherheit und Stabilität.
+Jeder Bereich hat eine eigene Funktion (z. B. Stack für Funktionsdaten, Heap für dynamischen Speicher).
+So verhindert das OS z. B. Pufferüberläufe oder Speicherüberschreibungen.
+
+3.
+Das absichtliche Speicherleck reserviert Speicher ohne Freigabe.
+In C wird dieser Speicher erst beim Programmende vom OS zurückgegeben.
+Dauerhafte Lecks in langen Programmen können Speicher verschwenden.
+Das OS schützt sich durch Prozessisolation, aber Entwickler müssen Lecks selbst vermeiden (z. B. mit Tools wie valgrind).
+
+

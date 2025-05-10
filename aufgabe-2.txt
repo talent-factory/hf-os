@@ -1,0 +1,97 @@
+1. mkdir -p test/subdir && cd test
+mkdir -p erstellt rekursiv das Verzeichnis test und darin subdir, wenn sie noch nicht existieren.
+
+cd test wechselt ins Verzeichnis test.
+Konzept: Verzeichnisstruktur, Pfadnavigation.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+
+$(date +%s) gibt die aktuelle Unix-Zeit (Sekunden seit 1970) zurück.
+echo schreibt den Text (z. B. Inhalt-1715343801) in die Datei original.txt.
+Der Operator > erzeugt die Datei (falls sie nicht existiert) oder überschreibt sie.
+Konzept: Dateierstellung, Schreiboperation, Umleitung.
+
+3. ln -s original.txt symlink.txt
+
+Erstellt einen symbolischen Link (symlink.txt), der auf original.txt zeigt.
+Symbolische Links speichern den Pfad zur Zieldatei.
+Wenn original.txt gelöscht wird, zeigt der Link ins Leere (Broken Link).
+Konzept: Symbolischer Link (Softlink), Pfadbasierter Verweis.
+
+4. ln original.txt hardlink.txt
+
+Erstellt einen Hardlink mit dem Namen hardlink.txt.
+Dieser zeigt direkt auf den gleichen Inode wie original.txt.
+Beide Namen verweisen physisch auf denselben Dateiinhalt.
+Konzept: Hardlink, Inode-Sharing, Dateinamen im gleichen Dateisystem.
+
+5. chmod 640 original.txt
+
+    Setzt die Berechtigungen von original.txt auf:
+
+        6 (rw-) für Eigentümer
+        4 (r--) für Gruppe
+        0 (---) für andere
+
+Auch hardlink.txt ist davon betroffen, da es dieselbe Datei ist.
+Konzept: Dateiberechtigungen (POSIX), Rechtevererbung bei Hardlinks.
+
+6. touch -d "2 days ago" original.txt
+
+Ändert den Modifikationszeitstempel (mtime) auf "2 Tage früher".
+Da hardlink.txt denselben Inode hat, zeigt auch sie den gleichen Timestamp.
+Symbolische Links zeigen weiterhin auf das Ziel und haben eigenen mtime, aber ls -l zeigt den des Ziels.
+Konzept: Zeitstempel (mtime), Datei-Metadaten, Touch-Utility.
+
+7. ls -la
+
+Zeigt eine detaillierte Übersicht aller Dateien im aktuellen Verzeichnis, inkl. versteckter Dateien (wegen -a), mit vielen Metadaten (wegen -l).
+
+Hardlinks (original + hardlink) teilen denselben Inode → gleicher Inhalt, gleiche Metadaten.
+
+Symbolische Links sind eigene Dateien mit eigenem Inode, die nur den Pfad zur Zieldatei speichern.
+
+Anhang:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:34 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:34 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:34 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:34 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:34 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:34 symlink.txt -> original.txt
+
+
+8. echo "Neuer Inhalt" > original.txt
+
+    Überschreibt den Inhalt.
+    Inode bleibt gleich, hardlink.txt zeigt denselben Inhalt.
+    symlink.txt funktioniert noch.
+
+9. cat symlink.txt hardlink.txt
+
+    Ausgabe:
+    Neuer Inhalt
+    Neuer Inhalt
+    Beide Links zeigen korrekt auf dieselben Daten.
+
+10. mv original.txt ../original.txt
+
+    Verschiebt Datei in übergeordnetes Verzeichnis.
+    Inode bleibt gleich, hardlink.txt weiter gültig.
+    symlink.txt ist jetzt broken, da Zielpfad fehlt.
+
+11. cat symlink.txt hardlink.txt 2>&1
+
+Anhang: 
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt 
+
+Symlink schlägt fehl, Hardlink funktioniert.
+
+Bonus:
+
+Hardlink funktioniert nicht über Dateisystemgrenzen → Fehler.
+
+Symlink funktioniert, da nur ein Pfad gespeichert wird.
+
+

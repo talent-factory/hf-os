@@ -1,0 +1,27 @@
+Interne Fragmentierung etnsteht, wenn einem Prozess mehr Speicher zugewiesen wird als tatsächlich benötigt. Der ungenutztze Speicher bleibt unbrauchbar - reserviert aber nicht nutzbar
+
+Praxisbeispiel:
+Ein Filesystem speichert Dateien in festen Blockgrössen z.B 4KB ab. Eine Datei mit 6.1 KB belegt dann 3 Blöcke was bedeutet das 1.9KB des dritten Blocks ungenutzt bleiben.
+
+Externe Fragmentierung tritt auf, wenn der freie Speicher zwar insgesamt groß genug ist, aber in viele kleine, nicht zusammenhängende Stücke aufgeteilt ist. Dadurch kann ein größerer Speicherbedarf nicht am Stück bedient werden, obwohl genügend freier Speicher vorhanden wäre.
+
+Praxisbeispiel:
+Ein Betriebssystem verwaltet Prozesse mit dynamischer Speicherzuweisung im RAM. Nach mehrfachem Starten und Beenden von Prozessen bleiben viele kleine freie Lücken im Hauptspeicher. Ein neuer Prozess benötigt 100 MB zusammenhängenden Speicher, aber dieser ist nicht verfügbar, obwohl z. B. insgesamt 200 MB frei sind – das ist externe Fragmentierung.
+
+Paging (Seitentechnik)
+Erklärung: Speicher wird in gleich große Pages unterteilt, die beliebig im RAM verteilt werden können.
+Vorteile:
+    Vermeidet externe Fragmentierung
+    Effiziente Nutzung des RAM
+Nachteile:
+    Interne Fragmentierung möglich
+    Verwaltungsaufwand durch Page-Tabellen
+
+2. Garbage Collection
+Erklärung: Nicht mehr genutzter Speicher wird erkannt, freigegeben und kompakt reorganisiert.
+Vorteile:
+    Reduziert externe Fragmentierung
+    Entlastet Entwickler
+    Nachteile:
+    Leistungseinbußen durch Pausen bei der Bereinigung
+    Hoher Ressourcenverbrauch

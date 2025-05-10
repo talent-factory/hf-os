@@ -1,0 +1,31 @@
+Formel zur Berechnung:
+
+Physische Adresse = Physische Adresse=(physischer Frame)×2 hoch 12 +Offset
+
+1.
+12300₁₀ = 0011 0000 0001 0100₂
+        = virtuelle Seite 3, Offset: 0x014 = 20₁₀
+
+Virtuelle Seite 3 → Frame 110₂ = 6
+
+6×4096+20=24576+20= 
+24596
+​
+2.
+16384₁₀ = 0100 0000 0000 0000₂
+        = virtuelle Seite 4, Offset: 0x000
+
+Virtuelle Seite 4 → Frame 100₂ = 4
+
+4×4096+0= 
+16384
+
+3.
+32800₁₀ = 1000 0000 1101 0000₂
+        = virtuelle Seite 8, Offset: 0x0D0 = 208₁₀
+
+​Virtuelle Seite 8 → Frame 011₂ = 3
+
+3×4096+208=12288+208= 
+12496
+

@@ -1,0 +1,50 @@
+➜  LB2 git:(hfi2024c/tim-baumann) ✗ gcc aufgabe-5.c -o aufgabe-5
+➜  LB2 git:(hfi2024c/tim-baumann) ✗ ./aufgabe-5
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße (Bytes):     96
+Inode-Nummer:           546214
+Anzahl der Hardlinks:   1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff:        2025-05-10 09:01:11
+Letzte Änderung:        2025-05-10 09:01:11
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße (Bytes):     140
+Inode-Nummer:           546214
+Anzahl der Hardlinks:   1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff:        2025-05-10 09:01:11
+Letzte Änderung:        2025-05-10 09:01:11
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße (Bytes):     140
+Inode-Nummer:           546214
+Anzahl der Hardlinks:   2
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff:        2025-05-10 09:01:11
+Letzte Änderung:        2025-05-10 09:01:11
+
+1.
+Nach dem Anhängen von Text an die Datei ändert sich die Dateigröße und der "Letzte Änderungszeitpunkt" (mtime).
+Der "Letzte Zugriffszeitpunkt" (atime) kann sich ebenfalls aktualisieren, je nach Betriebssystemkonfiguration.
+
+2.
+Der Dateiname ist lediglich ein Verweis im Verzeichnis – ein "Etikett".
+Die Inode-Nummer identifiziert eindeutig die tatsächlichen Datei-Metadaten und -Datenblöcke im Dateisystem.
+Wenn zwei Dateien dieselbe Inode-Nummer haben, zeigen sie auf denselben Inhalt (Hardlink).
+Änderungen am Inhalt oder an den Metadaten wirken sich auf beide gleich aus.
+
+3.
+Ein Symlink speichert nur den Pfad zur Zieldatei.
+Er hat eine eigene Inode-Nummer und Metadaten.
+Wenn die Originaldatei gelöscht wird, zeigt der Symlink ins Leere (Broken Link).
+Im Gegensatz dazu bleibt ein Hardlink auch nach dem Löschen des ursprünglichen Dateinamens gültig, solange mindestens ein Link existiert.
+
+
