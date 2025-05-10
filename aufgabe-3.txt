@@ -1,30 +1,30 @@
 Erklärung der Befehle:
 
-1️⃣ mkdir -p test/subdir && cd test
+1- mkdir -p test/subdir && cd test
 - Erstellt ein Verzeichnis namens "test" und darin ein Unterverzeichnis "subdir". Das `-p` stellt sicher, dass alle notwendigen Verzeichnisse erstellt werden. Danach wechselt man ins "test"-Verzeichnis.
 - Konzept: Verzeichnisstruktur, Pfade.
 
-2️⃣ echo "Inhalt-$(date +%s)" > original.txt
+2-echo "Inhalt-$(date +%s)" > original.txt
 - Erstellt eine Datei "original.txt" mit dem Inhalt: „Inhalt-<Zeitstempel>“ (z.B. Inhalt-1715337132).
 - Konzept: Dateien, Standardausgabe, Umleitung (>), Zeitstempel.
 
-3️⃣ ln -s original.txt symlink.txt
+3-ln -s original.txt symlink.txt
 - Erstellt einen symbolischen Link namens "symlink.txt", der auf "original.txt" verweist.
 - Konzept: Symbolische Links, Pfadauflösung.
 
-4️⃣ ln original.txt hardlink.txt
+4-ln original.txt hardlink.txt
 - Erstellt einen Hardlink "hardlink.txt", der denselben Inode wie "original.txt" nutzt.
 - Konzept: Harte Links, Inode-Referenzen.
 
-5️⃣ chmod 640 original.txt
+5-chmod 640 original.txt
 - Setzt die Berechtigungen von "original.txt" auf: Eigentümer darf lesen/schreiben, Gruppe darf lesen, andere nichts.
 - Konzept: Berechtigungen, Zugriffsrechte.
 
-6️⃣ touch -d "2 days ago" original.txt
+6-touch -d "2 days ago" original.txt
 - Ändert den Zeitstempel (Modification Time) von "original.txt" auf vor 2 Tagen.
 - Konzept: Zeitstempel (mtime).
 
-7️⃣ ls -la
+7-ls -la
 - Zeigt detaillierte Infos aller Dateien, inkl. versteckter Dateien.
 - Konzept: Dateiattribute, Inode, Rechte, Größe, Zeitstempel.
  **(Annahme für die Beispiel-Ausgabe von ls -la):**
@@ -35,9 +35,7 @@ lrwxrwxrwx 1 user group 12 May 10 12:00 symlink.txt -> original.txt
 
 ---
 
-🔍 **Analyse der Ausgabe:**
-
-1️⃣ **Spaltenbedeutung:**
+1-Spaltenbedeutung:
 - Spalte 1: Dateityp & Berechtigungen.
 - Spalte 2: Anzahl der Hardlinks.
 - Spalte 3: Eigentümer.
@@ -46,7 +44,7 @@ lrwxrwxrwx 1 user group 12 May 10 12:00 symlink.txt -> original.txt
 - Spalte 6-8: Datum & Uhrzeit (letzte Änderung).
 - Spalte 9: Dateiname (+ Linkziel bei Symlinks).
 
-2️⃣ **Unterschiede:**
+2-Unterschiede:
 - Inode:
     - "original.txt" & "hardlink.txt" haben denselben Inode (Hardlink!).
     - "symlink.txt" hat einen eigenen Inode.
@@ -57,50 +55,49 @@ lrwxrwxrwx 1 user group 12 May 10 12:00 symlink.txt -> original.txt
     - "symlink.txt" zeigt den Zeitstempel des Links selbst.
     - "original.txt" & "hardlink.txt" haben denselben Zeitstempel.
 
-3️⃣ **Warum gleiche/verschiedene Inodes:**
+3-Warum gleiche/verschiedene Inodes:
 - Hardlinks zeigen direkt auf denselben Inode → gleiche Inode-Nummer.
 - Symlinks sind eigene Dateien, die nur den Pfad speichern → andere Inode.
 
+Weitere Befehle:
 
-**Weitere Befehle:**
-
-1️⃣ echo "Neuer Inhalt" > original.txt
+1-echo "Neuer Inhalt" > original.txt
 - Überschreibt den Inhalt von "original.txt" (damit auch "hardlink.txt", da beide auf denselben Inode zeigen).
 - "symlink.txt" zeigt auch den neuen Inhalt an (indirekt).
 
-2️⃣ cat symlink.txt hardlink.txt
+2-cat symlink.txt hardlink.txt
 - Ausgabe:
 Neuer Inhalt
 Neuer Inhalt
 Weil beide den neuen Inhalt lesen.
 
-3️⃣ mv original.txt ../original.txt
+3-mv original.txt ../original.txt
 - Verschiebt "original.txt" ein Verzeichnis höher.
 - Hardlink bleibt unverändert (immer noch gültig).
 - Symlink zeigt ins Leere („broken link“), da er noch auf ./original.txt verweist.
 
-4️⃣ cat symlink.txt hardlink.txt 2>&1
+4-cat symlink.txt hardlink.txt 2>&1
 - "symlink.txt": Fehler („Datei nicht gefunden“), weil das Ziel fehlt.
 - "hardlink.txt": Zeigt weiterhin "Neuer Inhalt".
 
 ---
-**Inode-Tabelle:**
+Inode-Tabelle:
 - Hardlink bleibt gültig → Inode bleibt erhalten.
 - Symlink ist gebrochen → kein Zugriff auf den Inode des Ziels (zeigt aber weiterhin den Pfad).
 
 ---
 
-**Verhalten:**
+Verhalten:
 - Symbolische Links verweisen auf einen Pfad → brechen, wenn die Datei verschoben wird.
 - Hardlinks sind echte Verweise auf denselben Inode → bleiben stabil.
 
 ---
- **Mögliche Fehler:**
+ Mögliche Fehler:
 - Symlink „symlink.txt“ liefert Fehler nach dem Verschieben:
 cat: symlink.txt: No such file or directory
 Weil der Pfad nicht mehr existiert.
 
-**Bonus-Frage: Unterschiedliche Dateisysteme:**
+Bonus-Frage: Unterschiedliche Dateisysteme:
 
-- **Hardlink:** Kann **nicht** über verschiedene Dateisysteme/Partitionen hinweg erstellt werden → Fehler beim Versuch.
-- **Symlink:** Funktioniert **auch über verschiedene Dateisysteme** hinweg, da er nur den Pfad speichert (unabhängig vom Dateisystem).
+-Hardlink:Kann "nicht" über verschiedene Dateisysteme/Partitionen hinweg erstellt werden → Fehler beim Versuch.
+-Symlink: Funktioniert "uch über verschiedene Dateisysteme" hinweg, da er nur den Pfad speichert (unabhängig vom Dateisystem).
