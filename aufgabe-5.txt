@@ -1,0 +1,52 @@
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7ffefebfaf10
+Heap-Variable:     0x58de6c31b2a0
+Statische Variable: 0x58de6a799010
+Stack vs Heap Differenz:    43020851215472 Bytes
+Stack vs Static Differenz:  43020880060160 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (höhere Adressen)
+
+Aufgabe 5 – Speichervisualisierung und Adressraumanalyse
+
+1. Beschreibung der Programmausgabe:
+Das Programm zeigt die Adressen dreier Variablen:
+- eine auf dem Stack,
+- eine im Heap,
+- eine als statische (global oder static) Variable.
+
+Dabei erkennt man, dass diese drei Speicherbereiche im System **räumlich getrennt** organisiert sind:
+- Stack: hoher Adressbereich
+- Heap: mittlerer Bereich
+- Statischer Speicher: niedriger Adressbereich
+
+Die **Adressdifferenzen** bestätigen die große räumliche Trennung. Das bedeutet, das Betriebssystem organisiert den Speicher in verschiedene Segmente, was für Schutz, Effizienz und Fehlervermeidung wichtig ist.
+Zudem wurde die **Stack-Wachstumsrichtung** bestimmt:  
+→ In meinem Fall: *Stack wächst nach oben (höhere Adressen)*  
+(Je nach Architektur kann es auch abwärts wachsen.)
+
+---
+2. Erklärung der Speicherbereiche (Stack, Heap, Statisch):
+- **Stack**: Wird für lokale Variablen und Funktionsaufrufe verwendet. Dynamisch verwaltet durch den Compiler.  
+- **Heap**: Dynamisch verwalteter Speicher (z. B. `malloc()`), liegt typischerweise in einem separaten Bereich, oft zwischen Stack und statischem Segment.  
+- **Statisch**: Variablen, die zur Compile-Zeit festgelegt und dauerhaft gültig sind, liegen in einem festen Segment.
+
+Unterschiedliche Adressbereiche sind notwendig, damit sich die Speicherarten nicht überschreiben und getrennt geschützt verwaltet werden können.
+
+---
+
+3. Auswirkungen des Speicherlecks:
+
+Das absichtlich erzeugte Speicherleck (`malloc()` ohne `free()`) belegt Speicher, der nie freigegeben wird. Die Folge:
+
+- Speicherverbrauch steigt unnötig
+- Bei vielen Lecks oder langer Laufzeit → **Out of Memory**
+- Speicher kann nicht von anderen Prozessen genutzt werden
+
+Moderne Betriebssysteme erkennen solche Lecks **nicht automatisch**.  
+→ Erst beim Beenden des Prozesses wird der belegte Speicher zurückgegeben.  
+→ Tools wie **Valgrind**, **AddressSanitizer** oder Garbage Collection (in anderen Sprachen) helfen, solche Lecks frühzeitig zu erkennen.
+
+
