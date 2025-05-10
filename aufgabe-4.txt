@@ -1,0 +1,34 @@
+ 1. Virtuelle Adresse: 12300₁₀
+Seitennummer = 12300 ÷ 4096 ≈ 3
+
+Offset = 12300 − (3 × 4096) = 12300 − 12288 = 12
+
+Laut Bild: Virtuelle Seite 3 → Seitenrahmen 1
+
+Physische Adresse = 1 × 4096 + 12 = 4096 + 12 = 4108
+
+ Antwort: 4108
+
+ 2. Virtuelle Adresse: 16384₁₀
+Seitennummer = 16384 ÷ 4096 = 4
+
+Offset = 16384 − (4 × 4096) = 0
+
+Virtuelle Seite 4 → Seitenrahmen 6
+
+Physische Adresse = 6 × 4096 + 0 = 24576
+
+ Antwort: 24576
+
+ 3. Virtuelle Adresse: 32800₁₀
+Seitennummer = 32800 ÷ 4096 ≈ 8
+
+Offset = 32800 − (8 × 4096) = 32800 − 32768 = 32
+
+Virtuelle Seite 8 → Seitenrahmen 7
+
+Physische Adresse = 7 × 4096 + 32 = 28672 + 32 = 28704
+
+Antwort: 28704
+
+
