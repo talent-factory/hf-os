@@ -1,0 +1,48 @@
+Virtuelle zu physische Adressumrechnung anhand Page Table
+
+1. Virtuelle Adresse: 12300
+
+Berechnung:
+- Seite: 12300 / 4096 = 3
+- Offset: 12300 - (3 * 4096) = 12300 - 12288 = 12
+
+Page Table:
+- Virtuelle Seite 3 → Physische Seite 1 (Adressen 4KB–8KB)
+
+Physische Adresse:
+- 4KB + 12 = 4096 + 12 = 4108
+
+Antwort: 4108 (dezimal)
+
+------------------------------------------------------------
+
+2. Virtuelle Adresse: 16384
+
+Berechnung:
+- Seite: 16384 / 4096 = 4
+- Offset: 16384 - (4 * 4096) = 0
+
+Page Table:
+- Virtuelle Seite 4 → Physische Seite 0 (Adressen 0KB–4KB)
+
+Physische Adresse:
+- 0KB + 0 = 0
+
+Antwort: 0 (dezimal)
+
+------------------------------------------------------------
+
+3. Virtuelle Adresse: 32800
+
+Berechnung:
+- Seite: 32800 / 4096 = 8
+- Offset: 32800 - (8 * 4096) = 32800 - 32768 = 32
+
+Page Table:
+- Virtuelle Seite 8 → X (nicht im Speicher)
+
+Physische Adresse:
+- Seite nicht vorhanden → Page Fault
+
+Antwort: Page Fault
+
