@@ -1,0 +1,10 @@
+Unterschied interne/externe Speicherfragmentierung
+Bei der internen Speicherfragmentierung wird mehr Speicherplatz für den Prozess zugewiesen als benötigt, was Speicherplatz verschwendet und bei der externen Fragmentierung wird der Speicher auf eine "First-Fit" oder "Best-Fit" Methode zugewiesen, was den  Speicher weit verteilen kann.
+
+Grundsätzlich wird gesagt, dass die interne Fragmentierung passiert, wenn der Prozess kleiner ist als der zugewiesene Speicher und die externe Fragmentierung passiert beim Entfernen von Prozessen.
+
+Konkrete Beispiele
+
+Intern: Aufteilung des Speichers beim Lesen einer Datei, Festlegen der möglichen Speichergrösse, aber eine der Zeilen (meist die Letzte) ist kleiner als erwartet. Der überschüssige Speicher ist "verschwendet" bzw. fragmentiert.
+
+Extern: Vorherige Prozesse wurden beendet und haben verschiedene "Lücken" gelassen, 40, 10 und 5 KB jeweils gross. Ein Prozess braucht nun 50 KB an Speicher, was theoretisch machbar ist, aber da die Fragmente nicht zusammenhängen, wird nach einer anderen, 50KB grossen, Lücke gesucht.
