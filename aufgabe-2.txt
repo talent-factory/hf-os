@@ -1,0 +1,88 @@
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ ls -la
+insgesamt 84
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 10 08:44 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-rw-r-- 1 vmadmin vmadmin  1349 Mai 10 08:36 aufgabe-1.txt
+-rw-rw-r-- 1 vmadmin vmadmin     0 Mai 10 08:39 aufgabe-2.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 10 08:37 .git
+-rw-r----- 2 vmadmin vmadmin    18 Mai  8 08:45 hardlink.txt
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 10 08:23 LB2-FS25.html
+-rw-r----- 2 vmadmin vmadmin    18 Mai  8 08:45 original.txt
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+lrwxrwxrwx 1 vmadmin vmadmin    12 Mai 10 08:44 symlink.txt -> original.txt
+
+
+Erkläre die Bedeutung jeder Spalte in der Ausgabe:
+1: Dateityp und Zugriffsrechte
+2.Anzahl der Hardlinks
+3. Eingentümer
+4. Gruppe
+5. Dateigrösse in Bytes
+6. Datum und Uhrzeigt
+7.Dateiname bei Symlinks auch das Ziel mit ->
+
+
+
+Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+
+Inode: origin.txt und hardlink.txt haben denselben Inode daher lInk Anzhal 2
+symlink.txt hat einen eigenden Inode zeigt aber auf den Pfad original.txt
+Berechtigungen:
+original nur Besitzer lesen schreiben Gruppe lesen sonnst nichts
+Zeitstmpel mtime:
+Original.txt und hardlink.txt identisch zeigt dne letzten inhaltsschreib-zeitpunkt
+symlink.txt eingener Zeitstempel- zeigt Zeitpunkt der Link erstellun.
+
+Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+
+Dateinen mit gleicher Indode sind physisch dieselbe datei im dateisystem, sie teilen sich denselben inhalt.
+Symlink.txt ist nur ein verweis auf den pfad original.txt deshlab eigender Inode.
+andere Dateien aufageb1 usw sind eigenständige Datein daher eigender Inode.
+
+
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ ls -la
+insgesamt 80
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 10 08:46 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 10 08:46 ..
+-rw-rw-r-- 1 vmadmin vmadmin  1349 Mai 10 08:36 aufgabe-1.txt
+-rw-rw-r-- 1 vmadmin vmadmin     0 Mai 10 08:39 aufgabe-2.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 10 08:37 .git
+-rw-r----- 2 vmadmin vmadmin    13 Mai 10 08:45 hardlink.txt
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 10 08:23 LB2-FS25.html
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+lrwxrwxrwx 1 vmadmin vmadmin    12 Mai 10 08:44 symlink.txt -> original.txt
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ 
+
+
+Was wird ausgegeben und warum?
+der Inhalt wird zweimal angezeigt zumbeispiel neuer inhalt neuer inhalt
+Weil:
+symlink.txt zeigt auf den Pfas original.txt
+hardlink.txt ist original.txt gleicher inode beide lesen denselben inhalt.
+
+Nach mv original.txt ../original.txt zeigt
+symlink.txt ins lessre cat ibt Fehlermeldiung
+hardlink.txt funktioniert weiter --> zeigt inhalt
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+
+-original.txt und hardlink.txt teilen sich densleben inode eintrag
+- ln erhoht den Link count im node
+- symlink.txt bekommt eingende incode verweist nur auf pfad
+- chomd touch ändert einträge im inode
+
+Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+
+- hardlink bleibt auch nahc verschieben löschen von original.txt gültig
+- symlink zeigt auf pfad nach mv-original.txt ist dieser ungüligt- broken link
+- Hardlinks sind physisch identische kopien symlinks nur verweise
+
+Welche Fehler könnten auftreten und warum?
+
+cat symlink.txt nach verschieben -> fehler wie no such file or directory
+- zugriff auf kaputte Symlinks führt zu fehlermeldung
+bei falschn berechtigung kann zugriff blockiert werde chomd
+
+
+
+
