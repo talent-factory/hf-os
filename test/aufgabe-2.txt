@@ -1,0 +1,21 @@
+1. Unterschied intern und extern:
+
+- Interne Fragmentierung: Es bleibt Platz im Speicherblock übrig, der nicht genutzt wird.
+  Beispiel: Datei braucht 1 KB, Block ist 4 KB groß, 3 KB bleiben leer.
+
+- Externe Fragmentierung: Es gibt viele kleine Lücken, aber kein großer Block mehr frei.
+  Beispiel: Im RAM sind kleine Lücken, aber kein Platz für ein großes Programm.
+
+2. Zwei Strategien:
+
+- Paging: Speicher wird in gleich große Blöcke aufgeteilt.
+  Vorteil: Keine externen Lücken.
+  Nachteil: Manchmal bleibt etwas Platz in den Blöcken übrig.
+
+- Kompaktierung: Speicher wird aufgeräumt und zusammengepackt.
+  Vorteil: Große Blöcke werden wieder frei.
+  Nachteil: Dauert lange und braucht viel Rechenleistung.
+
+Kurz gesagt:
+Paging ist schnell und wird oft verwendet.  
+Kompaktierung ist langsam und wird selten benutzt.
