@@ -1,0 +1,42 @@
+Auswertung der Programmausgabe – Dateioperationen und Metadaten
+
+1. Beobachtungen aus der Ausgabe:
+
+a) Vor dem Anhängen:
+Dateigröße: 96 Bytes
+Hardlink-Zähler: 1
+Zugriffs- und Änderungszeit gleich
+
+b) Nach dem Anhängen:
+Größe wächst auf 136 Bytes → Bestätigung der erfolgreichen Erweiterung
+Inode bleibt gleich
+Änderungszeit (st_mtime) wurde nicht aktualisiert, vermutlich durch gepuffertes Schreiben oder fehlenden Zeitunterschied zwischen beiden Operationen (dauert <1 Sekunde)
+
+c) Nach Erstellen des Hardlinks:
+Gleiche Inode-Nummer (546208) für Original und Hardlink
+Hardlink-Zähler nun 2
+Alle Metadaten identisch (da beide auf denselben Inode zeigen)
+
+2. Erklärungen und Konzepte:
+Unterschied zwischen Dateiname und Inode:
+Der Dateiname ist nur ein Eintrag in einem Verzeichnis.
+Der Inode enthält alle wesentlichen Informationen: Größe, Rechte, Zeitstempel, Datenblöcke.
+Mehrere Namen (Hardlinks) können denselben Inode referenzieren → identische Inhalte.
+Bedeutung gleicher Inode-Nummern:
+Beide Dateinamen referenzieren dieselbe Datei im Dateisystem.
+Änderungen an einer Datei betreffen immer auch die andere.
+Erst wenn der Hardlink-Zähler auf 0 sinkt, wird der Speicherplatz freigegeben.
+
+3. Verhalten bei symbolischen Links:
+Was wäre anders bei einem Symlink statt Hardlink?
+
+Eigenschaft				Hardlink			Symlink
+Zeigt auf				Inode (direkt)			Pfad (Textstring)
+Inode-Nummer				Gleich wie Original		Eigenständig (unterschiedlich)
+Löschen der Originaldatei		Datei bleibt erreichbar		Link wird ungültig
+Verhalten bei Verschieben		Bleibt gültig			Kann brechen
+Über Dateisystemgrenzen			Nicht erlaubt			Möglich
+
+Fazit beim Löschen:
+Hardlink: Die Datei bleibt bestehen, bis alle Verweise gelöscht sind.
+Symlink: Zeigt ins Leere, gibt Fehler wie Datei nicht gefunden.

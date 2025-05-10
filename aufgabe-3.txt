@@ -1,0 +1,23 @@
+Virtuelle Adresse: 12300
+Virtuelle Seite: 3 (12300 / 4096 = 3)
+Offset: 12 (12300 % 4096 = 12)
+Seitenrahmen laut Tabelle: 3
+Physische Adresse: 3 * 4096 + 12 = 12288 + 12 = 12300
+Ergebnis: Physische Adresse = 12300
+
+
+
+Virtuelle Adresse: 16384
+Virtuelle Seite: 4 (16384 / 4096 = 4)
+Offset: 0 (16384 % 4096 = 0)
+Seitenrahmen laut Tabelle: 0
+Physische Adresse: 0 * 4096 + 0 = 0
+Ergebnis: Physische Adresse = 0
+
+
+
+Virtuelle Adresse: 32800
+Virtuelle Seite: 8 (32800 / 4096 = 8)
+Offset: 32 (32800 % 4096 = 32)
+Seitenrahmen laut Tabelle: X (nicht geladen)
+Ergebnis: Page Fault – Seite nicht im Speicher

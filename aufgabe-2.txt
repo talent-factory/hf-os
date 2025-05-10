@@ -1,0 +1,131 @@
+
+
+Teil 1: Erklärung der Befehle
+
+
+mkdir -p test/subdir && cd test
+erstellt das Verzeichnis "test" und rekursiv das Unterverzeichnis "subdir".
+cd test wechselt in das neu erstellte "test"-Verzeichnis.
+Konzepte: Verzeichnishierarchie, absolute vs. relative Pfade, Metadatenverwaltung (i-node für Verzeichnisse)
+
+echo "Inhalt-$(date +%s)" > original.txt
+Erzeugt die Datei "original.txt" und schreibt einen Zeitstempel-basierten String hinein.
+Konzepte: Dateierstellung, Schreiboperation, Umleitung mit ">"
+
+ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link "symlink.txt", der auf "original.txt" zeigt.
+Konzepte: Symbolische Links, Pfadreferenzen, i-node-Zeiger
+
+
+ln original.txt hardlink.txt
+Erstellt einen harten Link auf "original.txt". Beide Dateien zeigen auf denselben i-node.
+Konzepte: harte Links, i-node-Referenzzähler, Dateisysteminterne Verweise
+
+
+chmod 640 original.txt
+Setzt die Berechtigungen auf: rw- r-- --- -> Eigentümer darf lesen/schreiben, Gruppe nur lesen, andere gar nichts.
+Konzepte: Dateirechte, UNIX-Permission-Modell 
+
+
+touch -d "2 days ago" original.txt
+Setzt den Änderungszeitstempel von "original.txt" auf „vor 2 Tagen“.
+Konzepte: Timestamps: atime, mtime, ctime
+
+
+ls -la
+Zeigt alle Dateien im aktuellen Verzeichnis mit Details (auch versteckte).
+Konzepte: i-node-basierte Metadaten, Link-Zähler, Dateitypen
+
+
+Teil 2: Analyse der "ls -la"-Ausgabe
+
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 10:49 .               ← aktuelles Verzeichnis
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 10:49 ..              ← übergeordnetes Verzeichnis
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:50 hardlink.txt    ← Hardlink zu original.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:50 original.txt    ← Originaldatei
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 10:49 subdir          ← Unterverzeichnis
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 10:49 symlink.txt -> original.txt  ← symbolischer Link
+
+
+Spalten-Erklärung:
+
+1. Dateityp & Rechte ("drwxrwxr-x"): d = Verzeichnis, - = Datei, l = Link
+2. Link-Zähler: Anzahl Verweise auf denselben i-node (z. B. 2 für hardlink.txt und original.txt)
+3. Eigentümer / 4. Gruppe
+4. Dateigröße (in Bytes)
+5. Datum & Uhrzeit der letzten Änderung
+6. Dateiname
+7. Bei "l": Zeigt den Zielpfad des symbolischen Links an
+
+Vergleich der drei Dateien:
+
+| Datei        | Typ               | i-node geteilt?   | Rechte       | Zeitstempel | Bemerkung                          |
+| ------------ | ----------------- | ----------------- | ------------ | ----------- | ---------------------------------- |
+| original.txt | reguläre Datei    | Ja (mit hardlink) | "rw-r-----"  | Mai 8       | Zeitstempel manipuliert (touch -d) |
+| hardlink.txt | reguläre Datei    | Ja (mit original) | "rw-r-----"  | Mai 8       | identisch zu original.txt          |
+| symlink.txt  | symbolischer Link | Nein              | "lrwxrwxrwx" | Mai 10      | zeigt nur auf Pfadnamen            |
+
+
+
+Teil 3: Letzte Befehle + Auswirkungen
+
+
+echo "Neuer Inhalt" > original.txt
+
+
+Überschreibt die Datei mit neuem Inhalt.
+Betroffen:
+   "hardlink.txt": zeigt auf denselben i-node → gleicher Inhalt
+   "symlink.txt": referenziert weiterhin den Pfad "original.txt"
+ i-node: bleibt gleich, nur "mtime" wird aktualisiert.
+
+
+cat symlink.txt hardlink.txt
+Ausgabe:
+Neuer Inhalt
+Neuer Inhalt
+
+
+Warum?
+
+"symlink.txt": verweist auf "original.txt", das existiert.
+"hardlink.txt": zeigt denselben i-node → identischer Inhalt.
+
+mv original.txt ../original.txt
+Verschiebt "original.txt" in das übergeordnete Verzeichnis.
+i-node bleibt erhalten, da nur der Pfad geändert wird.
+hardlink.txt zeigt weiterhin korrekt auf die Datei (gleicher i-node).
+symlink.txt ist jetzt gebrochen, da "original.txt" im aktuellen Verzeichnis fehlt.
+
+
+cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+
+Warum?
+
+"symlink.txt" verweist auf nicht mehr existenten Pfad "./original.txt" → Fehler.
+"hardlink.txt" bleibt funktionsfähig → gleicher i-node.
+
+
+Teil 4: Vergleich – symbolischer vs. harter Link
+
+| Eigenschaft              | Harte Links            | Symbolische Links     |
+| ------------------------ | ---------------------- | --------------------- |
+| Inode geteilt?           | ✅ Ja                   | ❌ Nein                |
+| Über Dateisystemgrenzen? | ❌ Nein                 | ✅ Ja                  |
+| Pfadabhängig?            | ❌ Nein                 | ✅ Ja                  |
+| Bricht bei "mv" Ziel?    | ❌ Nein                 | ✅ Ja                  |
+| Referenzen zählbar?      | ✅ Ja (via Link-Zähler) | ❌ Nein (eigene Datei) |
+
+
+
+Bonusfrage: Unterschied bei verschiedenen Dateisystemen
+
+Harte Links funktionieren nicht über Dateisystemgrenzen hinweg. Der "ln"-Befehl schlägt fehl, wenn Quelle und Ziel nicht auf derselben Partition liegen.
+Symbolische Links dagegen verweisen nur auf einen Pfadnamen und funktionieren systemübergreifend, solange der Pfad gültig ist.
+

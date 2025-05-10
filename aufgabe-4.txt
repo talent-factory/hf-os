@@ -1,0 +1,26 @@
+Erklärung der Programmausgabe:
+
+Speicheradressanalyse:
+Stack-, Heap- und statische Variablen liegen typischerweise in verschiedenen Segmenten des virtuellen Adressraums.
+Statische Variablen: Im Datensegment.
+Heap-Variablen: Im dynamisch wachsenden Heap-Bereich (nach oben).
+Stack-Variablen: Im Stack, meist wachsend nach unten.
+
+Adressdifferenzen:
+Diese zeigen numerisch, wie weit die Variablen räumlich voneinander entfernt im Speicher liegen.
+Typisch: Stack liegt näher am Top-Ende des Speichers, Heap mittig, statisch meist nahe Programmbeginn.
+
+Wachstumsrichtung des Stacks:
+Zwei lokal deklarierte Variablen zeigen, ob die Adresse des später deklarierten kleiner ist → Stack wächst nach unten (üblich bei x86-Architektur).
+
+
+Speicherleck – Auswirkungen:
+In der Schleife wird Speicher mit malloc() allokiert, aber keine Referenz gespeichert und kein free() aufgerufen.
+Folge: Speicherleck – Speicher ist reserviert, aber nicht mehr erreichbar.
+Das kann langfristig zu Speichererschöpfung führen.
+
+Wie geht das Betriebssystem damit um?
+Auf Programmebene: Keine automatische Freigabe – Entwickler muss free() verwenden.
+Betriebssysteme räumen i. d. R. beim Prozessende auf (z. B. Linux, Windows).
+Tools wie valgrind helfen, solche Lecks beim Debuggen zu erkennen.
+In kritischen Systemen (z. B. Echtzeitsysteme) kann dauerhaft verlorener Heap-Speicher Systemabstürze oder Ressourcenmangel auslösen.
