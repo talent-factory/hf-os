@@ -1,0 +1,46 @@
+Ausgabe:
+
+➜  aufgabe-5 git:(hfi2024b/moiz_malik) ✗ ./speicheranalyse_out 
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffdb0d32950
+Heap-Variable: 0x6364fbb1e2a0
+Statische Variable: 0x6364fa6ab010
+Differenz Stack - Heap: 31442199463600 Bytes
+Differenz Stack - Statisch: 31442220906816 Bytes
+Differenz Heap - Statisch: 21443216 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben
+
+
+Speicheradressanalyse
+
+Die Adressen zeigen deutlich, dass der Stack sich im oberen Adressbereich des virtuellen Speichers befindet,
+
+Der Heap in der Mitte des nutzbaren Bereichs liegt,
+
+Statische Variablen in einem separaten, festen Segment gespeichert sind (z. B. .data).
+
+Differenzberechnungen:
+
+Stack – Heap: 31.442.199.463.600 Bytes
+
+Stack – Statisch: 31.442.220.906.816 Bytes
+
+Heap – Statisch: 21.443.216 Bytes
+
+Diese großen Differenzen reflektieren den weiten logischen Abstand zwischen Speichersegmenten im virtuellen Adressraum, was auf moderne Speicherverwaltungsmechanismen (Paging, Adressraumisolierung) hindeutet.
+
+Wachstumsrichtung des Stacks:
+
+Ergebnis: Stack wächst nach oben
+
+Dies ist ungewöhnlich, da in den meisten Architekturen (z. B. x86, x86_64) der Stack typischerweise nach unten wächst (von höheren zu niedrigeren Adressen).
+Mögliche Gründe:
+
+Kompilierung unter einer nicht standardmäßigen Plattform,
+
+Compileroptimierungen,
+
+Verhalten unter bestimmter Laufzeitumgebung (z. B. Sandbox).
