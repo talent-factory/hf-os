@@ -1,0 +1,83 @@
+3. Erweiterte Datei Operationen | 10P | 15'
+
+1. mkdir -p test/subdir && cd test
+   → Erstellt rekursiv das Verzeichnis test/subdir und wechselt danach in test.
+   → Konzept: Verzeichnisstruktur, Pfadnavigation.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+   → Schreibt einen Zeitstempel mit Text in original.txt.
+   → Konzept: Dateierstellung, Output-Umleitung, Zeitfunktion.
+
+3. ln -s original.txt symlink.txt
+   → Erstellt einen symbolischen Link, der auf original.txt zeigt.
+   → Konzept: symbolischer Link (verweist auf Pfad, nicht auf Inode).
+
+4. ln original.txt hardlink.txt
+   → Erstellt einen harten Link auf original.txt. Beide Dateien teilen denselben Inode.
+   → Konzept: harter Link (direkter Verweis auf selben Inode, Daten gemeinsam genutzt).
+
+5. chmod 640 original.txt
+   → Setzt Zugriffsrechte: Eigentümer darf lesen/schreiben, Gruppe lesen, andere nichts.
+   → Konzept: UNIX-Dateiberechtigungen.
+
+6. touch -d "2 days ago" original.txt
+   → Setzt den Änderungszeitpunkt der Datei auf zwei Tage in der Vergangenheit.
+   → Konzept: Zeitstempeländerung (mtime).
+
+7. ls -la
+   → Zeigt eine detaillierte Liste aller Dateien im Verzeichnis inklusive versteckter.
+   → Konzept: Anzeige von Dateieigenschaften (Rechte, Links, Inode, Größe, Zeit, Name).
+
+Beispielausgabe von ls -la:
+
+-rw-r----- 2 user group   20 Mai  8 10:00 original.txt
+-rw-r----- 2 user group   20 Mai  8 10:00 hardlink.txt
+lrwxrwxrwx 1 user group   12 Mai  8 10:01 symlink.txt -> original.txt
+
+Analyse der Ausgabe:
+- Spalten: Rechte | Linkanzahl | Besitzer | Gruppe | Größe | Datum | Name
+- Unterschiede:
+  - Inode: original.txt und hardlink.txt teilen sich den Inode (gleiche Datei), symlink.txt hat eigenen.
+  - Rechte: symlink hat lxxxxxxx, zeigt Symbolismus.
+  - Zeitstempel: symlink.txt hat eigenen, original.txt und hardlink.txt denselben.
+
+Inode-Nummern:
+- Gleich: original.txt und hardlink.txt (identische Datei, anderer Name).
+- Verschieden: symlink.txt (separate Datei, enthält Pfad als Inhalt).
+
+Weitere Befehle:
+
+8. echo "Neuer Inhalt" > original.txt
+   → Überschreibt Inhalt der Datei → betrifft auch hardlink.txt.
+   → Inode bleibt gleich.
+
+9. cat symlink.txt hardlink.txt
+   → Gibt "Neuer Inhalt" zweimal aus.
+   → symlink zeigt auf original.txt, hardlink zeigt direkt auf selben Inode.
+
+10. mv original.txt ../original.txt
+    → Verschiebt Datei aus aktuellem Verzeichnis.
+    → symlink.txt zeigt ins Leere (broken link), hardlink.txt weiterhin gültig.
+
+11. cat symlink.txt hardlink.txt 2>&1
+    → Fehler bei symlink.txt („No such file or directory“), hardlink zeigt weiter den Inhalt.
+    → Ausgabe:
+      cat: symlink.txt: No such file or directory
+      Neuer Inhalt
+
+Inode-Auswirkungen:
+- hardlink.txt: bleibt mit Daten verbunden.
+- symlink.txt: verweist auf Pfad, der nicht mehr existiert → Fehler.
+
+Verhalten:
+- Symbolischer Link ist Pfad-abhängig.
+- Harter Link ist inode-abhängig.
+
+Fehler:
+- Symbolischer Link wird beim Verschieben ungültig.
+- cat auf symlink erzeugt Fehlermeldung.
+
+Bonus:
+- Harte Links funktionieren nur im gleichen Dateisystem (Fehler bei ln).
+- Symbolische Links funktionieren über Dateisystemgrenzen hinweg, da sie nur Pfade enthalten.
+
