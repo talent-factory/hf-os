@@ -1,0 +1,32 @@
+Aufgaben nach der Ausführung
+1. Unterschiedliche Adressbereiche
+Diese Adressen liegen weit auseinander, was darauf hinweist, dass das Betriebssystem den virtuellen Adressraum des Prozesses in klar getrennte Bereiche unterteilt:
+Stack-Variablen befinden sich im oberen Speicherbereich. In diesem Fall zeigt die Analyse, dass der Stack auf dem getesteten System nach oben wächst.
+Heap-Variablen liegen deutlich darunter und wachsen dynamisch, typischerweise in Richtung höherer Adressen (bei Bedarf).
+Statische Variablen befinden sich noch weiter „unten“, im sogenannten Data Segment.
+Die klar getrennte Lage dieser Variablenarten zeigt, dass das Betriebssystem eine segmentierte Speicherverwaltung verwendet. Das erhöht die Sicherheit, verbessert die Fehlerisolierung (z. B. bei Pufferüberläufen), und erleichtert das Speicher- und Prozessmanagement.
+
+2. Verschiedene Speicherbereiche
+Die Trennung basiert auf den unterschiedlichen Eigenschaften und Lebenszyklen der Variablentypen:
+	Stack: Wird für lokale Variablen und Funktionsaufrufe verwendet. Der Speicher wird automatisch reserviert und freigegeben. Er ist schnell und wächst (in diesem Fall) nach oben.
+	
+	Heap: Wird für dynamische Speicheranforderungen genutzt. Der Speicher muss manuell verwaltet werden. Er ermöglicht flexible Größen und Laufzeiten.
+	Statischer Bereich: Enthält globale und static-Variablen, die für die gesamte Programmlaufzeit gültig bleiben. Sie werden bereits beim Programmstart im Speicher abgelegt.
+
+Diese Trennung dient der Effizienz, Sicherheit und Verwaltbarkeit des Programmspeichers. Sie erlaubt dem Betriebssystem z. B. den Stack zu schützen oder Heap-Zugriffe gezielt zu prüfen.
+
+3. Auswirkungen des des Speicherleks
+Im Programm wird innerhalb einer Schleife Speicher mit malloc(100) reserviert, aber nicht freigegeben. Dabei entsteht ein Speicherleck, weil die Speicherbereiche zwar reserviert, aber der Zugriff verloren geht – der Zeiger leak wird überschrieben und nicht weiterverwendet.
+
+Auswirkungen:
+- Der belegte Speicher wird nicht mehr genutzt, aber auch nicht freigegeben.
+- Bei kurz laufenden Programmen ist das meist unkritisch.
+- In lang laufenden Anwendungen (z. B. Servern) können viele solcher Lecks zu Speicherverknappung führen, was zu Performanceproblemen oder Abstürzen führen kann.
+
+Maßnahmen des Betriebssystems:
+
+- Während der Programmlaufzeit erkennt das Betriebssystem solche Lecks nicht automatisch.
+- Beim Beenden des Prozesses wird der gesamte dem Prozess zugewiesene Speicher (inkl. der nicht freigegebenen Bereiche) vom Betriebssystem zurück an das System gegeben.
+- Entwickler können Werkzeuge wie valgrind oder AddressSanitizer nutzen, um Lecks frühzeitig zu erkennen.
+
+
