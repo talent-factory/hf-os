@@ -1,0 +1,35 @@
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7fffc676aea0
+Heap-Variable: 0x5d8c445df2a0
+Statische Variable: 0x5d8c426ed010
+
+Adress-Differenzen:
+Stack - Heap: 37879499242496
+Stack - Statisch: 37879531691664
+Heap - Statisch: 32449168
+
+Wachstumsrichtungen:
+Der Stack wächst nach oben (zu höheren Adressen).
+
+
+
+Zusammenfassung
+
+1. Was zeigt die Ausgabe?
+Die Ausgabe zeigt, dass Stack, Heap und statische Variablen im Speicher weit auseinander liegen.  
+Der Stack wächst zu höheren Adressen. Das zeigt, dass das Betriebssystem den Speicher aufteilt, um Ordnung und Sicherheit zu schaffen.
+
+2. Warum liegen die Adressen in verschiedenen Bereichen?
+Weil jede Art von Variable einen eigenen Bereich braucht:
+- Stack für lokale Variablen
+- Heap für dynamischen Speicher (malloc)
+- Statisch für feste Werte
+So verhindert man, dass sich die Bereiche stören.
+
+3. Was passiert mit dem Speicherleck?
+Im Programm wird Speicher reserviert, aber nicht freigegeben.  
+Das verschwendet Speicher.  
+Das Betriebssystem gibt den Speicher erst wieder frei, wenn das Programm beendet wird.  
+Mit Programmen wie valgrind kann man solche Fehler finden und verbessern.
+
