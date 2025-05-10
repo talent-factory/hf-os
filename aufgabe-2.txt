@@ -1,0 +1,7 @@
+Interne:
+Interne Fragmentierung bedeutet, dass einem Programm mehr Speicher zugeteilt wird, als es wirklich braucht. Dieser ungenutzte Restplatz im Block geht verloren.
+Beispiel: Wenn ein System Speicherblöcke nur in 4 KB vergibt, ein Programm aber nur 3,5 KB braucht, bleibt der Rest (0,5 KB) ungenutzt.
+
+Externe: 
+Externe Fragmentierung passiert, wenn zwar noch genug freier Speicher da ist, dieser aber in viele kleine Stücke aufgeteilt ist. Dadurch kann ein größeres Programm nicht geladen werden, obwohl insgesamt genug Platz wäre.
+Beispiel: Es sind viele kleine freie Bereiche im RAM verteilt, aber es findet sich kein großes, zusammenhängendes Stück für ein neues großes Programm.
