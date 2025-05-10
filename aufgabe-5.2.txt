@@ -1,0 +1,15 @@
+Die Adressen der verschiedenen Variablentypen liegen in unterschiedlichen Speicherbereichen, weil das Betriebssystem den Speicher
+ eines Prozesses in logisch getrennte Segmente aufteilt:
+
+Statische Variablen werden im Data Segment gespeichert. Dieser Bereich ist zur Laufzeit fest reserviert und enthält globale und
+ statische Daten.
+
+Heap-Variablen entstehen durch dynamische Speicherreservierung mit malloc() und liegen im Heap-Bereich, der zur Laufzeit wächst
+ – normalerweise in Richtung höherer Adressen.
+
+Stack-Variablen sind lokale Variablen, die beim Funktionsaufruf im Stack-Segment gespeichert werden.
+ Der Stack wächst typischerweise in die entgegengesetzte Richtung – meist nach unten (zu niedrigeren Adressen).
+
+Diese Trennung ermöglicht eine effiziente Speicherverwaltung, bessere Sicherheit und erleichtert die Fehlerdiagnose.
+
+

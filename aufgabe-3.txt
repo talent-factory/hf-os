@@ -1,0 +1,80 @@
+
+
+mkdir -p test/subdir && cd test
+→ Erstellt das Verzeichnis test mit Unterordner subdir, wechselt dann in test.
+Konzept: Verzeichnisstruktur, -p verhindert Fehler bei verschachtelten Pfaden.
+
+echo "Inhalt-$(date +%s)" > original.txt
+→ Schreibt aktuellen Zeitstempel in die Datei original.txt.
+Konzept: Standardausgabe-Umleitung (>), Dateierstellung.
+
+ln -s original.txt symlink.txt
+→ Erstellt symbolischen Link auf original.txt.
+Konzept: Symlink zeigt auf Pfad, nicht auf Inode.
+
+ln original.txt hardlink.txt
+→ Erstellt harten Link, beide Dateien zeigen auf denselben Inode.
+Konzept: Dateisystem, Inode, Hardlink = gleicher Datenblock.
+
+chmod 640 original.txt
+→ Setzt Berechtigungen: rw- r-- --- (User darf lesen/schreiben, Gruppe nur lesen).
+Konzept: Dateiberechtigungen (Unix).
+
+touch -d "2 days ago" original.txt
+→ Ändert den Zeitstempel auf "vor 2 Tagen".
+Konzept: Metadatenbearbeitung.
+
+ls -la
+→ Zeigt alle Dateien inkl. versteckter in Langform.
+Spalten:
+
+Rechte (z. B. -rw-r-----)
+
+Anzahl Hardlinks
+
+Besitzer
+
+Gruppe
+
+Größe
+
+Datum/Uhrzeit
+
+Dateiname
+
+Analyse:
+
+Inode: original.txt und hardlink.txt haben denselben Inode, symlink.txt nicht.
+
+Berechtigungen: Gleich für original.txt und hardlink.txt, symlink.txt zeigt auf original.txt.
+
+Zeitstempel: Gleich bei original.txt und hardlink.txt, weil sie denselben Inhalt teilen.
+
+Weitere Befehle:
+echo "Neuer Inhalt" > original.txt
+→ Überschreibt Inhalt → auch hardlink.txt zeigt neuen Inhalt.
+Symlink zeigt weiterhin auf original.txt, also auch neuer Inhalt.
+
+
+cat symlink.txt hardlink.txt
+→ Gibt zweimal denselben neuen Inhalt aus.
+
+mv original.txt ../original.txt
+→ Verschiebt original.txt eine Ebene höher.
+Symlink ist nun "kaputt" (broken link), da der Pfad nicht mehr stimmt.
+Hardlink bleibt gültig, weil er denselben Inode referenziert.
+
+
+cat symlink.txt hardlink.txt 2>&1
+→ symlink.txt: Fehler („Datei nicht gefunden“),
+→ hardlink.txt: Zeigt noch den neuen Inhalt.
+
+Unterschiede Hardlink vs. Symlink:
+Hardlink: Funktioniert weiter, auch wenn Original gelöscht oder verschoben wird.
+
+Symlink: Funktioniert nur, wenn der Pfad gültig ist.
+
+Bonus – Unterschiedliche Dateisysteme:
+Hardlinks funktionieren nicht über Dateisystem-Grenzen hinweg (z. B. von /home nach /tmp).
+
+Symlinks funktionieren, da sie nur einen Pfad speichern, kein Inode.

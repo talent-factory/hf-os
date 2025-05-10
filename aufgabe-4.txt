@@ -1,0 +1,23 @@
+1. Virtuelle Adresse: 12300₁₀
+12300 / 4096 = Seite 3, Offset = 12 Byte
+
+Seite 3 → zeigt auf Seitenrahmen 5 (20KB–24KB)
+
+Physische Adresse = 20KB + 12 = 20492
+
+Ergebnis: 20492
+
+2. Virtuelle Adresse: 16384₁₀
+16384 / 4096 = Seite 4, Offset = 0
+
+Seite 4 → ist mit „X“ markiert → nicht im Speicher (Page Fault)
+
+Ergebnis: Seitenfehler
+3. Virtuelle Adresse: 32800₁₀
+32800 / 4096 = Seite 8, Offset = 32
+
+Seite 8 → zeigt auf Seitenrahmen 2 (8KB–12KB)
+
+Physische Adresse = 8KB + 32 = 8224
+
+Ergebnis: 8224

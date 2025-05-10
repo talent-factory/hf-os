@@ -1,0 +1,13 @@
+Ein absichtlich erzeugtes Speicherleck (durch malloc() ohne free()) führt dazu, dass reservierter Speicher nicht mehr genutzt, aber auch nicht freigegeben wird. Die Auswirkungen sind:
+
+Langfristig kann der verfügbare Speicher erschöpft werden, besonders bei häufigem oder dauerhaftem Leck (Memory Leak).
+
+Dies kann die Leistung des Systems beeinträchtigen oder zu einem Absturz führen, insbesondere bei Systemen mit begrenztem RAM (z. B. eingebettete Systeme).
+
+Ein Betriebssystem kann wie folgt damit umgehen:
+
+Es isoliert Prozesse voneinander und gibt beim Beenden eines Prozesses automatisch den gesamten von ihm belegten Speicher frei.
+
+Einige moderne Betriebssysteme und Laufzeitumgebungen verwenden Garbage Collection oder Memory Leak Detection Tools, um Lecks frühzeitig zu erkennen.
+
+Entwickler nutzen oft Werkzeuge wie Valgrind, um Speicherlecks während der Entwicklung zu finden und zu beheben.
