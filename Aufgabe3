@@ -1,0 +1,89 @@
+mkdir -p test/subdir && cd test
+//**
+Erstellt das Verzeichnis test und darin das Unterverzeichnis subdir, und -p erstellt die Verzeichnis, did gibt es nicht. dann wechtelt path in Verzeicht test
+**//
+
+echo "Inhalt-$(date +%s)" > original.txt
+//**
+Schreibt den Text "Inhalt-<Zeitstempel>" in die Datei original.txt
+result: Inhalt-1625097635
+**//
+
+ln -s original.txt symlink.txt
+//**
+das erstellt einen symbolischen Link (Verknüpfung) namens symlink.txt, der auf original.txt zeigt
+**//
+
+ln original.txt hardlink.txt
+//**
+Der Befehl ln original.txt hardlink.txt erstellt einen Hardlink namens hardlink.txt, der auf die gleichen Daten wie original.txt verweist.
+**//
+
+chmod 640 original.txt
+//**
+das setzt die Dateiberechtigungen für original.txt auf:
+**//
+
+touch -d "2 days ago" original.txt
+//**
+aktualisiert den Zeitstempel der Datei original.txt und setzt ihn auf den Zeitpunkt vor 2 Tagen.
+**//
+
+ls -al
+Output:
+
+insgesamt 24
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 11:01 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 10:58 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:59 hardlink.txt
+-rw-rw-r-- 1 vmadmin vmadmin  418 Mai 10 11:01 Ls_Inhalt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:59 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 10:58 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 10:58 symlink.txt -> original.txt
+
+
+*Analysiere die Ausgabe im Detail:
+1. Erste spalte Zeit die Berechtigung für Root/Group/User
+2. zweite ist Besitzer
+3. dritte ist Group
+4. Grösse
+5. lezte Änderung
+6. Dateiname
+
+*Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+hardlink.txt →Gleich wie original.txt; Gleich wie original.txt;Hardlink → teilt sich Inode + Daten mit original.txt.
+Hardlink → teilt sich Inode + Daten mit original.txt.
+symlink.txt→	Eindeutig	lrwxrwxrwx (symbolischer Link)
+*Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+- hardlink.txt und original.txt: Verweisen auf dieselben Daten auf der Festplatte
+- symlink.txt: Sind separate Dateien, die nur einen Pfad speichern
+
+Als letzte Befehle geben wir noch folgende Zeilen ein:
+
+echo "Neuer Inhalt" > original.txt
+ **** drukt Text "Neuer Inhalt" in orginal.txt 
+cat symlink.txt hardlink.txt
+ **** aktuallisert die Inhalt die datei
+ ---output: 
+ 	**** Neuer Inhalt
+ 	**** Neuer Inhalt
+mv original.txt ../original.txt
+ **** Verschiebt original.txt ins übergeordnete Verzeichnis.
+ **** Auswirkung auf Dateien 
+     ** hardlink.txt behält seine Inode (Daten bleiben erhalten).
+     ** symlink.txt: bleibt bestehen, zeigt aber ins Leere.
+
+cat symlink.txt hardlink.txt 2>&1
+ **** output: 
+ 	cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+	Neuer Inhalt
+ **** kann nicht lessené Ziel existiert nicht mehr
+
+
+
+
+
+
+
+
+
