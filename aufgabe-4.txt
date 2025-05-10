@@ -1,0 +1,3 @@
+Virtuelle Adresse 12300 → Physische Adresse 29684
+Virtuelle Adresse 16384 → Physische Adresse 4096
+Virtuelle Adresse 32800 → Page Fault

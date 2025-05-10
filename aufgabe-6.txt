@@ -1,0 +1,13 @@
+1. Beschreibung der Ausgabe und Metadatenänderungen
+
+Das Programm zeigt zunächst die Metadaten der Datei testdatei.txt, darunter Größe, Inode, Rechte, Anzahl der Links und Zeitstempel. Nach dem Anhängen von Text wächst die Dateigröße von 96 auf 142 Bytes. Die Inode-Nummer bleibt gleich, da der Inhalt der Datei erweitert, aber nicht ersetzt wurde. Die Anzahl der Hardlinks bleibt ebenfalls bei 1. Die Zeitstempel für „letzter Zugriff“ und „letzte Änderung“ ändern sich unter Umständen nicht sichtbar, da moderne Linux-Systeme diese nur bei Bedarf (z. B. relatime) aktualisieren.
+
+
+2. Inode-Nummer vs. Dateiname
+
+Der Dateiname ist ein Verzeichniseintrag, der auf einen Inode zeigt. Der Inode selbst speichert die eigentlichen Metadaten und verweist auf den Dateiinhalt. Haben zwei Dateien die gleiche Inode-Nummer (wie testdatei.txt und testdatei_hardlink.txt), handelt es sich um Hardlinks. Beide Namen sind gleichwertige Verweise auf denselben Inhalt im Dateisystem. Änderungen am Inhalt wirken sich auf beide aus.
+
+
+3. Verhalten bei Verwendung eines Symlinks
+
+Ein Symlink speichert nicht den Inode der Zieldatei, sondern nur ihren Pfad. Im Gegensatz zum Hardlink hat der Symlink einen eigenen Inode und eigene Metadaten. Wird die Originaldatei gelöscht, zeigt der Symlink ins Leere und wird unbrauchbar („dangling link“). Beim Zugriff führt das zu einem Fehler. Die Metadaten des Symlinks (z. B. Größe = Pfadlänge) unterscheiden sich vom Original. Ein Hardlink hingegen bleibt voll funktionsfähig, auch wenn der ursprüngliche Dateiname entfernt wird.

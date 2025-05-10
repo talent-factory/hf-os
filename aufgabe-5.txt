@@ -1,0 +1,24 @@
+Aufgaben nach der Ausführung:
+
+1.Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+
+Das Programm zeigt, dass Stack-, Heap- und statische Variablen in unterschiedlichen Speicherbereichen liegen. Die Differenzberechnungen und Adressen bestätigen das. Wird später z. B. eine Datei per echo verändert, ändert sich ihre mtime (Änderungszeit) und ctime (Metadatenänderung). Die Inode-Nummer bleibt gleich, solange die Datei nicht neu erstellt wird.
+
+
+
+2.Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+Die Inode-Nummer identifiziert die Datei im Dateisystem und enthält Metadaten und Speicherverweise. Der Dateiname ist nur ein Verzeichniseintrag, der auf den Inode zeigt. Haben zwei Dateien die gleiche Inode-Nummer (z. B. durch ln), sind es Hardlinks – beide Namen zeigen auf denselben Dateiinhalt.
+
+
+3.Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+Wenn statt eines Hardlinks ein symbolischer Link (Symlink) erstellt wird, ändert sich das Verhalten in mehreren Punkten. Ein Hardlink verweist direkt auf denselben Inode wie die Originaldatei. Beide Dateien sind technisch gleichwertig: Sie teilen sich Inhalt und Metadaten (z. B. Rechte, Größe, Zeitstempel). Wird die Originaldatei gelöscht, bleibt der Hardlink weiterhin vollständig funktionsfähig, da der Inode und damit der Dateninhalt im Dateisystem erhalten bleibt.
+
+Ein Symlink dagegen verweist nicht auf den Inode, sondern lediglich auf den Pfad der Originaldatei. Er hat einen eigenen Inode und eigene Metadaten (z. B. Erstellungszeit, Rechte). Wird die Originaldatei gelöscht oder verschoben, bleibt der Symlink bestehen, verweist aber ins Leere – beim Zugriff entsteht ein Fehler („Datei nicht gefunden“).
+
+
+
+
+
+
