@@ -1,0 +1,30 @@
+Ausgabe des Programms aufgabe-5:
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffd403db460
+Heap-Variable: 0x5c2d372322a0
+Statische Variable: 0x5c2d36c1c010
+
+Adressdifferenzen:
+Stack zu Heap: 39376412905920
+Heap zu Statisch: 6382224
+Stack zu Statisch: 39376419288144
+
+Wachstumsrichtungen:
+Adresse local_var1: 0x7ffd403db428
+Adresse local_var2: 0x7ffd403db42c
+Stack wächst nach oben.
+
+1. "Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?"
+Die Ausgabe zeigt die Adressen von Stack-, Heap- und statischen Variablen. Die Stack-Adresse (0x7ffd...) liegt im hohen Bereich, die Heap-Adresse (0x5c2d...) im mittleren und die statische Variable (0x5c2d...) im niedrigen Bereich. Die Differenzen zwischen Stack-Heap (≈39 TB) und Heap-statisch (≈6 MB) verdeutlichen die strikte Trennung der Speichersegmente. Der Stack wächst ungewöhnlicherweise nach oben (höhere Adressen für neue Variablen), was auf eine spezielle Systemarchitektur hindeutet.
+
+2. "Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen."
+- Statische Variablen liegen im Datensegment, das beim Programmstart fix reserviert wird.
+ - Heap wird dynamisch zur Laufzeit allokiert (z. B. via malloc) und kann fragmentieren.
+ - Stack verwaltet Funktionsaufrufe und lokale Variablen automatisch (LIFO-Prinzip). Die Trennung erhöht Sicherheit (kein Überschreiben) und Effizienz (schnelle Stack-Allokation vs. flexible Heap-Nutzung).
+
+3. "Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?"
+ - Auswirkung: Jeder malloc-Aufruf ohne free im Loop blockiert Speicher dauerhaft. Bei häufiger Ausführung führt dies zu steigendem Speicherverbrauch bis zum Absturz.
+
+ - OS-Massnahmen: Moderne Betriebssysteme bereinigen Speicherlecks nach Programmende. Tools wie Valgrind (Linux) oder AddressSanitizer helfen bei der Erkennung während der Entwicklung. Präventiv sollten Entwickler free immer paarweise mit malloc nutzen oder Smart Pointer (C++) verwenden.
