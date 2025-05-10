@@ -1,0 +1,26 @@
+Ausgabe: 
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffeb28599e0
+Heap-Variable: 0x58fb68d422a0
+Statische Variable: 0x58fb68c73010
+Differenz Stack - Heap: 42895074752320 Bytes
+Differenz Stack - Static: 42895075600848 Bytes
+Differenz Heap - Static: 848528 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben
+
+
+Analyse:
+Die Ausgabe des Programms zeigt die Speicheradressen einer Stack-Variable, einer Heap-Variable und einer statischen Variable. Dabei fällt auf, dass alle drei Variablentypen in deutlich voneinander getrennten Speicherbereichen liegen. Die Stack-Variable befindet sich im hohen Adressbereich, während die Heap-Variable im mittleren und die statische Variable im niedrigeren Adressbereich liegt. Diese Organisation entspricht dem typischen Aufbau eines virtuellen Adressraums in modernen Betriebssystemen.
+
+Obwohl der Stack im Regelfall vom oberen Adressbereich nach unten wächst, wurde im Programm gemessen, dass der Stack „nach oben wächst“. Dieser Befund kann auf die konkrete Implementierung des Compilers oder die Reihenfolge der Variablendeklarationen zurückzuführen sein. Wichtig ist aber: Stack, Heap und statische Bereiche sind sauber voneinander getrennt, was die Sicherheit und Stabilität bei der Speichervergabe erhöht.
+
+Der Grund für die räumliche Trennung der Variablentypen liegt in der Segmentierung des Speichers: Der Stack wird für Funktionsaufrufe und lokale Variablen genutzt und wächst dynamisch, weshalb er am oberen Rand liegt. Der Heap hingegen wird für dynamisch zur Laufzeit allokierten Speicher verwendet und wächst nach unten. Statische Variablen liegen im sogenannten „Data Segment“ und haben eine feste Speicheradresse während der gesamten Programmlaufzeit.
+
+Im weiteren Verlauf des Programms wurde absichtlich ein Speicherleck erzeugt, indem innerhalb einer Schleife mehrfach Speicher mit malloc() reserviert, aber nie wieder freigegeben wurde. Solche Speicherlecks führen dazu, dass belegter Speicher nicht mehr nutzbar ist – insbesondere bei lang laufenden Programmen kann dies zu Speicherknappheit oder Systeminstabilität führen. Das Betriebssystem kann solche Lecks in der Regel nicht automatisch erkennen oder beheben. Es stellt jedoch sicher, dass beim Beenden des Programms der gesamte belegte Speicher zurückgegeben wird. Für die Entwicklung bieten sich Analysewerkzeuge wie valgrind an, um Speicherlecks frühzeitig zu erkennen und zu vermeiden.
+
+Diese Übung verdeutlicht anschaulich die logische Struktur des Speichers unter einem Betriebssystem sowie potenzielle Risiken beim unsachgemäßen Umgang mit dynamischem Speicher.
+
+
