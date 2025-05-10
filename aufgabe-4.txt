@@ -1,0 +1,14 @@
+Adresse: 12300₁₀:
+Virtuelle Seite: 12300 ÷ 4096 = 3, Rest: 12300 mod 4096 = 12
+Virtuelle Seite 3 ist in physischer Seite 3 geladen
+Physische Adresse: 3 × 4096 + 12 = 12288 + 12 = 12300
+
+Adresse: 16384₁₀:
+Virtuelle Seite: 16384 ÷ 4096 = 4, Rest: 0
+Virtuelle Seite 4 ist in physischer Seite 4 geladen
+Physische Adresse: 4 × 4096 + 0 = 16384
+
+Adresse: 32800₁₀:
+Virtuelle Seite: 32800 ÷ 4096 = 8, Rest: 32800 mod 4096 = 32
+Virtuelle Seite 8 ist nicht geladen (in der Page Table mit "X" markiert)
+Ergebnis: Page Fault
