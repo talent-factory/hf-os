@@ -1,0 +1,26 @@
+Virtuelle zu physischer Adressübersetzung mit Seitentabelle
+
+Adresse 1
+Virtuelle Adresse dezimal 12300
+Binär 0011 0000 0001 1100
+Seitennummer 0011 entspricht Index 3
+Offset 0000 0001 1100 entspricht 28
+Seitenrahmen aus Tabelle bei Index 3 ist 110 entspricht 6
+Physische Adresse ist 6 mal 4096 plus 28 ergibt 24604
+
+Adresse 2
+Virtuelle Adresse dezimal 16384
+Binär 0100 0000 0000 0000
+Seitennummer 0100 entspricht Index 4
+Offset ist 0
+Seitenrahmen bei Index 4 ist 100 entspricht 4
+Physische Adresse ist 4 mal 4096 ergibt 16384
+
+Adresse 3
+Virtuelle Adresse dezimal 32800
+Binär 1000 0000 0010 0000
+Seitennummer 1000 entspricht Index 8
+Offset ist 32
+Seitenrahmen bei Index 8 ist nicht vorhanden
+Present Bit ist 0
+Ergebnis Page Fault
