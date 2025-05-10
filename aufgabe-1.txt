@@ -1,0 +1,37 @@
+1 Unterschied zwischen interner und externern Speicherformatierung:
+Interne Formatierung: Entsteht wenn ein prozess mehr Speicher zugewiesen bekommen, als tatsächlich benötigt.
+Der ungenutzer Speicher innerhalb des Blocks ist verschwendet.
+Beispiel:
+Ein Programm bekommt 8KB Speicher benötigt aber nur 6KB-> 2Kb gehen verlohren.
+
+Externe Formatierung:
+Entspeicht durch viele kleine freie Speicherbereiche im RAM, die nicht zusammenhängen. 
+Obwohl insgesamt genug Speicher frei ist, kann er nicht genutzt werden, wenn
+kein Block goss genug ist.
+
+beispiel:
+Im Ram gibt es freie Bereche von 2Kb 3Kb 4Kb aber ein Programm benötigt 6KB zusammenhängend
+--> es kann nicht geladen werden.
+
+2. Zwei Strategieren zur Reduzierung oder vermeidung von Fragmentierung:
+a: Paging
+der speicher wird glich grösse blöcke aufgeteilt.
+vorteile:
+- Vermeidet exerne formatierungen vollständig
+- Speicher kann felxiubel zugeteilt werden
+Nachteile:
+-Erfordert Verwaltung pber Seitentabelle
+-Kann interne Formatierungen verursaschen
+
+bSpeicherkompaktierung :
+Der Speicherinhalt wird neu organsierut sodass alle Freien Speicherbereiche
+zusammenhängend sind.
+Vorteile:
+-Reduziert externe Formatierung.
+-Ermöglicht grosse zusammenhängende Speicherblöcke.
+Nachteile:
+-Aufwendig in der Ausführung.
+-Hoher Ressourcenverbruach
+-Kann laufende Prozesse unetrbrechen 
+
+
