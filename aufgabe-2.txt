@@ -1,0 +1,21 @@
+. Speicherfragmentierung und Lösungsansätze
+
+1. Unterschied zwischen interner und externer Fragmentierung mit Beispielen:
+
+Interne Fragmentierung tritt auf, wenn einem Prozess mehr Speicher zugewiesen wird, als er tatsächlich benötigt. Der ungenutzte Speicher innerhalb des zugewiesenen Bereichs bleibt ungenutzt, kann aber nicht anderweitig verwendet werden.
+Beispiel: Ein Prozess benötigt 6 KB, aber das System weist ihm einen Block von 8 KB zu. Die verbleibenden 2 KB im Block sind intern fragmentiert.
+
+Externe Fragmentierung entsteht, wenn der Gesamtspeicher zwar ausreicht, aber nicht in zusammenhängenden Blöcken verfügbar ist, sodass ein großer Prozess keinen passenden durchgehenden Speicherbereich findet.
+Beispiel: Nach dem Beenden mehrerer kleiner Prozesse bleiben viele kleine freie Speicherbereiche verstreut im Speicher, aber kein großer zusammenhängender Block für einen neuen großen Prozess.
+
+2. Zwei Strategien zur Vermeidung bzw. Reduktion der Speicherfragmentierung:
+
+Paging (Seitentechnologie):
+Der Speicher wird in gleich große Seiten (Pages) aufgeteilt. Prozesse werden in Seiten aufgeteilt und diese Seiten können beliebig im physischen Speicher platziert werden.
+Vorteile: Reduziert externe Fragmentierung komplett, da keine zusammenhängenden Speicherbereiche erforderlich sind.
+Nachteile: Kann zu interner Fragmentierung führen, wenn Prozesse nicht genau in die Seiten passen. Verwaltung der Seitentabellen erfordert zusätzlichen Overhead.
+
+Memory Compaction (Speicherkonsolidierung):
+Das System verschiebt Prozesse im Speicher, um freie Speicherblöcke zu einem größeren zusammenhängenden Block zu konsolidieren.
+Vorteile: Verringert externe Fragmentierung effektiv.
+Nachteile: Sehr rechenintensiv und zeitaufwendig, daher selten während des Betriebs eingesetzt.
