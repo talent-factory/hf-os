@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable:     %p\n", (void*)stack_var);
+    printf("Heap-Variable:      %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+
+    // Adressdifferenzen berechnen
+    unsigned long diff_stack_heap = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff_stack_static = (unsigned long)stack_var - (unsigned long)static_var;
+    unsigned long diff_heap_static = (unsigned long)heap_var - (unsigned long)static_var;
+
+    printf("\nAdressdifferenzen:\n");
+    printf("Stack - Heap:       %ld Bytes\n", diff_stack_heap);
+    printf("Stack - Static:     %ld Bytes\n", diff_stack_static);
+    printf("Heap - Static:      %ld Bytes\n", diff_heap_static);
+
+    printf("\nWachstumsrichtungen:\n");
+
+    // Lokale Variablen deklarieren und Adressen vergleichen
+    int local1 = 1;
+    int local2 = 2;
+
+    printf("Adresse von local1: %p\n", (void*)&local1);
+    printf("Adresse von local2: %p\n", (void*)&local2);
+
+    if (&local2 < &local1)
+        printf("→ Stack wächst nach unten\n");
+    else
+        printf("→ Stack wächst nach oben\n");
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(100); // wird nicht freigegeben → Speicherleck
+        (void)leak; // verhindert Compiler-Warnung über ungenutzte Variable
+    }
+
+    // Speicher freigeben
+    free(heap_variable);
+
+    return 0;
+}
+
+
+
+
+Aufgabenbeantwortung nach der Ausführung:
+ 1. Was zeigt die Ausgabe über den Speicheraufbau?
+Die Ausgabe zeigt:
+
+Stack-Variablen liegen im hohen Adressbereich
+
+Heap-Variablen im mittleren Bereich
+
+Statische Variablen im niedrigeren Bereich (meist .data oder .bss)
+
+Dies bestätigt den typischen Aufbau des virtuellen Adressraums:
+
+
+[hohe Adressen]
+| Stack ↓
+| Heap ↑
+| .bss / .data (statisch)
+| Code (.text)
+[niedrige Adressen]
+ 2. Warum liegen die Adressen in unterschiedlichen Speicherbereichen?
+Jede Speicherart hat ihren zugewiesenen Bereich:
+
+Stack: Für Funktionsaufrufe und lokale Variablen, wächst dynamisch „nach unten“
+
+Heap: Dynamisch verwalteter Speicher (z. B. malloc), wächst „nach oben“
+
+Statisch: Wird zur Kompilierzeit festgelegt, liegt im statischen Datensegment
+
+Diese Trennung ermöglicht:
+
+Schutz (z. B. Stack Overflow)
+
+Effiziente Speicherverwaltung
+
+Fehlersuche und Debugging
+
+ 3. Auswirkungen des absichtlichen Speicherlecks
+Folgen:
+
+Allokierter Speicher wird nicht freigegeben
+
+Der Zeiger leak geht verloren → kein Zugriff mehr möglich
+
+Bei häufiger Wiederholung kann dies zu Speichererschöpfung (Out-of-Memory) führen
+
+Reaktion des OS:
+
+Moderne Betriebssysteme isolieren Prozesse → Speicher wird nach Prozessende automatisch freigegeben
+
+Während der Laufzeit hilft das OS nicht aktiv
+
+Entwickler-Tools wie Valgrind oder AddressSanitizer erkennen Lecks
