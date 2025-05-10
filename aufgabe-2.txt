@@ -1,0 +1,255 @@
+1. mkdir -p test/subdir && cd test
+mkdir -p: Erstellt ein Verzeichnis inkl. aller übergeordneten Verzeichnisse, falls sie noch nicht existieren.
+
+-p: Verhindert Fehler, wenn das Verzeichnis schon existiert, und erstellt test und subdir in einem Schritt.
+
+cd test: Wechselt in das Verzeichnis test.
+
+Konzepte:
+
+Verzeichnisse (Directories): Hierarchische Struktur, Speicherorte für Dateien.
+
+Pfadnavigation: Nutzung absoluter oder relativer Pfade.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+echo: Gibt einen Text auf der Konsole aus.
+
+$(date +%s): Gibt den aktuellen Zeitstempel in Sekunden seit 1970-01-01 zurück.
+
+>: Leitet die Ausgabe in die Datei original.txt um (erstellt sie, falls sie nicht existiert, oder überschreibt sie).
+
+Konzepte:
+
+Dateierstellung und -schreiben
+
+Zeitstempel werden beim Erstellen automatisch gesetzt: atime, mtime, ctime.
+
+3. ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link (symlink.txt) auf original.txt.
+
+Symlinks speichern den Pfad zur Zieldatei.
+
+Konzepte:
+
+Symbolische Links: Eigenständige Dateien, die auf andere Dateien verweisen.
+
+Bei Löschung der Ziel-Datei bleibt der Link erhalten, zeigt aber ins Leere („broken link“).
+
+4. ln original.txt hardlink.txt
+Erstellt einen Hardlink namens hardlink.txt auf original.txt.
+
+Beide zeigen auf den gleichen Inode im Dateisystem.
+
+Konzepte:
+
+Hardlinks: Zwei Dateinamen, ein Inode.
+
+Die Datei bleibt bestehen, solange mindestens ein Hardlink existiert.
+
+Änderungen an einer Datei wirken sich auf beide aus.
+
+5. chmod 640 original.txt
+Ändert Berechtigungen der Datei original.txt.
+
+640 bedeutet:
+
+6 (rw-): Besitzer darf lesen + schreiben.
+
+4 (r--): Gruppe darf lesen.
+
+0 (---): Andere haben keinen Zugriff.
+
+Konzepte:
+
+Zugriffsrechte: Benutzer, Gruppe, andere.
+
+Sicherheit im Dateisystem (z. B. bei Mehrbenutzersystemen).
+
+6. touch -d "2 days ago" original.txt
+Ändert den Zugriffs- und Änderungszeitstempel auf „vor 2 Tagen“.
+
+Die Datei selbst wird nicht verändert.
+
+Konzepte:
+
+Zeitstempel (mtime/atime/ctime): Relevant für Backups, Synchronisation, Makefiles.
+
+7. ls -la
+Zeigt eine lange Dateiliste mit versteckten Dateien im aktuellen Verzeichnis an.
+
+Details: Berechtigungen, Besitzer, Gruppe, Grösse, Änderungszeit, Inode-Verweise.
+
+Konzepte:
+
+Dateiattribute: Sichtbar in der Ausgabe.
+
+Anzahl der Links (nlink), symlink-Pfeile (->), Rechte (-rw-r-----), Zeitstempel.
+
+
+➜  test git:(hfi24b/ramon-Hauswirth) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 10:48 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 10:47 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:49 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:49 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 10:47 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 10:48 symlink.txt -> original.txt
+➜  test git:(hfi24b/ramon-Hauswirth) ✗ 
+
+Analyse der ls -la Ausgabe im Detail:
+
+1. Bedeutung jeder Spalte:
+--------------------------------------------------------
+Beispiel: -rw-r----- 2 vmadmin vmadmin 18 Mai  8 10:49 hardlink.txt
+
+- -rw-r----- : Dateityp und Berechtigungen
+    - "-" = reguläre Datei
+    - "rw-" = Besitzer darf lesen und schreiben
+    - "r--" = Gruppe darf nur lesen
+    - "---" = andere haben keinen Zugriff
+
+- 2 : Anzahl der Hardlinks (Link-Zahl)
+
+- vmadmin : Besitzer (User)
+
+- vmadmin : Gruppe
+
+- 18 : Dateigrösse in Bytes
+
+- Mai 8 10:49 : letzter Änderungszeitpunkt (mtime)
+
+- hardlink.txt : Dateiname
+
+--------------------------------------------------------
+
+2. Vergleich der drei Dateien (original.txt, hardlink.txt, symlink.txt):
+
+Datei: original.txt
+- Typ: reguläre Datei
+- Rechte: -rw-r-----
+- Link-Zahl: 2
+- Zeitstempel: Mai 8 10:49
+- Inode: geteilt mit hardlink.txt
+
+Datei: hardlink.txt
+- Typ: reguläre Datei
+- Rechte: -rw-r-----
+- Link-Zahl: 2
+- Zeitstempel: Mai 8 10:49
+- Inode: geteilt mit original.txt
+
+Datei: symlink.txt
+- Typ: symbolischer Link (l)
+- Rechte: lrwxrwxrwx
+- Link-Zahl: 1
+- Zeitstempel: Mai 10 10:48
+- Inode: eigener (nicht geteilt)
+- Ziel: zeigt auf "original.txt"
+
+--------------------------------------------------------
+
+3. Erklärung: Warum gleiche oder verschiedene Inodes?
+
+Gleicher Inode bei:
+- original.txt und hardlink.txt
+- Beide sind Hardlinks zur selben Datei (zeigen auf denselben Inode)
+- Inhalt, Metadaten und Speicherplatz werden gemeinsam genutzt
+- Änderungen wirken sich auf beide aus
+- Link-Zahl = 2 bedeutet: zwei Dateinamen verweisen auf denselben Inhalt
+
+Verschiedene Inodes bei:
+- symlink.txt
+- Ein symbolischer Link ist eine eigene Datei, die nur den Pfad speichert
+- Hat einen eigenen Inode und zeigt logisch auf das Ziel
+- Wird das Ziel gelöscht, ist der Symlink "broken"
+- Rechte des Symlinks sind meist irrelevant – es zählen die Rechte des Ziels
+
+--------------------------------------------------------
+
+Analyse der Befehle:
+
+1. echo "Neuer Inhalt" > original.txt
+
+- Wirkung: Überschreibt den Inhalt der Datei original.txt mit dem Text "Neuer Inhalt\n".
+- Ausgabe: keine.
+- Auswirkungen:
+    - Inhalt des Inodes wird verändert.
+    - Da hardlink.txt denselben Inode hat, zeigt es nun auch "Neuer Inhalt".
+    - symlink.txt zeigt weiterhin auf original.txt – also auch "Neuer Inhalt".
+- Inode-Änderung: Nur Dateninhalt des Inodes wird geändert, nicht die Inode-Nummer.
+
+--------------------------------------------------------
+
+2. cat symlink.txt hardlink.txt
+
+- Wirkung: Gibt den Inhalt beider Dateien aus.
+- Ausgabe:
+    Neuer Inhalt
+    Neuer Inhalt
+- Warum:
+    - symlink.txt → verweist auf original.txt → zeigt neuen Inhalt.
+    - hardlink.txt → verweist auf denselben Inode wie original.txt → zeigt denselben neuen Inhalt.
+
+--------------------------------------------------------
+
+3. mv original.txt ../original.txt
+
+- Wirkung: Verschiebt original.txt in das übergeordnete Verzeichnis.
+- Ausgabe: keine.
+- Auswirkungen:
+    - Nur der **Verzeichniseintrag** (Dateiname) wird verschoben.
+    - Der Inode bleibt erhalten.
+    - hardlink.txt bleibt gültig, da es denselben Inode referenziert.
+    - symlink.txt zeigt **immer noch auf "original.txt" im aktuellen Verzeichnis**, aber diese Datei **existiert dort nun nicht mehr**.
+
+--------------------------------------------------------
+
+4. cat symlink.txt hardlink.txt 2>&1
+
+- Wirkung: Zeigt Inhalt beider Dateien, auch Fehlermeldungen.
+- Ausgabe:
+    cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+    Neuer Inhalt
+- Warum:
+    - symlink.txt zeigt auf "original.txt", aber die Datei ist im aktuellen Verzeichnis nicht mehr vorhanden → Fehler.
+    - hardlink.txt funktioniert weiterhin, da es direkt auf den Inode zeigt, der nach wie vor existiert.
+- Inode:
+    - symlink.txt: verweist auf Pfad, nicht Inode → kein Update möglich.
+    - hardlink.txt: noch gültiger Inode → funktioniert.
+
+--------------------------------------------------------
+
+Vergleich: Symlink vs. Hardlink in diesem Szenario
+
+- **Symlink**:
+    - Symbolischer Pfadverweis.
+    - Wenn Ziel verschoben oder gelöscht wird → Link „kaputt“.
+    - Kein Zugriff mehr möglich (wie hier nach mv).
+
+- **Hardlink**:
+    - Direkt auf denselben Inode.
+    - Unabhängig vom Pfad → funktioniert auch nach `mv` von original.txt.
+
+--------------------------------------------------------
+
+Mögliche Fehler:
+
+- `cat symlink.txt`: „Datei nicht gefunden“, weil das Ziel (original.txt im aktuellen Verzeichnis) nach dem `mv` nicht mehr existiert.
+- `mv`: Wenn das Zielverzeichnis schreibgeschützt ist → Fehler.
+- `ln original.txt ...`: Hardlinks funktionieren **nicht über Dateisystemgrenzen**.
+
+--------------------------------------------------------
+
+Bonus: Verhalten bei unterschiedlichen Dateisystemen
+
+- **Hardlinks**:
+    - Können **nicht** zwischen unterschiedlichen Dateisystemen erstellt werden.
+    - Fehler beim `ln`: "Invalid cross-device link".
+    - Grund: Inodes sind lokal zum jeweiligen Dateisystem.
+
+- **Symbolische Links**:
+    - Funktionieren problemlos über Dateisystemgrenzen.
+    - Sie speichern nur den Pfad – unabhängig vom Dateisystem.
+    - Aber: Sind fehleranfällig, wenn der Pfad nicht erreichbar ist.
+
+--------------------------------------------------------
