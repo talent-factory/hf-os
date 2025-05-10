@@ -1,0 +1,82 @@
+Aufgabe 3:
+1. "Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden dabei angewendet?"
+mkdir -p test/subdir && cd test – Erstellt das Verzeichnis test und darin subdir, falls noch nicht vorhanden. Danach wechselt man in test.
+
+echo "Inhalt-$(date +%s)" > original.txt – Schreibt einen Text mit aktuellem Unix-Zeitstempel in die Datei original.txt.
+
+ln -s original.txt symlink.txt – Erstellt einen symbolischen Link, der den Pfad zu original.txt speichert.
+
+ln original.txt hardlink.txt – Erstellt einen harten Link, der auf dieselbe Inode wie original.txt zeigt.
+
+chmod 640 original.txt – Setzt Rechte: Besitzer darf lesen & schreiben, Gruppe nur lesen, andere gar nicht.
+
+touch -d "2 days ago" original.txt – Setzt den Änderungszeitpunkt von original.txt auf vor zwei Tagen.
+
+ls -la – Zeigt alle Dateien inkl. versteckter, mit Details wie Rechte, Besitzer, Grösse, Zeit und Inode-Links.
+
+2. "Kopiere die Ausgabe des letzten Befehles als Anhang zu der Lösung."
+Analyse der ls -la-Ausgabe:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 10:57 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 10:57 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:57 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 10:57 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 10:57 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 10:57 symlink.txt -> original.txt
+
+3. "Analysiere die Ausgabe im Detail:"
+3.1. "Erkläre die Bedeutung jeder Spalte in der Ausgabe"
+Erste Spalte: Dateityp und Rechte
+Zweite: Linkanzahl (2 bei original/hardlink, da gleiche Inode)
+Dritte: Benutzername
+Vierte: Gruppe
+Fünfte: Dateigrösse
+Sechste: Änderungsdatum und Zeit
+Letzte Spalte: Name (+ Ziel bei Symlink)
+
+3.2. "Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?"
+Unterschiede:
+original.txt und hardlink.txt teilen sich die Inode -> gleicher Inhalt, gleicher Zeitstempel.
+symlink.txt hat eigene Inode, zeigt nur auf Pfad.
+Nur symlink.txt wird ungültig, wenn Ziel verschoben wird.
+
+3.3. "Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?"
+original.txt und hardlink.txt teilen sich die Inode, da beide harte Links auf denselben Speicher zeigen.
+symlink.txt hat eine eigene Inode, da es nur ein Pfadverweis ist und nicht direkt auf den Dateispeicher zeigt.
+
+4. "Als letzte Befehle geben wir noch folgende Zeilen ein:"
+echo "Neuer Inhalt" > original.txt
+Ausgabe: Der Text "Neuer Inhalt" wird in die Datei geschrieben oder die Datei wird überschrieben.
+Auswirkungen Inode: Neue Inode wird erstellt oder überschrieben.
+Symbolische Links: Verweisen weiterhin auf das Ziel, ohne die Inode zu ändern.
+Harte Links: Verweisen auf dieselbe Inode, keine Änderung.
+Fehler: Kann auftreten, wenn keine Schreibrechte vorhanden sind.
+
+
+cat symlink.txt hardlink.txt
+Ausgabe: Inhalt der Dateien symlink.txt und hardlink.txt wird angezeigt.
+Auswirkungen Inode: Keine Änderungen.
+Symbolische Links: Zeigen auf die Ziel-Datei.
+Harte Links: Zeigen auf die gleiche Inode wie die Originaldatei.
+Fehler: Kann auftreten, wenn eine Datei nicht existiert oder nicht lesbar ist.
+
+
+mv original.txt ../original.txt
+Ausgabe: Keine Ausgabe, ausser Fehler tritt auf.
+Auswirkungen Inode: Inode bleibt gleich, nur der Pfad wird geändert.
+Symbolische Links: Zeigen auf verschobene Datei.
+Harte Links: Pfad ändert sich, Inode bleibt gleich.
+Fehler: Kann auftreten, wenn Ziel-Datei existiert oder keine Berechtigungen vorhanden sind.
+
+
+cat symlink.txt hardlink.txt 2>&1
+Ausgabe: Inhalt von symlink.txt und hardlink.txt wird angezeigt, Fehler wird mit ausgegeben.
+Auswirkungen Inode: Keine Änderungen.
+Symbolische Links: Zeigen auf verschobene Datei.
+Harte Links: Zeigen weiterhin auf die Inode der Originaldatei.
+Fehler: Wenn eine Datei nicht existiert oder nicht lesbar ist, wird ein Fehler ausgegeben.
+
+5. "Bonus-Frage":
+5.1 "Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?":
+Harte Links funktionieren nur innerhalb desselben Dateisystems.
+Symbolische Links funktionieren auch über Partitionen hinweg, da sie nur Pfade speichern.
