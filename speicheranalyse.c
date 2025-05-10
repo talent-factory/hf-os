@@ -9,7 +9,6 @@ void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
     printf("Heap-Variable: %p\n", (void*)heap_var);
     printf("Statische Variable: %p\n", (void*)static_var);
 
-    // Adressdifferenz berechnen
     unsigned long diff1 = (unsigned long)stack_var - (unsigned long)heap_var;
     unsigned long diff2 = (unsigned long)stack_var - (unsigned long)static_var;
 
@@ -18,7 +17,6 @@ void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
 
     printf("\nWachstumsrichtungen:\n");
 
-    // Zwei lokale Variablen deklarieren und vergleichen
     int local1 = 1;
     int local2 = 2;
 
@@ -32,13 +30,8 @@ void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
 }
 
 int main() {
-    // Statische Variable
     static int static_variable = 100;
-
-    // Stack-Variable
     int stack_variable = 200;
-
-    // Heap-Variable
     int* heap_variable = (int*)malloc(sizeof(int));
     if (heap_variable == NULL) {
         printf("Fehler bei der Speicherzuweisung\n");
@@ -46,43 +39,11 @@ int main() {
     }
     *heap_variable = 300;
 
-    // Speicherlayout analysieren
     analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
 
-    // Speicherleck demonstrieren
     for (int i = 0; i < 5; i++) {
-        // Speicher wird absichtlich nicht freigegeben
-        malloc(1024);
+        malloc(1024);  // Speicherleck
     }
 
     return 0;
 }
-
-
-Speicheradressanalyse:
-----------------------
-Stack-Variable: 0x7ffd5dd64aa8
-Heap-Variable: 0x57e46bef12a0
-Statische Variable: 0x57e46b09c010
-Adressunterschied Stack <-> Heap: 44087602788360
-Adressunterschied Stack <-> Static: 44087617817240
-
-Wachstumsrichtungen:
-Der Stack wächst nach oben.
-
-Wachstumsrichtungen:
-Der Stack wächst nach oben
-
-Die Ausgabe zeigt die Organisation des Speichers:
-
-Stack-, Heap- und statische Variablen befinden sich in verschiedenen Speicherbereichen.
-
-Die Adresse der Stack-Variable ist höher als die der Heap-Variable → Stack und Heap wachsen in entgegengesetzte Richtungen.
-
-Der Unterschied zwischen zwei lokalen Variablen zeigt, dass der Stack in diesem Fall nach oben wächst.
-
-Die statische Variable liegt in einem separaten, festen Bereich des Programms (Data Segment).
-
-Dies entspricht der typischen Speicherorganisation moderner Betriebssysteme.
-
-
