@@ -1,0 +1,29 @@
+1. Virtuelle Adresse: 12300₁₀
+Seitennummer (VPN) = 12300 ÷ 4096 ≈ 3
+→ 3 × 4096 = 12288
+
+Offset = 12300 − 12288 = 12
+
+Virtuelle Seite 3 → physischer Seitenrahmen 1
+→ Physische Adresse = 1 × 4096 + 12 = 4108
+
+Antwort 4108
+
+2. Virtuelle Adresse: 16384₁₀
+Seitennummer = 16384 ÷ 4096 = 4
+→ Offset = 0
+
+Virtuelle Seite 4 → physischer Rahmen 6
+→ Physische Adresse = 6 × 4096 + 0 = 24576
+
+Antwort 24576
+
+3. Virtuelle Adresse: 32800₁₀
+Seitennummer = 32800 ÷ 4096 = 8
+→ 8 × 4096 = 32768
+→ Offset = 32800 − 32768 = 32
+
+Virtuelle Seite 8 → physischer Rahmen 7
+→ Physische Adresse = 7 × 4096 + 32 = 28672 + 32 = 28704
+
+Antwort 28704
