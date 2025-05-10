@@ -69,6 +69,22 @@ int main() {
     return 0;
 }
 -------------------------------------------
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7fff0e624ab0
+Heap-Variable: 0x59791b21d2a0
+Statische Variable: 0x597919706010
+
+Adressunterschiede:
+Stack - Heap: 42356753594384 bytes
+Stack - Static: 42356782000800 bytes
+Heap - Static: 28406416 bytes
+
+Wachstumsrichtungen:
+Adresse von local_var1: 0x7fff0e624a78
+Adresse von local_var2: 0x7fff0e624a7c
+Stack wächst nach oben (höhere Adressen)
+
 
  Beschreibung der Ausgabe:
 

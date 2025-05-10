@@ -94,6 +94,36 @@ int main() {
     return 0;
 }
 -------------------------------------------
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546293
+Anzahl der Hardlinks: 1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 10:34:10
+Letzte Änderung: 2025-05-10 10:34:10
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 139 Bytes
+Inode-Nummer: 546293
+Anzahl der Hardlinks: 1
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 10:34:10
+Letzte Änderung: 2025-05-10 10:34:10
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 139 Bytes
+Inode-Nummer: 546293
+Anzahl der Hardlinks: 2
+Zugriffsrechte (Oktal): 664
+Letzter Zugriff: 2025-05-10 10:34:10
+Letzte Änderung: 2025-05-10 10:34:10
 
 Beschreibung der Ausgabe:
 
