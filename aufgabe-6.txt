@@ -1,0 +1,139 @@
+Aufgabe 6: Praktische Aufgabe - Dateisysteme
+
+-------------------------------------------
+🔧 Vervollständigter Code:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+void print_file_metadata(const char* filename) {
+    struct stat file_info;
+
+    // stat() aufrufen
+    if (stat(filename, &file_info) != 0) {
+        perror("stat");
+        return;
+    }
+
+    printf("Metadaten für Datei: %s\n", filename);
+    printf("------------------------\n");
+
+    printf("Dateigröße: %ld Bytes\n", file_info.st_size);
+    printf("Inode-Nummer: %ld\n", file_info.st_ino);
+    printf("Anzahl der Hardlinks: %ld\n", file_info.st_nlink);
+    printf("Zugriffsrechte (Oktal): %o\n", file_info.st_mode & 0777);
+
+    char time_str[30];
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&file_info.st_atime));
+    printf("Letzter Zugriff: %s\n", time_str);
+
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&file_info.st_mtime));
+    printf("Letzte Änderung: %s\n", time_str);
+
+    printf("\n");
+}
+
+int main() {
+    const char* filename = "testdatei.txt";
+    const char* content = "Dies ist ein Test für Dateioperationen.\n"
+                         "Wir untersuchen, wie Dateisysteme Metadaten verwalten.\n";
+
+    // Datei erstellen und schreiben
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Fehler beim Öffnen der Datei");
+        return 1;
+    }
+
+    fprintf(file, "%s", content);
+    fclose(file);
+
+    // Metadaten vor der Änderung anzeigen
+    printf("Metadaten vor der Änderung:\n");
+    print_file_metadata(filename);
+
+    // Datei öffnen und zusätzlichen Inhalt anhängen
+    file = fopen(filename, "a");
+    if (file == NULL) {
+        perror("Fehler beim Öffnen der Datei zum Anhängen");
+        return 1;
+    }
+
+    // Weiteren Text hinzufügen
+    fprintf(file, "Zusätzlicher Inhalt wird hier angehängt.\n");
+
+    fclose(file);
+
+    // Metadaten nach der Änderung anzeigen
+    printf("Metadaten nach der Änderung:\n");
+    print_file_metadata(filename);
+
+    // Hardlink erstellen
+    const char* hardlink_name = "testdatei_hardlink.txt";
+
+    if (link(filename, hardlink_name) != 0) {
+        perror("Fehler beim Erstellen des Hardlinks");
+    } else {
+        printf("Hardlink erstellt: %s\n", hardlink_name);
+
+        // Metadaten des Hardlinks anzeigen
+        printf("Metadaten des Hardlinks:\n");
+        print_file_metadata(hardlink_name);
+    }
+
+    // Dateien löschen
+    remove(filename);
+    remove(hardlink_name);
+
+    return 0;
+}
+-------------------------------------------
+
+Beschreibung der Ausgabe:
+
+1-Metadaten vor der Änderung:
+- Die Datei zeigt ihre Standard-Metadaten wie Größe (~120 Bytes), Inode, Hardlink-Anzahl (1), Zugriffsrechte und Zeitstempel (Erstellung).
+
+2-Nach dem Anhängen von Text:
+- Die Dateigröße wächst (z.B. von ~120 Bytes auf ~160 Bytes).
+- Der "Inode bleibt gleich", da es dieselbe Datei ist.
+- "st_mtime" (Letzte Änderung) aktualisiert sich auf den neuen Zeitpunkt.
+- "st_atime" kann sich auch ändern (je nach System).
+
+3- Hardlink:
+- Das Hardlink hat dieselbe Inode-Nummer wie das Original, identische Metadaten (Größe, Rechte, Zeitstempel).
+- Die Hardlink-Anzahl steigt auf 2 (weil zwei Namen auf denselben Inode zeigen).
+
+-------------------------------------------
+
+ Analyse:
+
+- Inode vs. Dateiname:
+  - Ein Inode ist die eindeutige Kennung für eine Datei im Dateisystem.
+  - Der Dateiname ist nur ein Verweis auf den Inode.
+  - Wenn zwei Dateien dieselbe Inode-Nummer haben (wie hier der Hardlink), sind sie **physisch dieselbe Datei**, nur mit unterschiedlichem Namen.
+
+- Symlink statt Hardlink:
+  - Ein Symlink verweist nur auf den Pfad der Datei (z.B. "testdatei.txt").
+  - Inode-Nummer des Symlinks ≠ Inode der Originaldatei.
+  - Wenn die Originaldatei gelöscht wird, zeigt der Symlink ins Leere (Broken Link).
+  - Beim Hardlink bleibt die Datei bestehen, bis **alle Hardlinks gelöscht sind.**
+
+- Verhalten beim Löschen:
+  - Hardlink: Datei bleibt erhalten, solange mindestens ein Link existiert.
+  - Symlink: Datei wird sofort gelöscht, Symlink „zeigt ins Leere“.
+
+-------------------------------------------
+ Zusammenfassung:
+
+- Das Programm zeigt schön die Manipulation von Dateien und wie sich Metadaten ändern.
+- Die wichtigsten Unterschiede zwischen Hardlink und Symlink sind:
+    - Hardlinks teilen denselben Inode.
+    - Symlinks haben einen eigenen Inode und verlinken nur den Pfad.
+- Hardlinks sind stabiler; Symlinks sind flexibler über Dateisystemgrenzen hinweg.
