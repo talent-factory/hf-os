@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Funktion zur Analyse der Speicheradressen
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable:    %p\n", (void*)stack_var);
+    printf("Heap-Variable:     %p\n", (void*)heap_var);
+    printf("Statische Variable:%p\n", (void*)static_var);
+
+    // Berechnung der Adressunterschiede
+    unsigned long diff_stack_heap = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff_stack_static = (unsigned long)stack_var - (unsigned long)static_var;
+    unsigned long diff_heap_static = (unsigned long)heap_var - (unsigned long)static_var;
+
+    printf("\nAdressunterschiede:\n");
+    printf("Stack - Heap:      %lu Bytes\n", diff_stack_heap);
+    printf("Stack - Statisch:  %lu Bytes\n", diff_stack_static);
+    printf("Heap  - Statisch:  %lu Bytes\n", diff_heap_static);
+
+    // Wachstumsrichtung des Stacks analysieren
+    int local1 = 0;
+    int local2 = 0;
+
+    printf("\nWachstumsrichtungen:\n");
+    if (&local2 > &local1)
+        printf("Stack wächst nach oben (höhere Adressen)\n");
+    else
+        printf("Stack wächst nach unten (niedrigere Adressen)\n");
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(sizeof(int));  // Leak: kein free()
+        *leak = i * 100;
+        // kein free(leak); => absichtliches Speicherleck
+    }
+
+    // Heap-Speicher korrekt freigeben
+    free(heap_variable);
+
+    return 0;
+}
+
+Ausgabe:
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7fffabb70170
+Heap-Variable:     0x5a5f09bba2a0
+Statische Variable:0x5a5f09bb0010
+
+Adressunterschiede:
+Stack - Heap:      41371842600656 Bytes
+Stack - Statisch:  41371842642272 Bytes
+Heap  - Statisch:  41616 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (höhere Adressen)
+
+1.
+die statische Variable liegt im Daten- oder BSS-Segment, 
+das zur Programmlaufzeit für globale und static-Variablen reserviert ist.
+
+die Heap-Variable liegt jedoch höher als die statische aber niedriger als der 
+Stack. Der Heap wächst nach oben, je mehr Speicher mit malloc() angefordert wird
+
+Stack-Variable liegt ganz oben im Speciher und zeigt dass der Stack nach unten wächst
+obwohl in der Ausgabe steht Stack wächst nach oben -> mögliche Fehleranalyse
+
+2.
+Das liegt an der Speicherschutz- und Segmentierungsstrategie des Betriebssystems:
+
+Stack:
+Wird vom Betriebssystem verwendet, um lokale Variablen und Rücksprungadressen zu verwalten. Jeder Funktionsaufruf legt einen "Stack Frame" an, der bei Rückkehr wieder freigegeben wird.
+→ Schneller Zugriff, aber limitiert in Größe.
+
+Heap:
+Wird dynamisch vom Programm selbst über malloc() etc. verwaltet.
+→ Flexibler, aber langsamerer Zugriff und Gefahr von Speicherlecks.
+
+Statische Daten:
+Befinden sich in einem festgelegten Bereich, initialisiert beim Programmstart und erst beim Programmende freigegeben.
+→ Für globale Informationen oder langlebige Zustände
+
+3.
+kurzfristige Auswirkung = man merkt oft nichts bei kleinen Programmen
+langfristig = immer mehr RAM wird verbraucht, programm wird langsame und irgendwann ein Crash oder es wird beendet
+
+das Betriebsystem isoliert Prozesse: Wenn dein Programm Speicher "leakt", betrifft das nur dich
+Beim Beenden des Programms gibt das Betriebssystem alles automatisch frei – aber das versteckt das eigentliche Proble

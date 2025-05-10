@@ -1,0 +1,8 @@
+12300₁₀
+virtuelle Seite ist 3 und physische ist Seite 4
+    
+16384₁₀
+virtuelle Seite 4 und physische Seite 0
+
+32800₁₀
+virtuelle Seite 8 und physische Seite 6

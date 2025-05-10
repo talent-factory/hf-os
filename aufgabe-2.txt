@@ -1,0 +1,31 @@
+Interne Speicherfragmentierung = unbenutzter Speicher innerhalb eines zugewiesen Blocks
+Externe Speicherfragmentierung = unbenutzter Speicher ausserhalb verteilt in vielen kleinen freien Lücken
+
+Beispiel intern: Dateisysteme wie FAT oder NTFS allokieren Dateien in Clustern (oft 4 KB). Eine 100-Byte-Datei belegt trotzdem 4 KB auf der Festplatte ⇒ 3900+ Byte Verlust = interne Fragmentierung.
+Beispiel extern: Ein Apache-Server, der 100.000 Verbindungen nacheinander verarbeitet, kann in bestimmten Konfigurationen an externer Fragmentierung leiden und muss daher regelmäßig neu gestartet werden (Memory Compaction fehlt).
+
+Strategien: 
+Speicherverdichtung
+Beim Swapping und dynamischer Speicherzuweisung entstehen mit der Zeit viele kleine Lücken (Fragmentierung). Die Speicherverdichtung verschiebt Prozesse im RAM, um diese Lücken zu schließen und wieder größere zusammenhängende Bereiche zu schaffen.
+Vorteile:
+Reduziert externe Fragmentierung
+Macht große, zusammenhängende Speicherbereiche wieder nutzbar
+
+Nachteile:
+Hohe Rechenlast beim Verschieben von Prozessen
+Kann zu Leistungsproblemen führen, wenn oft nötig
+Speicherverdichtung benötigt exklusive Kontrolle des Betriebssystems, ggf. kurzzeitige Blockierung aller Prozesse
+
+Virtueller Speicher mit Paging
+Hier wird der Speicher in gleich große Seiten (pages) unterteilt. Der virtuelle Speicher eines Prozesses wird flexibel auf verfügbare physische Frames abgebildet. Seiten müssen nicht zusammenhängend im RAM liegen.
+
+Vorteile:
+Vermeidet externe Fragmentierung komplett
+Programme müssen nicht vollständig im RAM liegen
+Effiziente RAM-Nutzung durch „on demand“-Laden von Seiten
+
+Nachteile:
+Page Tables brauchen zusätzlichen Speicher
+Page Faults verursachen Performance-Einbußen
+Aufwendiger in der Implementierung (MMU, OS-Support)
+
