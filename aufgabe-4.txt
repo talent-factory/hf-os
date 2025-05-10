@@ -1,0 +1,49 @@
+Aufgabe 4 – Logische und Physische Adressen
+
+Seitengrösse: 4KB = 4096 Bytes
+
+Virtuelle Adresse 1: 12300
+---------------------------
+1. Seite berechnen:
+   12300 ÷ 4096 = 3 → Seite 3
+   Offset: 12300 mod 4096 = 12300 - (3 * 4096) = 12
+
+2. Übersetzung:
+   Seite 3 → physischer Frame 5 → Startadresse 5 * 4096 = 20480
+
+3. Ergebnis:
+   Physische Adresse = 20480 + 12 = **20492**
+
+
+Virtuelle Adresse 2: 16384
+---------------------------
+1. Seite berechnen:
+   16384 ÷ 4096 = 4 → Seite 4
+   Offset: 0
+
+2. Übersetzung:
+   Seite 4 → physischer Frame 4 → Startadresse 4 * 4096 = 16384
+
+3. Ergebnis:
+   Physische Adresse = 16384 + 0 = **16384**
+
+
+Virtuelle Adresse 3: 32800
+---------------------------
+1. Seite berechnen:
+   32800 ÷ 4096 = 8 → Seite 8
+   Offset: 32800 mod 4096 = 32
+
+2. Übersetzung:
+   Seite 8 → physischer Frame 7 → Startadresse 7 * 4096 = 28672
+
+3. Ergebnis:
+   Physische Adresse = 28672 + 32 = **28704**
+
+
+Zusammenfassung:
+----------------
+12300  → phys. Adresse **20492**
+16384  → phys. Adresse **16384**
+32800  → phys. Adresse **28704**
+

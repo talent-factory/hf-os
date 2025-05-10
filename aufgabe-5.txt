@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable:    %p\n", (void*)stack_var);
+    printf("Heap-Variable:     %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+
+    // Adressdifferenzen
+    unsigned long diff_stack_heap = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff_stack_static = (unsigned long)stack_var - (unsigned long)static_var;
+    unsigned long diff_heap_static = (unsigned long)heap_var - (unsigned long)static_var;
+
+    printf("\nAdressdifferenzen (in Bytes):\n");
+    printf("Stack - Heap:    %lu\n", diff_stack_heap);
+    printf("Stack - Static:  %lu\n", diff_stack_static);
+    printf("Heap  - Static:  %lu\n", diff_heap_static);
+
+    printf("\nWachstumsrichtungen:\n");
+
+    int local1 = 1;
+    int local2 = 2;
+
+    printf("Adresse local1: %p\n", (void*)&local1);
+    printf("Adresse local2: %p\n", (void*)&local2);
+    if (&local2 > &local1) {
+        printf("Stack wächst nach unten (höhere Adresse bei zuerst deklarierter Variable).\n");
+    } else {
+        printf("Stack wächst nach oben (selten, aber theoretisch möglich).\n");
+    }
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(1000);  // Speicher wird nicht freigegeben
+        (void)leak;  // um Compiler-Warnung zu vermeiden
+    }
+
+    // Speicher freigeben
+    free(heap_variable);
+
+    return 0;
+}
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7fffa07d5900
+Heap-Variable:     0x588ea7c472a0
+Statische Variable: 0x588ea702f010
+
+Adressdifferenzen (in Bytes):
+Stack - Heap:    43366162687584
+Stack - Static:  43366175369456
+Heap  - Static:  12681872
+
+Wachstumsrichtungen:
+Adresse local1: 0x7fffa07d58c8
+Adresse local2: 0x7fffa07d58cc
+Stack wächst nach unten (höhere Adresse bei zuerst deklarierter Variable).
+
+
+Aufgabe 5 – Aufgaben nach der Ausführung
+
+1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Die Ausgabe zeigt die Speicheradressen von drei Variablentypen: einer Stack-Variable, einer Heap-Variable und einer statischen Variable.
+Außerdem werden die Adressunterschiede zwischen diesen Variablen ausgegeben sowie die Wachstumsrichtung des Stacks bestimmt.
+
+Die Ausgabe zeigt:
+- Stack-Adressen befinden sich im hohen Speicherbereich.
+- Heap-Adressen liegen tiefer im Speicher.
+- Statische Variablen befinden sich im noch tieferen Adressbereich (nahe dem Programmtextsegment).
+- Der Stack wächst nach unten (höhere Adresse bei zuerst deklarierten lokalen Variablen).
+
+Das sagt über das Betriebssystem aus:
+- Der Speicher ist logisch in Segmente für Stack, Heap und statische Daten unterteilt.
+- Diese Organisation ist typisch für Unix/Linux-Systeme und unterstützt Schutzmechanismen (z. B. Stack Overflow-Erkennung).
+
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+Jeder Variablentyp hat einen speziellen Zweck und benötigt daher einen bestimmten Speicherbereich:
+
+- Stack-Variablen (lokale Variablen in Funktionen):
+  Werden beim Funktionsaufruf automatisch erzeugt und beim Verlassen wieder gelöscht. Sie werden im Stack-Segment gespeichert, das schnell wächst/verkleinert wird und daher effizient ist.
+
+- Heap-Variablen (dynamisch mit malloc/new angelegt):
+  Bleiben bestehen, bis sie explizit freigegeben werden. Sie liegen im Heap-Segment, das flexibel wächst (nach oben) und für dynamische Daten reserviert ist.
+
+- Statische Variablen (static, globale Variablen):
+  Existieren über die gesamte Laufzeit des Programms. Sie befinden sich im Data-Segment (bei Initialisierung) oder im BSS-Segment (ohne Initialisierung).
+
+Diese Trennung schützt vor Fehlern (z. B. Stackoverflow überschreibt keine statischen Daten) und macht die Speicherverwaltung effizienter und sicherer.
+
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+Auswirkungen:
+- Ein Speicherleck bedeutet, dass dynamisch reservierter Speicher (Heap) nicht mehr freigegeben wurde und kein Zeiger mehr darauf verweist.
+- Das führt dazu, dass der belegte Speicher nicht mehr nutzbar ist → Speicherverbrauch steigt mit jeder Programmausführung.
+- Im Extremfall kann das System verlangsamen, Prozesse abstürzen oder es kommt zu einem Out-of-Memory-Fehler.
+
+Wie kann das Betriebssystem damit umgehen?
+- Moderne Betriebssysteme räumen beim Beenden eines Prozesses den gesamten Prozessspeicher automatisch auf.
+- Lang laufende Prozesse (z. B. Server, Dienste) müssen selbst Speicher freigeben – dort helfen:
+  - Garbage Collection (in Sprachen wie Java, Python)
+  - Valgrind / LeakSanitizer: Werkzeuge zur Leck-Erkennung
+  - Betriebssystemüberwachung: Überwachung von Speicherverbrauch mit Limits (z. B. ulimit unter Linux)
+
