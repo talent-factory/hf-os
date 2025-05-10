@@ -1,5 +1,4 @@
 Aufgabe 4 – Logische und Physische Adressen
-
 Gegeben: Page Table (siehe Abbildung)
 Jede Seite ist 4 KB = 4096 Bytes groß.
 
