@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable:     %p\n", (void*)stack_var);
+    printf("Heap-Variable:      %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+
+    // Adressdifferenzen berechnen
+    unsigned long diff1 = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff2 = (unsigned long)stack_var - (unsigned long)static_var;
+    unsigned long diff3 = (unsigned long)heap_var - (unsigned long)static_var;
+
+    printf("\nAdressdifferenzen:\n");
+    printf("Stack - Heap:     %lu Bytes\n", diff1);
+    printf("Stack - Static:   %lu Bytes\n", diff2);
+    printf("Heap - Static:    %lu Bytes\n", diff3);
+
+    printf("\nWachstumsrichtungen:\n");
+
+    // Zwei lokale Variablen deklarieren
+    int a = 1;
+    int b = 2;
+
+    if (&a > &b)
+        printf("Stack wächst nach unten (hohe → niedrige Adressen)\n");
+    else
+        printf("Stack wächst nach oben (niedrige → hohe Adressen)\n");
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(sizeof(int)); // Leck: kein free()
+        *leak = i * 10;
+        // Hinweis: Zeiger "leak" wird überschrieben und geht verloren
+    }
+
+    // Speicher freigeben
+    free(heap_variable);
+
+    return 0;
+}
+
+
+1. Beschreibung der Programmausgabe
+-----------------------------------
+Das Programm gibt die Speicheradressen folgender Variablentypen aus:
+
+- Stack-Variable:    0x7ffdf9066b80
+- Heap-Variable:     0x595cb0a542a0
+- Statische Variable: 0x595caf3c5010
+
+Anschließend werden die Adressdifferenzen berechnet:
+
+- Stack - Heap:   sehr großer positiver Wert
+- Stack - Static: sehr großer positiver Wert
+- Heap - Static:  moderater Wert
+
+Die Ausgabe interpretiert, dass der Stack nach oben wächst (niedrige → hohe Adressen).
+
+2. Bedeutung für die Speicherorganisation im Betriebssystem
+-----------------------------------------------------------
+Die Adressen zeigen, dass die Speicherbereiche klar voneinander getrennt sind:
+
+- Stack: Im hohen Adressbereich (z. B. 0x7fff...) – für lokale Variablen und Funktionsaufrufe.
+- Heap: Im mittleren Adressbereich – für dynamisch reservierten Speicher (z. B. via malloc).
+- Statischer Speicher: Im unteren Bereich – für globale/statische Variablen.
+
+Diese Trennung erleichtert dem Betriebssystem die Speicherverwaltung, etwa bei Stacküberläufen oder Heap-Verwaltung.
+
+3. Warum liegen die Adressen in unterschiedlichen Bereichen?
+-------------------------------------------------------------
+Das liegt an der Speichersegmentierung des Betriebssystems:
+
+- Statischer Bereich (Data/ BSS Segment): Für globale/statische Variablen, wird beim Start allokiert.
+- Heap: Dynamisch wachsender Bereich, kontrolliert durch malloc, free usw.
+- Stack: Wächst bei Funktionsaufrufen und wird beim Rücksprung wieder freigegeben.
+
+Diese Trennung verbessert Stabilität, Sicherheit und Performance.
+
+4. Auswirkungen eines absichtlich erzeugten Speicherlecks
+----------------------------------------------------------
+Ein Speicherleck (z. B. durch malloc ohne free) führt dazu, dass Speicher reserviert bleibt, aber nie freigegeben wird. Konsequenzen:
+
+- Langfristiger Speicherverbrauch steigt.
+- Programme könnten langsamer werden oder abstürzen (z. B. "Out of memory").
+
+Wie kann das Betriebssystem damit umgehen?
+
+- Das OS kann den Speicher beim Beenden des Prozesses vollständig freigeben.
+- Für lang laufende Prozesse hilft das nicht – hier braucht es:
+  - Speicherprüfer (Valgrind, ASAN)
+  - Garbage Collection (in manchen Sprachen)
+  - Gute Programmierpraxis (z. B. jedes `malloc` mit `free` paaren)
