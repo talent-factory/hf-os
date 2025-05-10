@@ -1,0 +1,54 @@
+Interne Fragmentierung entsteht, wenn einem Prozess ein Speicherblock zugewiesen wird, der grösser ist als tatsächlich benötigt. Der ungenutzte Speicher im Block bleibt ungenutzt.
+
+Beispiel: Ein Programm benötigt 18 KB, aber es wird ein Block von 20 KB zugewiesen. Die verbleibenden 2 KB innerhalb des Blocks sind intern fragmentiert.
+
+Externe Fragmentierung entsteht, wenn durch Speicherfreigabe viele kleine freie Bereiche im Speicher verteilt entstehen, die zusammen genug Speicher bieten würden, aber nicht zusammenhängend sind.
+
+Beispiel: Nach mehrfachem Laden und Entfernen von Programmen entstehen viele kleine freie Speicherstücke wie 4 KB, 6 KB, 3 KB usw., aber kein einzelner grosser Block, z. B. für ein 10-KB-Programm
+
+Zwei Strategien zur Vermeidung/Reduktion von Fragmentierung:
+
+Paging (Seitentabellenverwaltung):
+
+Speicher wird in gleich grosse Seiten (z. B. 4 KB) aufgeteilt. Virtuelle Adressen werden über eine Page Table in physikalische Adressen übersetzt.
+
+Vorteile:
+
+Keine externe Fragmentierung.
+
+Einfaches Laden und Ersetzen von Seiten.
+
+Nachteile:
+
+Interne Fragmentierung in der letzten Seite.
+
+Page Tables können bei grossen Programmen sehr gross werden
+
+peicherverwaltung mit Bitmaps oder verketteten Listen (für Allokation/Freigabe):
+
+Freier Speicher wird mit Bitmaps oder Listen verwaltet.
+
+Kann zusammen mit Algorithmen wie First Fit, Best Fit, Worst Fit verwendet werden
+First Fit:
+
+Sucht das erste passende Loch.
+
+Vorteil: Schnell.
+
+Nachteil: Führt zu vielen kleinen Reststücken (externe Fragmentierung).
+
+Best Fit:
+
+Sucht das kleinste passende Loch.
+
+Vorteil: Weniger interner Verlust.
+
+Nachteil: Erzeugt viele kleine freie Stücke (externe Fragmentierung).
+
+Quick Fit:
+
+Hält Listen für oft genutzte Blockgrössen.
+
+Vorteil: Schnellere Allokation.
+
+Nachteil: Weniger flexibel.
