@@ -1,0 +1,49 @@
+Unterschied zwischen interner und externer Speicherfragmentierung:
+Interne Fragmentierung
+Entsteht, wenn einem Prozess mehr Speicher zugewiesen wird, als er tatsächlich benötigt. Der ungenutzte Speicher innerhalb der zugewiesenen Einheit ist verschwendet.
+
+Beispiel:
+Ein Dateisystem mit fester Blockgröße von 4 KB speichert eine Datei mit 6 KB. Diese Datei belegt zwei Blöcke (8 KB), aber nutzt davon nur 6 KB effektiv. Die verbleibenden 2 KB sind intern fragmentiert und gehen verloren.
+
+Externe Fragmentierung
+Entsteht, wenn im freien Speicherbereich zwar insgesamt genug Platz vorhanden ist, dieser aber in kleine, nicht zusammenhängende Teile aufgeteilt ist, sodass große Prozesse keinen ausreichend großen, zusammenhängenden Speicherbereich finden.
+
+Beispiel:
+Ein RAM mit insgesamt 100 MB freiem Speicher hat diese in 10 freie Segmente à 10 MB aufgeteilt. Ein Prozess, der 20 MB am Stück benötigt, kann nicht starten, obwohl insgesamt genug freier Speicher vorhanden ist.
+
+Zwei Strategien zur Reduktion von Speicherfragmentierung:
+1. Paging (Seitentabellenverwaltung)
+Das Betriebssystem teilt den virtuellen Speicher in gleich große Seiten (z. B. 4 KB) auf, die beliebig auf den physischen Speicher gemappt werden.
+
+Vorteile:
+
+Vermeidet externe Fragmentierung vollständig.
+
+Erlaubt effiziente Speicherzuweisung durch kleine Seiten.
+
+Nachteile:
+
+Verursacht interne Fragmentierung, insbesondere bei vielen kleinen Speicherseiten.
+
+Benötigt zusätzliche Verwaltungseinheiten (Seitentabellen), was mehr Speicher und CPU-Zeit verbraucht.
+
+2. Speicherkompaktierung (Memory Compaction)
+Das Betriebssystem verschiebt laufende Prozesse im RAM so, dass freie Speicherbereiche zusammengeführt werden (nur bei nicht-paging-Systemen möglich).
+
+Vorteile:
+
+Reduziert externe Fragmentierung und ermöglicht größere zusammenhängende Speicherblöcke.
+
+Nützlich in Systemen ohne virtuelle Speicherverwaltung.
+
+Nachteile:
+
+Sehr rechenintensiv (zeitaufwendig).
+
+Nicht praktikabel bei vielen laufenden Prozessen oder Echtzeitsystemen.
+
+Bewertung (kurz):
+
+Paging ist heute Standard, effizient und zuverlässig, aber erfordert zusätzlichen Speicher und erzeugt Verwaltungs-Overhead.
+
+Kompaktierung wird selten genutzt, da sie hohe CPU-Kosten verursacht und moderne Systeme eher auf virtuelle Speicherverwaltung setzen.
