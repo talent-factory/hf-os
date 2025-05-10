@@ -1,0 +1,161 @@
+1- mkdir -p test/subdir && cd test
+Funktion: Erstellt ein Verzeichnis namens test mit einem Unterverzeichnis subdir. Der Parameter -p sorgt dafür, dass alle notwendigen Verzeichnisse erstellt werden, falls sie nicht existieren.
+
+Konzepte:
+
+mkdir → Erstellt Verzeichnisse.
+-p → Erstellt Elternverzeichnisse, falls nicht vorhanden.
+&& → Führt den nächsten Befehl (cd test) nur aus, wenn der vorherige erfolgreich war.
+cd test → Wechselt in das Verzeichnis test
+
+
+2-echo "Inhalt-$(date +%s)" > original.txt
+Funktion: Erstellt eine Datei namens original.txt und schreibt den Inhalt "Inhalt-<Zeitstempel>" hinein.
+
+Konzepte:
+
+echo → Gibt Text im Terminal aus oder schreibt ihn in eine Datei.
+date +%s → Gibt den aktuellen Unix-Timestamp (Sekunden seit 1970) aus.
+> → Leitet die Ausgabe in die Datei original.txt. Falls die Datei nicht existiert, wird sie erstellt, andernfalls überschrieben.
+
+3-ln -s original.txt symlink.txt
+Funktion: Erstellt einen symbolischen Link (Softlink) mit dem Namen symlink.txt, der auf original.txt zeigt.
+
+Konzepte:
+
+ln -s → Erstellt einen symbolischen Link.
+Symbolische Links sind Verknüpfungen, die auf den Pfad einer Datei zeigen.
+Wenn original.txt gelöscht wird, zeigt symlink.txt auf eine nicht vorhandene Datei (Broken Link).
+
+4️⃣ ln original.txt hardlink.txt
+Funktion: Erstellt einen Hardlink namens hardlink.txt, der auf die exakt gleichen Daten wie original.txt zeigt.
+
+Konzepte:
+
+ln → Erstellt einen Hardlink.
+Hardlinks sind direkte Referenzen auf die Daten im Dateisystem (inode).
+Wenn original.txt gelöscht wird, bleibt der Inhalt über hardlink.txt erreichbar.
+
+5️⃣ chmod 640 original.txt
+Funktion: Setzt die Rechte von original.txt auf 640.
+
+Konzepte:
+
+chmod → Ändert Dateiberechtigungen.
+640 → Rechteverteilung:
+6 → Besitzer: Lesen und Schreiben (4 + 2 = 6)
+4 → Gruppe: Nur Lesen
+0 → Andere: Kein Zugriff
+
+ 6️⃣ touch -d "2 days ago" original.txt
+Funktion: Ändert das Änderungsdatum von original.txt auf "vor 2 Tagen".
+
+Konzepte:
+
+touch → Setzt das Datum einer Datei neu.
+-d "2 days ago" → Legt das Datum exakt auf zwei Tage in der Vergangenheit.
+
+7️⃣ ls -la
+Funktion: Listet alle Dateien im aktuellen Verzeichnis, einschließlich versteckter Dateien, im Detailformat auf.
+
+Konzepte:
+
+ls → Listet Inhalte eines Verzeichnisses auf.
+-l → Detaillierte Liste mit Informationen (Rechte, Besitzer, Größe, Datum).
+-a → Zeigt auch versteckte Dateien an (die mit . beginnen).
+
+AUSGABE VON ls-la:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:56 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:55 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:56 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:56 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:55 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:56 symlink.txt -> original.txt
+
+
+Spalte	Beschreibung
+drwxrwxr-x	Dateityp und Berechtigungen — Das erste Zeichen steht für den Typ (d für Verzeichnis, - für Datei, l für symbolischen Link), die folgenden neun Zeichen repräsentieren die Berechtigungen (Besitzer, Gruppe, Andere).
+3	Anzahl der Hardlinks — Die Anzahl der Verweise auf diesen Inode. Bei Verzeichnissen beinhaltet dies das Verzeichnis selbst (.), sein übergeordnetes Verzeichnis (..) und seine Unterverzeichnisse.
+vmadmin	Besitzer — Der Benutzer, dem die Datei oder das Verzeichnis gehört.
+vmadmin	Gruppe — Die Gruppe, die bestimmte Rechte auf die Datei oder das Verzeichnis hat.
+4096, 18, 12	Größe — Die Größe der Datei in Bytes. Verzeichnisse haben in der Regel eine Standardgröße von 4096 Bytes (4KB).
+Mai 10 08:56	Zeitstempel — Das letzte Änderungsdatum und die Uhrzeit der Datei oder des Verzeichnisses.
+., .., hardlink.txt, symlink.txt	Name — Der Name der Datei oder des Verzeichnisses.
+
+
+Analyse der Unterschiede:
+Dateityp:
+
+original.txt ist eine reguläre Datei.
+hardlink.txt ist ein Hardlink zu original.txt. Beide teilen sich denselben Inode (haben also dieselbe Referenz auf den Speicher).
+symlink.txt ist ein symbolischer Link (l im ersten Zeichen) und verweist lediglich auf den Pfad von original.txt.
+
+Größe:
+Die Größe von original.txt und hardlink.txt beträgt jeweils 18 Bytes — der Inhalt ist vollständig identisch.
+
+symlink.txt hat nur 12 Bytes, weil nur der Pfad (original.txt) gespeichert wird und nicht der Inhalt.
+
+Berechtigungen:
+original.txt und hardlink.txt haben dieselben Rechte: rw-r-----.
+
+Der Besitzer kann lesen und schreiben, die Gruppe kann nur lesen, andere haben keinen Zugriff.
+
+symlink.txt hat die Berechtigungen lrwxrwxrwx, was bedeutet, dass der Link selbst für jeden zugänglich ist. Die Berechtigungen des Ziels (original.txt) werden beim Zugriff verwendet.
+
+Zeitstempel:
+original.txt und hardlink.txt haben denselben Zeitstempel (Mai 8 08:56), weil sie denselben Inode teilen.
+
+symlink.txt hat einen anderen Zeitstempel (Mai 10 08:56), weil der Link selbst später erstellt wurde.
+
+Hardlinks:
+original.txt und hardlink.txt haben beide eine Anzahl von 2 Hardlinks. Das bedeutet, dass es zwei Verweise auf dieselbe Datei gibt.
+
+symlink.txt hat 1 Hardlink, weil es nur eine symbolische Referenz ist.
+
+Verknüpfung:
+symlink.txt zeigt explizit auf original.txt. Das sieht man in der Ausgabe:
+
+Warum haben hardlink.txt und original.txt dieselbe Inode-Nummer, aber symlink.txt nicht?
+Hardlinks wie hardlink.txt und original.txt sind direkte Verweise auf denselben Inode. Das bedeutet, sie zeigen beide exakt auf dieselben Daten im Dateisystem. Wenn du original.txt löschst, bleibt der Inhalt über hardlink.txt erhalten, weil es sich um denselben Inode handelt.
+
+Symbolische Links (Symlinks) wie symlink.txt sind nur Pfad-Verweise. Sie enthalten lediglich den Pfad zur Originaldatei, nicht die Daten selbst. Darum haben sie eine eigene Inode-Nummer und sind vom Original unabhängig.
+
+
+echo "Neuer Inhalt" > original.txt
+Dieser Befehl:
+
+Überschreibt den Inhalt von original.txt mit dem Text "Neuer Inhalt".
+Da hardlink.txt ein Hardlink zu original.txt ist, zeigt es denselben Inhalt an, weil beide auf denselben Inode im Dateisystem verweisen:
+
+cat hardlink.txt
+
+Ausgabe:
+Neuer Inhalt
+
+mv original.txt ../original.txt
+
+Die Datei original.txt wurde in ein anderes Verzeichnis verschoben.
+Der symbolische Link (symlink.txt) ist gebrochen, weil er nur auf den Pfad von original.txt verweist.
+Da original.txt nicht mehr im ursprünglichen Verzeichnis ist, zeigt symlink.txt ins Leere.
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+
+original.txt:	Teilt sich den Inode mit hardlink.txt	Der Befehl mv ändert nur den Pfad, nicht die Inode-Nummer.
+hardlink.txt:	Teilt sich den Inode mit original.txt	Bleibt unverändert und zeigt weiterhin korrekt auf die Daten.
+symlink.txt:	Hat eine eigene Inode und verweist auf einen Pfad	Die Inode bleibt bestehen, aber der Pfad ist ungültig.
+
+
+
+Hard Links (hardlink.txt) bleiben intakt, weil sie direkte Verweise auf die Inode haben.
+Symbolische Links (symlink.txt) sind jetzt gebrochen, weil sie nur auf den alten Pfad verweisen.
+
+Wie unterscheidet sich das Verhalten zwischen symbolischen Links und Hardlinks in diesem Szenario?
+
+Hard Link:	Funktioniert weiterhin korrekt, auch wenn die Originaldatei (original.txt) verschoben oder gelöscht wird. Der Inhalt bleibt erhalten, da der Inode bestehen bleibt.
+Symbolischer Link:	Ist jetzt gebrochen (Datei oder Verzeichnis nicht gefunden), weil der Link nur auf den Pfad von original.txt verweist. Wird der Pfad verändert, zeigt der Link ins Leere.
+
+
+Hard Link: Direkter Verweis auf die Datenblöcke (Inode). Verschieben der Datei hat keinen Einfluss.
+Symbolischer Link: Verweist nur auf den Pfad; ändert sich der Pfad, bricht der Link.
+
