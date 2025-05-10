@@ -45,4 +45,12 @@ drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:30 ..
 drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:30 subdir
 lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:31 symlink.txt -> original.txt
 
+Analyse der Ausgabe:
+1. Die Ausgabe zeigt alle Dateien und Ordner im aktuellen Verzeichnis mit vielen Infos dazu. Man sieht unter anderem den Dateinamen, wann die Datei zuletzt geändert wurde, wie groß sie ist und welche Rechte sie hat.
+2. original.txt und hardlink.txt sind eigentlich die gleiche Datei mit zwei Namen. Beide haben den gleichen Inhalt, die gleichen Rechte, den gleichen Zeitstempel und teilen sich den gleichen Speicher. Das erkennt man auch daran, dass beide die gleiche Link-Anzahl 2 haben.
+symlink.txt ist anders. Er zeigt nur auf den Namen original.txt, hat aber einen eigenen Speicherplatz. Wenn man ihn löscht, bleibt original.txt trotzdem da. Er hat auch einen anderen Zeitstempel und spezielle Rechte (lrwxrwxrwx), die immer bei symbolischen Links so aussehen.
+3. riginal.txt und hardlink.txt teilen sich den gleichen Inode, weil sie beide direkt auf den gleichen Speicher im Dateisystem zeigen. Es ist also egal, welchen Namen man benutzt, der Inhalt ist der gleiche.
+symlink.txt hat eine andere Inode-Nummer, weil er nur eine Art Verknüpfung ist. Er speichert nicht den Inhalt, sondern nur den Pfad zur echten Datei. Darum hat er auch eigene Metadaten und einen eigenen Zeitstempel.
+
+die nächsten Befehlen:
 
