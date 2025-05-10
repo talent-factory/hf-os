@@ -1,0 +1,126 @@
+Befehl: mkdir -p test/subdir && cd test
+Erstellt das Verzeichnis test mit Unterordner subdir und wechselt in test.
+
+Befehl: echo "Inhalt-$(date +%s)" > original.txt
+Schreibt den Text inkl. Zeitstempel in original.txt. Datei wird neu erstellt.
+
+Befehl: ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link auf original.txt, speichert nur den Pfad.
+
+Befehl: ln original.txt hardlink.txt
+Erstellt einen harten Link, verweist direkt auf denselben Inode wie original.txt.
+
+Befehl: chmod 640 original.txt
+Setzt Rechte: Besitzer = lesen/schreiben, Gruppe = lesen, andere = keine Rechte.
+
+Befehl: touch -d "2 days ago" original.txt
+Ändert den Änderungszeitpunkt (mtime) von original.txt auf „vor zwei Tagen“.
+
+Befehl: ls -la
+Zeigt Dateilisten mit Details: Rechte, Links, Besitzer, Größe, Zeit, Name.
+
+Ausgabe Befehl: 
+ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:31 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:31 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:32 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:32 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:31 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:31 symlink.txt -> original.txt
+
+
+Bedeutung der Spalten (ls -la):
+Spalte 1: Dateityp und Berechtigungen (z. B. -rw-r-----)
+- = reguläre Datei, l = symbolischer Link, d = Verzeichnis
+Rechte für Besitzer / Gruppe / andere
+
+Spalte 2: Linkanzahl (wie viele Dateinamen auf denselben Inode zeigen)
+
+Spalte 3 & 4: Besitzer und Gruppe (z. B. vnadmin)
+
+Spalte 5: Dateigröße in Bytes
+
+Spalte 6–8: Änderungsdatum und Uhrzeit (mtime)
+
+Spalte 9: Dateiname (bei Symlinks inkl. -> Zielpfad)
+
+2. Unterschiede zwischen original.txt, hardlink.txt, symlink.txt:
+Datei	Inode	Berechtigungen	Zeitstempel
+original.txt	gleich wie hardlink.txt	-rw-r-----	identisch
+hardlink.txt	gleich wie original.txt	-rw-r-----	identisch
+symlink.txt	eigener Inode	lrwxrwxrwx	abweichend (Link-Datei selbst)
+
+original.txt & hardlink.txt: zeigen auf denselben Inode, gleiche Inhalte & Metadaten
+
+symlink.txt: zeigt nur symbolisch auf Pfad original.txt, besitzt eigene Metadaten (eigener Inode)
+
+3. Warum gleiche oder unterschiedliche Inodes?
+Gleiche Inode-Nummer: bei harten Links wie original.txt und hardlink.txt – sie verweisen direkt auf denselben Speicherort.
+
+Unterschiedliche Inode-Nummer: bei symbolischen Links wie symlink.txt, da sie nur einen Pfad speichern, nicht die Datei selbst.
+
+
+Befehl: echo "Neuer Inhalt" > original.txt
+Ausgabe: Keine, aber Inhalt von original.txt wird überschrieben.
+
+Inode: Gleich geblieben – nur Inhalt ersetzt.
+
+Links: hardlink.txt zeigt auf denselben Inode → zeigt ebenfalls „Neuer Inhalt“.
+
+Fehler: Keine.
+
+Befehl: cat symlink.txt hardlink.txt
+Ausgabe: Zwei Mal „Neuer Inhalt“
+
+symlink.txt → zeigt auf original.txt
+
+hardlink.txt → gleicher Inode
+
+Inode: Keine Änderung.
+
+Unterschied: Beide funktionieren, da das Ziel (original.txt) noch vorhanden ist.
+
+Fehler: Keine.
+
+Befehl: mv original.txt ../original.txt
+Ausgabe: Keine.
+
+Inode: bleibt gleich (nur Dateiname/Pfad ändert sich).
+
+Auswirkung: hardlink.txt bleibt gültig (gleicher Inode),
+symlink.txt zeigt auf einen nicht mehr existierenden Pfad.
+
+Fehler: Symlink wird ungültig (broken).
+
+Befehl: cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+
+Fehler: symlink.txt: Datei oder Verzeichnis nicht gefunden
+
+hardlink.txt: zeigt weiterhin „Neuer Inhalt“
+
+Inode: keine Änderung.
+
+Unterschied:
+
+Symlink: kaputt, weil Zielpfad nicht mehr existiert.
+
+Hardlink: funktioniert, da er direkt auf den Inode zeigt.
+
+Fehler: Symlink ist ungültig, weil er keinen Inode, sondern nur einen Pfad kennt.
+
+Bonus Frage:
+Wenn sich die Dateien auf unterschiedlichen Dateisystemen befinden:
+
+Hardlinks: funktionieren nicht über Dateisystemgrenzen hinweg, da Inodes nur innerhalb eines Dateisystems eindeutig sind.
+→ ln original.txt /anderes-fs/hardlink.txt würde mit einem Fehler abbrechen.
+
+Symlinks: funktionieren problemlos, da sie nur den Pfad speichern, nicht den Inode.
+→ ln -s /anderes-fs/original.txt symlink.txt ist gültig, egal wo die Zieldatei liegt.
+
+Fazit:
+
+Hardlinks sind lokal ans Dateisystem gebunden.
+
+Symlinks sind flexibel, aber anfälliger für Pfadänderungen.
