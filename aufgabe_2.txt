@@ -1,0 +1,34 @@
+Unterschied zwischen interner und externer Fragmentierung:
+
+Interne Fragmentierung tritt auf, wenn einem Prozess mehr Speicher zugewiesen wird, als dieser tatsächlich benötigt. Die ungenutzten Teile innerhalb des zugewiesenen Speicherblocks sind nicht mehr anderweitig nutzbar.
+
+Praxisbeispiel: Ein Prozess benötigt 6 KB Speicher, es stehen aber nur 8-KB-Blöcke zur Verfügung. Der Prozess erhält einen 8-KB-Block, wobei 2 KB ungenutzt bleiben. Diese 2 KB stellen interne Fragmentierung dar.
+
+Externe Fragmentierung entsteht, wenn durch dynamische Speicherzuweisungen und -freigaben viele kleine freie Bereiche im Speicher entstehen, die nicht zusammenhängend sind. Obwohl die Gesamtsumme der freien Bereiche ausreicht, kann ein größerer zusammenhängender Speicherbedarf nicht bedient werden.
+
+Beispiel: Ein Speicher enthält freie Bereiche von 4 MB, 3 MB und 5 MB. Ein Prozess benötigt 10 MB zusammenhängenden Speicher. Die Anfrage schlägt fehl, obwohl insgesamt 12 MB frei sind.
+
+Strategie 1 - Speicherverdichtung (Compaction)
+Dabei werden alle Prozesse im Speicher verschoben, um freie Speicherbereiche zusammenzufassen und größere zusammenhängende Blöcke zu schaffen.
+
+Vorteile
+Externe Fragmentierung wird vollständig beseitigt
+Größere Prozesse können ohne Swapping ausgeführt werden.
+
+Nachteile
+Hoher Rechen- und Zeitaufwand.
+Erfordert komplexe Speicherverwaltung und ggf. Hardwareunterstützung.
+Kann die Systemleistung während der Verdichtung stark beeinträchtigen.
+
+Strategie 2 -Virtueller Speicher mit Paging
+Der virtuelle Adressraum wird in gleich große Seiten (z. B. 4 KB) unterteilt, die unabhängig in gleich große Speicherrahmen im physischen Speicher geladen werden. Nur die benötigten Seiten müssen tatsächlich im RAM vorhanden sein.
+
+Vorteile
+Vermeidung externer Fragmentierung.
+Effiziente Speichernutzung durch Nachladen bei Bedarf (Demand Paging).
+Prozesse können größer als der verfügbare physische Speicher sein.
+
+Nachteile
+Potenzielle interne Fragmentierung auf Seitenebene.
+Höherer Verwaltungsaufwand durch Seitentabellen und die Memory Management Unit (MMU).
+Leistungsverluste durch Page Faults bei häufigem Nachladen von Seiten.
