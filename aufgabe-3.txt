@@ -90,7 +90,7 @@ Neuer Inhalt
 
 ===== Technische Analyse =====
 
-🧩 Auswirkungen auf die Inode-Tabelle:
+Auswirkungen auf die Inode-Tabelle:
 
 - `hardlink.txt` und `original.txt` haben dieselbe Inode → eine Änderung an einer wirkt auf beide
 - Nach dem `mv` ist nur noch `hardlink.txt` im aktuellen Verzeichnis mit gültiger Verbindung zur Inode
