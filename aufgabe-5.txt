@@ -1,0 +1,60 @@
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ nano aufgabe5.c
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ gcc -o aufgabe5 aufgabe5.c
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ ./aufgabe5
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse: 96 Bytes
+Inode-Nummer: 546293
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: 2025-05-10 09:26:14
+Letzte Änderung: 2025-05-10 09:26:14
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse: 135 Bytes
+Inode-Nummer: 546293
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: 2025-05-10 09:26:14
+Letzte Änderung: 2025-05-10 09:26:14
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigrösse: 135 Bytes
+Inode-Nummer: 546293
+Anzahl Hardlinks: 2
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: 2025-05-10 09:26:14
+Letzte Änderung: 2025-05-10 09:26:14
+
+➜  LB2 git:(hfi2024c/saime-fazlija) ✗ 
+
+
+
+1. Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+
+Nach dem Anhängen von Text an die Datei `testdatei.txt` hat sich die Dateigrösse von 96 Bytes auf 135 Bytes erhöht – was korrekt ist, da zusätzlicher Text hinzugefügt wurde. Die Inode-Nummer ist gleich geblieben, da es sich weiterhin um dieselbe Datei handelt. 
+Die Anzahl der Hardlinks war zunächst 1 und stieg nach dem Erstellen des Hardlinks auf 2. Die Zugriffsrechte (664) sowie die Zeitstempel für Zugriff und Änderung blieben gleich, da die Aktionen innerhalb kurzer Zeit erfolgten und das System eventuell keine neuen Zeitstempel gesetzt hat.
+
+2. Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+Die Inode-Nummer ist ein eindeutiger Identifikator für eine Datei im Dateisystem. Sie enthält alle Informationen über die Datei (z. B. Größe, Rechte, Zeitstempel, Block-Position auf der Festplatte), aber **nicht** den Dateinamen.
+Der Dateiname ist nur ein Verweis (Link) auf eine Inode.
+
+Wenn zwei Dateinamen dieselbe Inode-Nummer haben, handelt es sich um Hardlinks – also verschiedene Namen, die denselben Dateiinhalt referenzieren. Änderungen an einer der beiden wirken sich direkt auf die andere aus, da sie dieselbe Inode (denselben Inhalt) teilen.
+
+3. Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+Ein symbolischer Link (Symlink) ist eine spezielle Datei, die nur den Pfad zur Ziel-Datei enthält. Sie hat **eine eigene Inode** und verweist nur symbolisch auf die Originaldatei. 
+
+Unterschiede:
+- Die Inode des Symlinks ist anders als die der Ziel-Datei.
+- Wenn die Originaldatei gelöscht wird, zeigt der Symlink ins Leere („broken link“), während ein Hardlink weiterhin funktioniert.
+- Die Metadaten (z. B. Zugriffszeit) des Symlinks betreffen nur den Link selbst, nicht zwangsläufig die Ziel-Datei.
+
+
