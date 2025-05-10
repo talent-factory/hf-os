@@ -16,7 +16,7 @@ Nach dem Erstellen eines Hardlinks:
 - testdatei_hardlink.txt zeigt:
   - Gleiche Grösse: 168 Bytes
   - Gleiche Inode-Nummer: 546209
-  - Hardlink-Zähler: 2
+  - Anzahl Hardlinks: 2
   - Rechte & Zeitstempel identisch
 
 Analyse:

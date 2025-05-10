@@ -32,8 +32,8 @@ Berechnung:
 → Phys. Adresse = 12288 + 0 = 12288
 
 3. Virtuelle Adresse: 32800
-→ Seite 8 → nicht abgebildet (Seite X laut Tabelle)
-→ Kein Mapping → Seite nicht im Speicher → Seitefehler (Page Fault)
+→ Seite 8 → nicht abgebildet laut Page Table
+→ Kein Mapping vorhanden → ergibt einen Seitenfehler (Page Fault)
 
 Antworten:
 - 12300 → 5108

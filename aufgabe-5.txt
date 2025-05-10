@@ -12,7 +12,7 @@ Stack - Static: 37907435126912 Bytes
 Heap - Static: 21258896 Bytes
 
 Wachstumsrichtungen:
-Stack wächst nach oben.
+Stack wächst in diesem konkreten Fall nach oben – was untypisch ist, da auf den meisten Systemen der Stack nach unten wächst. Dies könnte durch Compiler-Einstellungen oder Optimierungen beeinflusst sein..
 
 Analyse:
 
@@ -23,7 +23,7 @@ Analyse:
 
 2. Die hohe Differenz bei Stack-Heap und Stack-Static zeigt die Speichertrennung.
 
-3. Obwohl Stack gewöhnlich nach unten wächst, zeigt dieser konkrete Output „Stack wächst nach oben“. Dies ist abhängig vom Compiler oder Optimierung, aber untypisch.
+3. Obwohl Stack gewöhnlich nach unten wächst, zeigt dieser konkrete Output „Stack wächst in diesem konkreten Fall nach oben – was untypisch ist, da auf den meisten Systemen der Stack nach unten wächst. Dies könnte durch Compiler-Einstellungen oder Optimierungen beeinflusst sein.“. Dies ist abhängig vom Compiler oder Optimierung, aber untypisch.
 
 4. Die Speicherlecks aus der Schleife erzeugen unbeachteten Heap-Speicher:
    - Bei kleiner Menge irrelevant
