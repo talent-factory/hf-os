@@ -8,8 +8,8 @@ Physische Adresse = Physische Adresse=(physischer Frame)×2 hoch 12 +Offset
 
 Virtuelle Seite 3 → Frame 110₂ = 6
 
-6×4096+20=24576+20= 
-24596
+6×4096+20=24576+20= 24596
+		    -----
 ​
 2.
 16384₁₀ = 0100 0000 0000 0000₂
@@ -17,8 +17,8 @@ Virtuelle Seite 3 → Frame 110₂ = 6
 
 Virtuelle Seite 4 → Frame 100₂ = 4
 
-4×4096+0= 
-16384
+4×4096+0= 16384
+	  -----
 
 3.
 32800₁₀ = 1000 0000 1101 0000₂
@@ -26,6 +26,6 @@ Virtuelle Seite 4 → Frame 100₂ = 4
 
 ​Virtuelle Seite 8 → Frame 011₂ = 3
 
-3×4096+208=12288+208= 
-12496
+3×4096+208=12288+208= 12496
+		      -----
 
