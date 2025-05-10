@@ -1,0 +1,113 @@
+-------------------------
+Vervollständigter C-Code:
+-------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable:    %p\n", (void*)stack_var);
+    printf("Heap-Variable:     %p\n", (void*)heap_var);
+    printf("Statische Variable:%p\n", (void*)static_var);
+
+    // Adressdifferenz berechnen
+    unsigned long diff_stack_heap = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff_stack_static = (unsigned long)stack_var - (unsigned long)static_var;
+
+    printf("\nAdressdifferenzen:\n");
+    printf("Stack - Heap:      %lu Bytes\n", diff_stack_heap);
+    printf("Stack - Static:    %lu Bytes\n", diff_stack_static);
+
+    // Wachstumsrichtung des Stacks analysieren
+    printf("\nWachstumsrichtungen:\n");
+
+    int local1 = 1;
+    int local2 = 2;
+
+    if ((unsigned long)&local2 < (unsigned long)&local1) {
+        printf("Stack wächst nach unten (absteigende Adressen)\n");
+    } else {
+        printf("Stack wächst nach oben (aufsteigende Adressen)\n");
+    }
+
+    printf("\n");
+}
+
+int main() {
+    static int static_variable = 100;
+    int stack_variable = 200;
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        void* leak = malloc(1024); // 1 KB Speicherleck pro Iteration
+        (void)leak; // suppress unused variable warning
+    }
+
+    free(heap_variable);
+
+    return 0;
+}
+
+-------------------------
+Programmausgabe:
+-------------------------
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7ffc4c8627c0
+Heap-Variable:     0x5eef152062a0
+Statische Variable:0x5eef13ec8010
+
+Adressdifferenzen:
+Stack - Heap:      36340647707936 Bytes
+Stack - Static:    36340667885488 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (aufsteigende Adressen)
+
+-------------------------
+Analyse & Interpretation:
+-------------------------
+
+1. **Speicherbereiche:**
+   - **Stack-Variable:** 0x7ffc4c8627c0 → liegt im hohen Speicherbereich (typisch für Stack)
+   - **Heap-Variable:**  0x5eef152062a0 → liegt deutlich darunter
+   - **Statische Variable:** 0x5eef13ec8010 → liegt im Bereich des Datensegments
+
+2. **Adressdifferenzen:**
+   - Stack – Heap: ca. 36 TB (theoretisch große Differenz, da virtualisiert)
+   - Stack – Static: noch größere Differenz
+   → Zeigt die klare Trennung der Speichersegmente im **virtuellen Adressraum**
+
+3. **Wachstumsrichtung des Stacks:**
+   - Deine Analyse ergibt: **Stack wächst nach oben**
+   - Dies ist eher ungewöhnlich, da Stacks in vielen Architekturen traditionell **nach unten** wachsen.
+   - Erklärung: Das Verhalten kann je nach **Compiler, Plattform, Speicherlayout** variieren.
+
+4. **Speicherleck (im Code erzeugt):**
+   - Im Loop wurden 5× je 1024 Byte (1 KB) mit `malloc()` zugewiesen.
+   - Diese Speicherblöcke wurden **nicht** freigegeben.
+   - Ergebnis: Es entstehen **Speicherlecks**, die zu **Ressourcenerschöpfung** führen können, wenn sie sich häufen.
+
+5. **Wie geht das Betriebssystem damit um?**
+   - Das OS selbst erkennt Lecks nicht automatisch.
+   - Beim Beenden des Prozesses werden die Ressourcen vom Betriebssystem **freigegeben**.
+   - Für Laufzeitanalyse nutzt man Tools wie:
+     - `valgrind`
+     - `asan` (AddressSanitizer)
+     - oder Memory Profiling in IDEs
+
+
+
+

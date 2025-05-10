@@ -1,0 +1,60 @@
+1. Unterschied zwischen interner und externer Fragmentierung
+Interne Fragmentierung:
+
+Entsteht, wenn einem Prozess mehr Speicher zugewiesen wird, als tatsächlich benötigt wird.
+
+Der ungenutzte Speicher innerhalb eines zugewiesenen Blocks ist intern „verschwendet“.
+
+Beispiel:
+Ein Betriebssystem vergibt Speicher in Einheiten von 4 KB. Wenn ein Prozess jedoch nur 3,2 KB benötigt, bleiben 0,8 KB ungenutzt – dies ist interne Fragmentierung.
+
+Externe Fragmentierung:
+
+Entsteht, wenn im Speicher viele kleine, unzusammenhängende freie Bereiche vorhanden sind, die für größere Anforderungen nicht genutzt werden können – obwohl der Gesamtspeicher ausreichen würde.
+
+Beispiel:
+Ein System hat freien Speicher in Form von 3 Blöcken zu je 5 MB. Ein Prozess benötigt 10 MB zusammenhängenden Speicher, aber kein einzelner Block ist groß genug – dies ist externe Fragmentierung.
+
+2. Strategien zur Reduzierung oder Vermeidung von Fragmentierung
+a) Paging (virtueller Speicher)
+Der Speicher wird in gleich große Blöcke (Pages und Frames) aufgeteilt.
+
+Virtuelle Adressen werden durch die MMU (Memory Management Unit) auf physische Adressen abgebildet.
+
+Interne Fragmentierung kann auftreten, aber keine externe Fragmentierung.
+
+Vorteile:
+
+Keine externe Fragmentierung.
+
+Flexibler Umgang mit Speicheranforderungen.
+
+Prozesse müssen nicht zusammenhängend im physischen Speicher liegen.
+
+Nachteile:
+
+Verwaltungsaufwand durch Page Tables.
+
+Page Faults können Leistungseinbußen verursachen.
+
+Erhöhter Speicherverbrauch für Verwaltungsstrukturen.
+
+b) Speicherverdichtung (Memory Compaction)
+Speicher wird aktiv reorganisiert, indem belegte Blöcke verschoben werden, um größere zusammenhängende freie Bereiche zu schaffen.
+
+Wird oft im Zusammenhang mit Swapping eingesetzt.
+
+Vorteile:
+
+Effektive Beseitigung externer Fragmentierung.
+
+Bessere Ausnutzung des Speichers für große Prozesse.
+
+Nachteile:
+
+Hoher Rechen- und Zeitaufwand.
+
+Prozesse müssen oft vollständig pausiert werden.
+
+Nicht in allen Systemen praktikabel.
+

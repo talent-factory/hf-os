@@ -1,0 +1,102 @@
+
+Teil 1: Schritt-für-Schritt-Erklärung der Befehle
+-------------------------------------------------
+
+1. mkdir -p test/subdir && cd test
+   - Erstellt ein Verzeichnis 'test' mit einem Unterverzeichnis 'subdir'.
+   - 'cd test' wechselt in das neu erstellte Verzeichnis.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+   - Erstellt die Datei 'original.txt' mit Inhalt wie z.B. "Inhalt-1715334286".
+   - Die Datei enthält den Unix-Zeitstempel zum Zeitpunkt der Ausführung.
+
+3. ln -s original.txt symlink.txt
+   - Erstellt einen symbolischen Link 'symlink.txt', der auf die Datei 'original.txt' verweist.
+
+4. ln original.txt hardlink.txt
+   - Erstellt einen Hardlink 'hardlink.txt', der dieselbe Inode wie 'original.txt' verwendet.
+
+5. chmod 640 original.txt
+   - Setzt die Berechtigungen auf rw-r----- (Besitzer: lesen + schreiben, Gruppe: lesen, andere: keine Rechte).
+
+6. touch -d "2 days ago" original.txt
+   - Ändert den Änderungszeitstempel von 'original.txt' (und somit auch von 'hardlink.txt') auf 2 Tage früher.
+
+7. ls -la
+   → Ausgabe:
+
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 10 10:43 .
+drwxr-x--- 22 vmadmin vmadmin 4096 Mai 10 10:44 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 10:44 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 10:44 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 10 10:42 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 10 10:43 symlink.txt -> original.txt
+
+-------------------------------------------------
+
+Teil 2: Analyse der Ausgabe von 'ls -la'
+----------------------------------------
+
+Spalten:
+1. Dateityp + Rechte
+2. Linkanzahl (Anzahl der Verweise auf denselben Inode)
+3. Benutzername
+4. Gruppe
+5. Dateigröße (in Bytes)
+6. Zeitstempel (letzte Modifikation)
+7. Dateiname (+ Ziel bei symbolischen Links)
+
+Unterschiede:
+
+- 'original.txt' und 'hardlink.txt' haben **identische Inodes** (ersichtlich an der Linkanzahl '2').
+- Beide Dateien zeigen dieselben Rechte und denselben Zeitstempel, da sie **denselben Datenblock** nutzen.
+- 'symlink.txt' hat **einen eigenen Inode**, enthält aber nur einen Pfad (Länge = 12 Bytes).
+- Der Zeitstempel von 'symlink.txt' zeigt **nicht** die Modifikationszeit der Ziel-Datei, sondern seine eigene.
+
+-------------------------------------------------
+
+Teil 3: Weitere Befehle – Verhalten und Auswirkungen
+-----------------------------------------------------
+
+1. echo "Neuer Inhalt" > original.txt
+   - Überschreibt den Inhalt von 'original.txt'.
+   - Auch 'hardlink.txt' zeigt jetzt "Neuer Inhalt", da beide denselben Inode nutzen.
+   - 'symlink.txt' verweist weiterhin auf 'original.txt'.
+
+2. cat symlink.txt hardlink.txt
+   → Ausgabe:
+   Neuer Inhalt
+   Neuer Inhalt
+
+3. mv original.txt ../original.txt
+   - Verschiebt die Datei eine Ebene nach oben.
+   - 'hardlink.txt' bleibt funktional, da der Inode bestehen bleibt.
+   - 'symlink.txt' ist jetzt **gebrochen**, da 'original.txt' im aktuellen Verzeichnis fehlt.
+
+4. cat symlink.txt hardlink.txt 2>&1
+   → Ausgabe:
+   cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+   Neuer Inhalt
+
+-------------------------------------------------
+
+Teil 4: Symbolischer vs. harter Link
+------------------------------------
+
+| Merkmal               | Hardlink                  | Symbolischer Link           |
+|-----------------------|---------------------------|-----------------------------|
+| Inode                 | Gleich wie Original       | Eigener Inode               |
+| Inhalt                | Zeigt direkt auf Daten    | Zeigt auf Pfad              |
+| Gültig nach mv?       | Ja                        | Nein (wenn Ziel verschoben) |
+| Cross-Filesystem?     | Nein                      | Ja                          |
+| Bruchgefahr           | Gering                    | Hoch bei Pfadänderung       |
+
+-------------------------------------------------
+
+Bonus: Unterschiedliche Dateisysteme
+------------------------------------
+
+- **Hardlinks funktionieren nur innerhalb desselben Dateisystems** (Partition).
+  → ln: 'Invalid cross-device link'
+- **Symbolische Links funktionieren auch über Partitionsgrenzen hinweg**, da sie lediglich Pfade speichern.
