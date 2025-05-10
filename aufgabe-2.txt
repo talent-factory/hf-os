@@ -1,0 +1,16 @@
+Unterschied zwischen interner und externer Speicherfragmentierung:
+Interne Fragmentierung passiert, wenn einem Prozess mehr Speicher zugewiesen wird, als er eigentlich braucht. Der überschüssige Teil bleibt dann einfach ungenutzt.
+Beispiel: Wenn ein Prozess nur 6 KB braucht, aber ein Block von 8 KB zugeteilt wird, dann gehen 2 KB verloren.
+Externe Fragmentierung entsteht, wenn im RAM zwar genug freier Speicher vorhanden ist, aber nicht zusammenhängend. Dadurch kann man grössere Prozesse nicht mehr unterbringen.
+Beispiel: Es gibt z. B. 4 freie Blöcke mit je 4 KB, aber ein Prozess braucht 8 KB am Stück – das funktioniert dann nicht.
+
+
+Strategien zur Vermeidung oder Reduzierung von Fragmentierung:
+Speicherverdichtung (Compaction):
+Dabei werden Prozesse im Speicher "zusammengeschoben", damit die kleinen Lücken verschwinden und wieder grössere zusammenhängende Bereiche entstehen.
+Vorteil: Man kriegt so wieder Platz für grössere Prozesse.
+Nachteil: Das Ganze ist ziemlich aufwendig, weil der Speicherinhalt verschoben werden muss – das kostet Zeit und Rechenleistung.
+Virtueller Speicher:
+Hierbei muss ein Programm nicht komplett im physischen RAM liegen. Es wird in Seiten aufgeteilt (Paging), die bei Bedarf geladen oder ausgelagert werden.
+Vorteil: Es spart physischen Speicher und man kann auch grosse Programme ausführen.
+Nachteil: Das System wird dadurch komplexer, und es gibt Performanceeinbssen wegen dem ständigen Nachladen der Seiten.
