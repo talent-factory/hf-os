@@ -1,0 +1,46 @@
+Befehle:
+	mkdir -p test/subdir && cd test			# dir test/subdir rekursiv erstellen, ins verz. test navigieren
+	echo "Inhalt-$(date +%s)" > original.txt	# Datei original.txt erstellen und mit "Inhalt-" und dem aktuellen Datum beschreiben
+	ln -s original.txt symlink.txt			# einen sym Link auf die datei original.txt erstellen
+   	ln original.txt hardlink.txt			# einen hard link auf die Datei original.txt erstellen
+	chmod 640 original.txt				# Berechtigungen von original.txt auf 640 ändern
+	touch -d "2 days ago" original.txt		# setzt den zeitstempel von original.txt aufs datum vor zwei tagen
+	ls -la						# Ganzes dir auflisten mit versteckten Dateien und berechtigungen
+    
+
+insgesamt 28
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:48 .
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:47 ..
+-rw-rw-r-- 1 vmadmin vmadmin  429 Mai 10 08:47 Aufgabe-3-Anhang.txt
+-rw-rw-r-- 1 vmadmin vmadmin  490 Mai 10 08:48 Aufgabe-3.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:47 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:47 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:47 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:47 symlink.txt -> original.txt
+
+
+Spalte 1: Dateityp und Berechtigungen
+Spalte 2: Anzahl links
+Spalte 3: Besitzer
+Spalte 4: Gruppe
+Spalte 5: Dateigrösse
+Spalte 6: Monat
+Spalte 7: Tag
+Spalte 8: Zeit
+Spalte 9: Name
+
+original.txt ist die "originale" Datei. Der Hard Link übernimmt sowohl die Berechtigungen, Grösse und die Zeit, als auch den Inhalt. Der Symlink übernimmt nur den Inhalt. Berechtigungen, Grösse und Zeitstempel sind sepparat.
+
+Die innode nummer ist dieselbe, weil ein Hardlink auf die original datei zeigt und somit exakt die selbe ist.
+
+
+
+	echo "Neuer Inhalt" > original.txt	# überschreibt den Inhalt von original.txt
+	cat symlink.txt hardlink.txt		# Gibt den "Inhalt" der Link (verlinkten Datei) aus
+	mv original.txt ../original.txt		# verschiebt original.txt in das parent dir
+	cat symlink.txt hardlink.txt 2>&1	# Gibt nochmals den Inhalt aus
+	
+Der Hardlink funktioniert weiterhin, der symlink jedoch nicht, da er nur auf einen anderen Pfad verweist.
+Dadurch könnte bei symlinks der Fehler auftreten, dass die Datei nicht mehr gefunden wird oder sie gelöscht wird.
+
+

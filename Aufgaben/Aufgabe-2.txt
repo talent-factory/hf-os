@@ -1,0 +1,10 @@
+Unterschied interne und externe Speicherfragmentierung:
+Die interne Speicherfragmentierung geschieht im RAM, durch Methoden wie "First Fit" oder "Next Fit". So können die Daten im RAM verteilt sein statt beieinander.
+Bei der externen Speicherfragmentierung ist die Rede von der Festplatte, auf welcher die Daten mit der Zeit überall verteilt sein können.
+
+
+Strategiern:
+Memory Compaction
+
+Paging
+
