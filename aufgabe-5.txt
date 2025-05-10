@@ -1,0 +1,31 @@
+Ausgabe des Programms – Aufgabe 5
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffca0369090
+Heap-Variable: 0x5d829e4672a0
+Statische Variable: 0x5d829d021010
+
+Adressdifferenzen:
+Stack - Heap: 37907413868016 Bytes
+Stack - Static: 37907435126912 Bytes
+Heap - Static: 21258896 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben.
+
+Analyse:
+
+1. Stack-, Heap- und statische Variable liegen in unterschiedlichen Adressbereichen:
+   - Stack: hohe Adresse (typisch bei x86_64, wächst bei vielen Systemen nach unten)
+   - Heap: mittlerer Adressbereich
+   - Statisch: tiefer, meist im Daten-/BSS-Segment
+
+2. Die hohe Differenz bei Stack-Heap und Stack-Static zeigt die Speichertrennung.
+
+3. Obwohl Stack gewöhnlich nach unten wächst, zeigt dieser konkrete Output „Stack wächst nach oben“. Dies ist abhängig vom Compiler oder Optimierung, aber untypisch.
+
+4. Die Speicherlecks aus der Schleife erzeugen unbeachteten Heap-Speicher:
+   - Bei kleiner Menge irrelevant
+   - In realen Programmen kann das zum RAM-Verbrauch führen
+   - Betriebssysteme können Speicher nach Prozessende freigeben (z. B. durch Adressraumfreigabe)

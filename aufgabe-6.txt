@@ -1,0 +1,30 @@
+Ausgabeanalyse – Aufgabe 6: Dateisysteme und Metadaten
+
+Metadaten vor der Änderung:
+- Dateigrösse: 96 Bytes
+- Inode-Nummer: 546209
+- Hardlinks: 1
+- Rechte: 664 (rw-rw-r--)
+- Letzter Zugriff & Änderung: 2025-05-10 11:08:09
+
+Nach dem Anhängen von Text:
+- Dateigrösse steigt auf 168 Bytes
+- Inode, Rechte und Zeitstempel bleiben gleich (da sehr zeitnah erfolgt)
+- Hardlinks: weiterhin 1
+
+Nach dem Erstellen eines Hardlinks:
+- testdatei_hardlink.txt zeigt:
+  - Gleiche Grösse: 168 Bytes
+  - Gleiche Inode-Nummer: 546209
+  - Hardlink-Zähler: 2
+  - Rechte & Zeitstempel identisch
+
+Analyse:
+1. Die Datei wurde erfolgreich erweitert, was sich in der Dateigrösse widerspiegelt.
+2. Die Inode-Nummer bleibt konstant – Dateiname ist nur ein Verweis darauf.
+3. Durch den Hardlink gibt es nun zwei Verweise auf denselben Inode – beide Dateien teilen sich Inhalt und Metadaten.
+4. Beim Löschen einer Datei mit mehreren Hardlinks bleibt der Inhalt erhalten, solange mindestens ein Link existiert.
+
+Unterschied zu einem symbolischen Link:
+- Symlink hätte einen eigenen Inode und nur den Pfad gespeichert.
+- Beim Löschen von testdatei.txt wäre ein Symlink „gebrochen“, ein Hardlink jedoch weiterhin funktional.

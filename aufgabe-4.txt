@@ -1,0 +1,44 @@
+Aufgabe 4: Logische und Physische Adressen – Verifizierte Lösung mit Einheiten
+
+Zuordnung virtueller zu physischen Adressen bei 4 KB (= 4096 Byte) Seitengrösse:
+
+Virtuelle Adresse → Virtuelle Seite = Adresse / 4096 Byte
+Offset = Adresse % 4096 Byte
+Physische Adresse = Seitenrahmen * 4096 Byte + Offset
+
+Laut Page Table aus der Prüfung:
+
+Virtuelle Seite → Physischer Rahmen:
+0 → 4
+1 → 6
+2 → 2
+3 → 1
+4 → 3
+5 → 5
+6 → 0
+7 → 7
+8–15 → nicht vorhanden → Page Fault
+
+Berechnungen:
+
+1. Virtuelle Adresse: 12300 Byte
+→ Seite: 12300 Byte / 4096 Byte = Seite 3
+→ Offset: 12300 Byte % 4096 Byte = 1012 Byte
+→ Rahmen: 1 → Basisadresse: 1 * 4096 Byte = 4096 Byte
+→ Physische Adresse: 4096 Byte + 1012 Byte = 5108 Byte
+
+2. Virtuelle Adresse: 16384 Byte
+→ Seite: 16384 Byte / 4096 Byte = Seite 4
+→ Offset: 0 Byte
+→ Rahmen: 3 → Basisadresse: 3 * 4096 Byte = 12288 Byte
+→ Physische Adresse: 12288 Byte + 0 Byte = 12288 Byte
+
+3. Virtuelle Adresse: 32800 Byte
+→ Seite: 32800 Byte / 4096 Byte = Seite 8
+→ Kein Mapping laut Page Table
+→ Ergebnis: Page Fault
+
+Ergebnisse:
+- 12300 Byte → 5108 Byte
+- 16384 Byte → 12288 Byte
+- 32800 Byte → Page Fault

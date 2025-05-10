@@ -1,0 +1,25 @@
+Interne vs. externe Fragmentierung:
+
+Interne Fragmentierung entsteht, wenn Speicherblöcke grösser als notwendig zugewiesen werden, und dadurch ungenutzter Speicher innerhalb eines Blocks verloren geht.
+Beispiel: Ein Prozess benötigt 5 KB, bekommt aber 8 KB (z. B. wegen fester Blockgrössen), die restlichen 3 KB bleiben ungenutzt.
+
+Externe Fragmentierung tritt auf, wenn zwischen belegten Speicherblöcken kleine freie Bereiche entstehen, die für neue Prozesse zu klein sind.
+Beispiel: Nach dem Beenden mehrerer Prozesse entstehen viele kleine freie Lücken, aber kein zusammenhängender Block für einen neuen 10 KB-Prozess.
+
+Strategien gegen Fragmentierung:
+
+Paging:
+
+Der Speicher wird in gleich grosse Seiten aufgeteilt, Prozesse nutzen nicht zusammenhängende Seiten.
+
+Vorteile: Vermeidet externe Fragmentierung, effizient bei Allokation.
+
+Nachteile: Kann zu interner Fragmentierung führen (letzte Seite nicht ganz gefüllt), Overhead durch Verwaltung von Seitentabellen.
+
+Kompaktierung (Defragmentierung):
+
+Freie Speicherbereiche werden durch Verschieben von Prozessen zusammengelegt.
+
+Vorteile: Reduziert externe Fragmentierung, schafft grosse zusammenhängende Blöcke.
+
+Nachteile: Zeitaufwändig, benötigt Rechenleistung, Prozesse müssen unterbrechbar oder verschiebbar sein.

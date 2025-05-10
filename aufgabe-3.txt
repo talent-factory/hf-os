@@ -1,0 +1,41 @@
+Aufgabe 4: Logische und Physische Adressen – Lösung
+
+Gegeben: Page Table laut Abbildung
+
+Virtuelle Seiten (je 4KB = 4096 Byte gross):
+Virtuelle Adresse / 4096 → Virtuelle Seite
+Offset = Virtuelle Adresse % 4096
+
+Beispiel: 12300 / 4096 = Seite 3, Offset = 12300 - (3 * 4096) = 1012
+
+Zuordnung gemäss Page Table:
+Virtuelle Seite → Physische Seite (je 4KB):
+0 → 4
+1 → 6
+2 → 2
+3 → 1
+4 → 3
+5 → 5
+6 → 0
+7 → 7
+
+Berechnung:
+
+1. Virtuelle Adresse: 12300
+→ Seite 3, Offset 1012
+→ Physische Seite 1 → Basisadresse: 1 * 4096 = 4096
+→ Phys. Adresse = 4096 + 1012 = 5108
+
+2. Virtuelle Adresse: 16384
+→ Seite 4, Offset 0
+→ Physische Seite 3 → Basisadresse: 3 * 4096 = 12288
+→ Phys. Adresse = 12288 + 0 = 12288
+
+3. Virtuelle Adresse: 32800
+→ Seite 8 → nicht abgebildet (Seite X laut Tabelle)
+→ Kein Mapping → Seite nicht im Speicher → Seitefehler (Page Fault)
+
+Antworten:
+- 12300 → 5108
+- 16384 → 12288
+- 32800 → Fehler: Page Fault

@@ -1,0 +1,91 @@
+Aufgabe 3: Erweiterte Dateioperationen – vollständige Lösung
+
+1. Schrittweise Erklärung der Befehle:
+
+mkdir -p test/subdir && cd test
+- Erstellt rekursiv das Verzeichnis test und darin subdir (wenn nicht vorhanden).
+- Anschliessend wird ins test-Verzeichnis gewechselt.
+- Konzepte: Verzeichnisstruktur, relative Pfade, logische Navigation.
+
+echo "Inhalt-$(date +%s)" > original.txt
+- Schreibt den String „Inhalt-“ gefolgt von der aktuellen Unix-Zeit in die Datei original.txt.
+- Falls die Datei existiert, wird sie überschrieben.
+- Konzepte: Umleitung der Standardausgabe (>), dynamischer Inhalt mit date.
+
+ln -s original.txt symlink.txt
+- Erstellt einen symbolischen Link symlink.txt, der auf die Pfadangabe original.txt verweist.
+- Konzepte: Symbolischer Link – speichert Pfadangabe, nicht Inode.
+
+ln original.txt hardlink.txt
+- Erstellt einen Hardlink hardlink.txt, der direkt auf denselben Inode wie original.txt verweist.
+- Konzepte: Harte Links – mehrere Namen für denselben Inode.
+
+chmod 640 original.txt
+- Setzt Berechtigungen: Besitzer darf lesen/schreiben (rw-), Gruppe darf lesen (r--), andere haben keinen Zugriff (---).
+- Konzepte: Dateirechte (POSIX), Schutzmechanismus.
+
+touch -d "2 days ago" original.txt
+- Setzt den Änderungszeitpunkt (mtime) von original.txt auf „vor 2 Tagen“.
+- Konzepte: Zeitmetadaten von Dateien (atime, mtime, ctime).
+
+ls -la
+- Listet alle Dateien im aktuellen Verzeichnis ausführlich auf.
+- Konzepte: Dateiattribute, Anzeige von Links, Rechte, Besitzer, Grösse, Zeit, Inode-Informationen.
+
+2. Beispielausgabe von ls -la:
+
+insgesamt 16
+drwxr-xr-x 2 user user 4096 Mai 10 10:41 .
+drwxr-xr-x 3 user user 4096 Mai 10 10:00 ..
+-rw-r----- 2 user user   17 Mai  8 10:00 original.txt
+-rw-r----- 2 user user   17 Mai  8 10:00 hardlink.txt
+lrwxrwxrwx 1 user user   12 Mai 10 10:00 symlink.txt -> original.txt
+
+3. Analyse:
+
+- Dateityp und Rechte: z. B. -rw-r----- (Datei, rw für owner, r für group, - für other)
+- Anzahl Hardlinks: 2 für Hardlinks, 1 für Symlinks
+- Benutzer/Gruppen: zeigen Besitzrechte
+- Dateigrösse: Anzahl Bytes
+- Änderungsdatum: mtime
+- Name bzw. Pfad: Datei- oder Linkname
+
+Unterschiede:
+- hardlink.txt und original.txt teilen denselben Inode
+- symlink.txt hat eigenen Inode, verweist auf Pfad
+
+4. Weitere Befehle:
+
+echo "Neuer Inhalt" > original.txt
+- Inhalt wird überschrieben
+- hardlink.txt zeigt denselben Inhalt (gleicher Inode)
+- symlink.txt zeigt auf original.txt → ebenfalls gleicher Inhalt
+
+cat symlink.txt hardlink.txt
+- Gibt den neuen Inhalt zweimal aus
+
+mv original.txt ../original.txt
+- Verschiebt Datei, Inode bleibt erhalten
+- hardlink.txt bleibt gültig
+- symlink.txt zeigt ins Leere (broken)
+
+cat symlink.txt hardlink.txt 2>&1
+- symlink.txt gibt Fehler „Datei nicht gefunden“
+- hardlink.txt zeigt den Inhalt korrekt
+
+5. Vergleich:
+
+Typ            | Verhalten bei mv   | Inode-Verbindung | Stabilität
+---------------|--------------------|------------------|----------
+Hardlink       | bleibt gültig      | identisch        | stabil
+Symlink        | gebrochen          | nur Pfad         | instabil
+
+6. Fehlerquellen:
+
+- Zugriff auf symlink.txt nach mv → Fehler
+- root-Dateien wie aufgabe-1.txt evtl. nicht editierbar
+
+7. Bonus:
+
+- Hardlinks funktionieren nicht über Dateisystemgrenzen (Inode = lokal)
+- Symbolische Links funktionieren, da sie Pfade referenzieren
