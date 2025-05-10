@@ -1,0 +1,22 @@
+Unterschied zwischen interner und externer Speicherfragmentierung:
+
+- Interne Fragmentierung:
+Dies tritt auf, wenn der zugewiesene Speicherblock größer ist als die tatsächlich benötigte Datenmenge. Der ungenutzte Speicherplatz innerhalb des Blocks wird verschwendet.
+Beispiel: Ein Prozess benötigt 30 KB, aber das Betriebssystem weist Blöcke von 32 KB zu. Die verbleibenden 2 KB sind interne Fragmentierung.
+
+- Externe Fragmentierung:
+Dies passiert, wenn genügend Gesamtspeicher verfügbar ist, aber dieser nicht zusammenhängend ist. Es entstehen viele kleine freie Speicherbereiche, die für größere Anforderungen nicht genutzt werden können.
+Beispiel: Mehrere Prozesse werden gestartet und wieder beendet, sodass viele kleine Lücken entstehen. Ein neuer Prozess benötigt 50 KB, aber es gibt nur kleine Lücken wie 20 KB, 15 KB usw., obwohl insgesamt 100 KB frei sind.
+
+Strategien zur Reduzierung/Verminderung von Speicherfragmentierung:
+
+1. Speicherkompaktierung:
+Das Betriebssystem verschiebt Prozesse im Speicher, um alle freien Blöcke zusammenhängend zu machen.
+Vorteile: Ermöglicht größere Speicherzuweisungen.
+Nachteile: Hoher Rechenaufwand und Leistungseinbußen während der Kompaktierung.
+
+2. Paging (Seitentechnik):
+Der Speicher wird in feste Seiten (z.B. 4 KB) unterteilt. Prozesse erhalten Seiten, die nicht zusammenhängend sein müssen.
+Vorteile: Keine externe Fragmentierung, effizient bei vielen kleinen Prozessen.
+Nachteile: Interne Fragmentierung innerhalb der Seiten und erhöhter Verwaltungsaufwand.
+
