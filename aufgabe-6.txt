@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+void print_file_metadata(const char* filename) {
+    struct stat file_info;
+
+    /* --- Metadaten ermitteln ------------------------------------------- */
+    if (stat(filename, &file_info) != 0) {
+        perror("stat");
+        return;
+    }
+
+    printf("Metadaten fuer Datei: %s\n", filename);
+    printf("------------------------\n");
+
+    /* --- Metadaten ausgeben -------------------------------------------- */
+    printf("Dateigroesse (Bytes): %lld\n",        (long long)file_info.st_size);
+    printf("Inode‑Nummer:         %llu\n",        (unsigned long long)file_info.st_ino);
+    printf("Hardlinks:            %lu\n",         (unsigned long)file_info.st_nlink);
+    printf("Zugriffsrechte(oct):  %o\n",          file_info.st_mode & 07777);
+
+    char time_str[30];
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S",
+             localtime(&file_info.st_atime));
+    printf("Letzter Zugriff:      %s\n", time_str);
+
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S",
+             localtime(&file_info.st_mtime));
+    printf("Letzte Aenderung:     %s\n\n", time_str);
+}
+
+int main() {
+    const char* filename = "testdatei.txt";
+    const char* content  = "Dies ist ein Test fuer Dateioperationen.\n"
+                           "Wir untersuchen, wie Dateisysteme Metadaten verwalten.\n";
+
+    /* Datei anlegen und Basisinhalt schreiben --------------------------- */
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        perror("Fehler beim Oeffnen der Datei");
+        return 1;
+    }
+    fprintf(file, "%s", content);
+    fclose(file);
+
+    /* Metadaten VOR Aenderung ------------------------------------------- */
+    puts("Metadaten vor der Aenderung:");
+    print_file_metadata(filename);
+
+    /* Datei zum Anhängen oeffnen ---------------------------------------- */
+    file = fopen(filename, "a");
+    if (!file) {
+        perror("Fehler beim Oeffnen der Datei zum Anhaengen");
+        return 1;
+    }
+
+    /* --- Zusaetzlichen Text anhaengen ---------------------------------- */
+    fprintf(file, "Dies ist eine zusaetzliche Zeile, um die Datei zu vergroessern.\n");
+    fclose(file);
+
+    /* Metadaten NACH Aenderung ------------------------------------------ */
+    puts("Metadaten nach der Aenderung:");
+    print_file_metadata(filename);
+
+    /* Hardlink anlegen --------------------------------------------------- */
+    const char* hardlink_name = "testdatei_hardlink.txt";
+    if (link(filename, hardlink_name) != 0) {
+        perror("Fehler beim Erstellen des Hardlinks");
+        return 1;
+    }
+    printf("Hardlink erstellt: %s\n\n", hardlink_name);
+
+    /* Metadaten des Hardlinks ------------------------------------------- */
+    puts("Metadaten des Hardlinks:");
+    print_file_metadata(hardlink_name);
+
+    /* Aufraeumen --------------------------------------------------------- */
+    remove(filename);
+    remove(hardlink_name);
+    return 0;
+}
+
+Wenn Sie das Programm ausfuehren, legt es zunaechst die Datei testdatei.txt an, schreibt zwei kurze Zeilen hinein und schliesst die Datei sofort wieder. Gleich danach werden mit stat() die Metadaten dieser frischen Datei abgefragt und ausgegeben. Zu diesem Zeitpunkt enthaelt der Datensatz in der Inode zum Beispiel eine Groesse von rund 90 Byte – genau so gross wie der eben geschriebene Text –, eine Inode‑Nummer, die im jeweiligen Dateisystem eindeutig ist, einen Hard‑Link‑Zaehler von 1, die ueblichen Zugriffsrechte (etwa 100644) sowie identische Zeitstempel fuer letzten Zugriff (st_atime) und letzte Aenderung (st_mtime), denn Lesen und Schreiben fanden praktisch gleichzeitig statt.
+
+Anschliessend oeffnet das Programm die Datei erneut im Modus »append«, fuegt eine weitere Zeile an und schliesst wieder. Ruft man nun stat() erneut auf, hat sich vor allem die Dateigroesse veraendert – sie ist um die Laenge der hinzugefuegten Zeile gewachsen. Ebenfalls neu ist der Aenderungszeitstempel: st_mtime zeigt jetzt den Moment des Anhängens, waehrend st_atime – je nach Mount‑Option – entweder unveraendert bleibt oder ebenfalls aktualisiert wird. Die Inode‑Nummer selbst, die Zugriffsrechte und der Link‑Zaehler sind nach wie vor dieselben, weil sich am Identitaetskern der Datei nichts geaendert hat.
+
+Daraufhin erzeugt das Programm mit link() einen Hardlink namens testdatei_hardlink.txt. Beide Verzeichniseintraege – der urspruengliche und der Hardlink – verweisen jetzt auf exakt dieselbe Inode. Wenn man sich die Metadaten des Hardlinks anzeigen laesst, stimmt alles mit denen von testdatei.txt ueberein: identische Inode‑Nummer, identische Groesse und derselbe Inhalt. Neu ist lediglich, dass der Hard‑Link‑Zaehler in der Inode von 1 auf 2 gestiegen ist. Loescht man spaeter eine der beiden Dateinamen, wird der Zaehler wieder dekrementiert; erst wenn er bei 0 ankommt, gibt das Dateisystem den belegten Speicher frei.
+
+Damit sind wir beim Unterschied zwischen Inode‑Nummer und Dateiname: Die Inode ist sozusagen die Visitenkarte des Datei­inhalts im Dateisystem; sie enthaelt alle Metadaten und die Verweise auf die echten Datenbloecke, aber keinen Namen. Ein Dateiname existiert nur als Eintrag im jeweiligen Verzeichnis und zeigt auf diese Inode. Gibt es zwei Namen mit derselben Inode‑Nummer – etwa nach dem Erstellen eines Hardlinks –, handelt es sich nicht um Kopien, sondern um zwei Wege zum gleichen Objekt. Aenderungen ueber den einen Namen erscheinen sofort beim anderen, und die Daten bleiben so lange erhalten, bis der letzte Name geloescht ist.
+
+Wuerden wir statt eines Hardlinks einen symbolischen Link (Symlink) anlegen, gaebe es eine Reihe spuerbarer Unterschiede. Ein Symlink bekommt eine eigene Inode mit einem eigenen Rechte­satz und enthaelt als Daten nur den Zielpfad. Sein Link‑Zaehler bleibt immer 1, denn er hat keinen gemeinsamen Inode mit der Zieldatei. Wird die Originaldatei geloescht, »haengt« der Symlink ins Leere; jeder Zugriffsversuch endet dann mit »No such file«. Ein Hardlink dagegen bleibt voll funktionsfaehig, weil die Daten ja weiterhin vorhanden sind, solange noch mindestens ein Name darauf zeigt. Ausserdem koennen Hardlinks nur innerhalb derselben Partition angelegt werden, waehrend Symlinks ohne weiteres auch uebers Dateisystem oder sogar Netzgrenzen hinweg verweisen koennen.
+
+Kurz gesagt: Das Anhaengen von Text veraendert Groesse und Aenderungszeit der Datei, das Anlegen eines Hardlinks erhoeht lediglich den Link‑Zaehler, und waehrend zwei Hardlinks wirklich dieselbe Datei sind, ist ein Symlink bloss ein Verweis, der ungueltig werden kann, wenn das Ziel verschwindet.

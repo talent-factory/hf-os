@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable: %p\n", (void*)stack_var);
+    printf("Heap-Variable: %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+
+    // Adressdifferenzen berechnen
+    unsigned long stack_heap_diff = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long stack_static_diff = (unsigned long)stack_var - (unsigned long)static_var;
+    unsigned long heap_static_diff = (unsigned long)heap_var - (unsigned long)static_var;
+
+    printf("\nAdressdifferenzen:\n");
+    printf("Stack - Heap: %ld\n", stack_heap_diff);
+    printf("Stack - Statisch: %ld\n", stack_static_diff);
+    printf("Heap - Statisch: %ld\n", heap_static_diff);
+
+    printf("\nWachstumsrichtungen:\n");
+
+    int local1 = 1;
+    int local2 = 2;
+
+    if (&local2 > &local1)
+        printf("Stack waechst nach oben (steigende Adressen)\n");
+    else
+        printf("Stack waechst nach unten (fallende Adressen)\n");
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck demonstrieren
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(sizeof(int));
+        *leak = i; // Verwendung zur Verhinderung von Optimierung
+        // Hinweis: kein free(leak)
+    }
+
+    // Speicher freigeben
+    free(heap_variable);
+
+    return 0;
+}
+
+Das ausgeführte C-Programm zeigt verschiedene Aspekte der Speicherverwaltung und illustriert, wie der Speicher eines laufenden Prozesses typischerweise organisiert ist. Dabei werden drei unterschiedliche Variablentypen betrachtet: eine lokale Stack-Variable, eine dynamisch mit malloc erzeugte Heap-Variable und eine statische Variable. Die Ausgabe des Programms zeigt die Speicheradressen dieser drei Variablen, die sich deutlich voneinander unterscheiden. Diese Unterschiede ergeben sich aus der Art, wie Betriebssysteme den Adressraum eines Programms segmentieren.
+
+Statische Variablen befinden sich in einem speziell reservierten Bereich, der während der Programmlaufzeit konstant bleibt und typischerweise im unteren Bereich des Adressraums liegt. Dynamisch allokierte Variablen, also solche auf dem Heap, liegen im mittleren Adressbereich und wachsen in der Regel in aufsteigender Richtung. Lokale Variablen, die auf dem Stack gespeichert werden, liegen im oberen Adressbereich, wobei der Stack üblicherweise in fallender Richtung wächst. Dies lässt sich im Programm durch die Deklaration und Adressvergleiche zweier lokaler Variablen nachweisen: Wenn die später deklarierte Variable eine kleinere Adresse besitzt als die zuvor deklarierte, deutet dies auf ein wachsendes Stacksegment nach unten hin.
+
+Ein weiterer Aspekt des Programms ist die Demonstration eines Speicherlecks. Im main-Block wird in einer Schleife fünfmal Speicher mit malloc angefordert, jedoch nicht wieder freigegeben. Da keine Referenz auf diesen Speicherbereich erhalten bleibt, kann er später nicht mehr adressiert oder freigegeben werden – der Speicher geht also aus Sicht des Programms verloren. Zwar wird dieser nach Programmende vom Betriebssystem zurückgewonnen, in lang laufenden Anwendungen oder Systemdiensten kann ein solches Verhalten jedoch zu stetig wachsendem Speicherverbrauch und damit zu ernsthaften Problemen führen.
+
+Solche Speicherlecks sind ein typisches Risiko in Sprachen wie C, die keine automatische Speicherbereinigung (Garbage Collection) kennen. Moderne Betriebssysteme begegnen diesem Problem unter anderem durch die Trennung des virtuellen Adressraums für Prozesse sowie durch Tools wie Speicherdebugger (z. B. valgrind), mit denen Entwickler Speicherlecks identifizieren und beheben können.
+
