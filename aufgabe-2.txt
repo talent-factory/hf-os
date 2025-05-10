@@ -1,0 +1,43 @@
+Interne Fragmentierung:
+Definition: Interne Fragmentierung tritt auf, wenn zugewiesene Speicherblöcke ungenutzten Speicherplatz enthalten, da die Speicherallokationen eine feste Größe haben oder aufgerundet werden.
+
+Ursache: Dies passiert, weil der Speicher in feste Blockgrößen unterteilt wird, und die Anwendung möglicherweise nicht den gesamten Block nutzt, wodurch ungenutzter Speicherplatz entsteht.
+
+Beispiel (Praxis):
+Angenommen, ein Dateisystem weist Speicher in 4-KB-Blöcken zu. Wenn Sie eine Datei von 6 KB speichern, benötigt sie zwei Blöcke (4 KB + 4 KB = 8 KB), aber 2 KB dieses Speichers bleiben ungenutzt, da nur 6 KB verwendet werden. Diese ungenutzten 2 KB sind interne Fragmentierung.
+
+Externe Fragmentierung:
+Definition: Externe Fragmentierung tritt auf, wenn freier Speicher über das System verteilt und nicht zusammenhängend ist. Dadurch ist es schwierig, große zusammenhängende Speicherblöcke zuzuweisen, obwohl genügend Gesamtspeicher vorhanden ist.
+
+Ursache: Dies passiert im Laufe der Zeit, wenn Programme in den Speicher geladen und wieder entfernt werden, was nicht zusammenhängende freie Speicherblöcke hinterlässt.
+
+Beispiel (Praxis):
+
+Stellen Sie sich ein System mit 8 MB freiem Speicher vor, der jedoch in Segmente von je 2 MB unterteilt ist. Wenn ein Programm 4 MB Speicher anfordert, kann es nicht zugewiesen werden, obwohl 8 MB verfügbar sind, da der Speicher nicht zusammenhängend ist.
+
+STRATEGIEN:
+Paging (für interne Fragmentierung):
+Funktionsweise: Der Speicher wird in gleich große Seiten (Pages) unterteilt, und Prozesse erhalten diese Seiten, ohne dass zusammenhängender Speicher erforderlich ist.
+
+Vorteile:
+Minimiert die externe Fragmentierung, da kein zusammenhängender Speicher nötig ist.
+Einfachere Allokation und Verwaltung von kleineren festen Seiten.
+Schnellerer Speicherzugriff aufgrund der festgelegten Seitengrößen.
+
+Nachteile:
+Interne Fragmentierung kann trotzdem auftreten, wenn die letzte Seite eines Prozesses nicht vollständig genutzt wird.
+Seitentabellen sind nötig, was die Komplexität und den Speicherverbrauch erhöht.
+
+Defragmentierung (für externe Fragmentierung):
+Funktionsweise: Das Betriebssystem reorganisiert periodisch den Speicher oder die Speicherblöcke, um freie Bereiche zusammenzuführen und Platz für größere Speicheranforderungen zu schaffen.
+
+Vorteile:
+Reduziert externe Fragmentierung erheblich.
+Große zusammenhängende Speicherblöcke werden verfügbar.
+
+Nachteile:
+Zeitaufwändige und ressourcenintensive Operation.
+Speicher oder Festplatte ist während des Vorgangs zeitweise nicht verfügbar.
+Für Echtzeitsysteme ungeeignet, da die Leistung stark beeinträchtigt wird.
+
+
