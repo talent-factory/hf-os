@@ -1,0 +1,110 @@
+Aufgabe 3 – Erweiterte Datei Operationen
+
+1. Erklärung der Befehle:
+
+mkdir -p test/subdir && cd test
+→ Erstellt rekursiv das Verzeichnis „test/subdir“, falls es noch nicht existiert.
+→ Wechselt anschließend ins Verzeichnis „test“.
+
+echo "Inhalt-$(date +%s)" > original.txt
+→ Schreibt den Text Inhalt- gefolgt von der aktuellen Unix-Zeit in die Datei „original.txt“.
+
+ln -s original.txt symlink.txt
+→ Erstellt einen symbolischen Link (Symlink) mit dem Namen „symlink.txt“, der auf „original.txt“ verweist.
+
+ln original.txt hardlink.txt
+→ Erstellt einen Hardlink namens „hardlink.txt“, der auf denselben Inode wie „original.txt“ zeigt.
+
+chmod 640 original.txt
+→ Setzt die Zugriffsrechte auf „original.txt“: Besitzer darf lesen/schreiben, Gruppe darf lesen, andere nichts.
+
+touch -d 2 days ago original.txt
+→ Ändert das Änderungsdatum von „original.txt“ auf den Zeitpunkt vor zwei Tagen.
+
+ls -la
+→ Zeigt eine lange Liste aller Dateien im aktuellen Verzeichnis an, inklusive versteckter Dateien.
+
+2. Analyse der Ausgabe von insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:27 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:26 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:26 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:26 symlink.txt -> original.txt (Beispielanalyse):
+
+Beispielausgabe:
+
+-rw-r----- 2 user group   18 May  8 10:00 hardlink.txt
+-rw-r----- 2 user group   18 May  8 10:00 original.txt
+lrwxrwxrwx 1 user group   12 May  8 10:00 symlink.txt -> original.txt
+
+Erklärung der Spalten:
+- Spalte 1: Dateityp und Zugriffsrechte (z. B. -rw-r-----)
+- Spalte 2: Anzahl Hardlinks
+- Spalte 3: Besitzer
+- Spalte 4: Gruppe
+- Spalte 5: Dateigröße in Bytes
+- Spalte 6–8: Änderungsdatum und Uhrzeit
+- Spalte 9: Dateiname
+- Bei Symlinks: -> zeigt das Ziel des Links
+
+Unterschiede:
+- „original.txt“ und „hardlink.txt“ teilen sich dieselbe Inode-Nummer (sichtbar über insgesamt 12
+529455 -rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 hardlink.txt
+529455 -rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 original.txt
+529453 drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:26 subdir
+529458 lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:26 symlink.txt -> original.txt), weil sie Hardlinks sind.
+- „symlink.txt“ hat eine andere Inode, da es nur ein Verweis ist.
+- „symlink.txt“ zeigt auf „original.txt“, speichert aber keinen eigenen Inhalt.
+- Der Zeitstempel wurde mit  auf „2 days ago“ gesetzt, was bei „original.txt“ (und damit auch bei „hardlink.txt“) sichtbar ist.
+
+3. Weitere Befehle:
+
+echo Neuer Inhalt > original.txt
+→ Überschreibt den Inhalt von „original.txt“ (und damit auch von „hardlink.txt“, da sie denselben Inode teilen).
+
+cat symlink.txt hardlink.txt
+→ Gibt den Inhalt beider Dateien aus:
+  - „symlink.txt“ zeigt auf „original.txt“ → Ausgabe: „Neuer Inhalt“
+  - „hardlink.txt“ zeigt auf denselben Inode wie „original.txt“ → ebenfalls „Neuer Inhalt“
+
+mv original.txt ../original.txt
+→ Verschiebt die Datei „original.txt“ in das übergeordnete Verzeichnis.
+→ Der symbolische Link „symlink.txt“ ist danach gebrochen (zeigt auf eine nicht vorhandene Datei).
+→ Der Hardlink „hardlink.txt“ funktioniert weiterhin, da er direkt auf den Inode zeigt.
+
+cat symlink.txt hardlink.txt 2>&1
+→ Ausgabe:
+  - „symlink.txt“: Fehler (broken link), z. B. No such file or directory
+  - „hardlink.txt“: zeigt weiterhin „Neuer Inhalt“
+
+4. Auswirkungen auf die Inode-Tabelle:
+
+- Hardlinks teilen sich denselben Inode → Änderungen an einer Datei wirken sich auf alle Hardlinks aus.
+- Symlinks besitzen einen eigenen Inode und enthalten nur einen Pfadverweis → wenn das Ziel verschoben oder gelöscht wird, ist der Link ungültig.
+
+5. Unterschiede Symbolischer vs. Harte Links:
+
+Symbolischer Link:
+- Verweist auf den Pfad einer Datei
+- Funktioniert nicht mehr, wenn die Zieldatei verschoben oder gelöscht wird
+- Hat eine eigene Inode
+
+Harter Link:
+- Verweist auf denselben Inode
+- Bleibt funktional, auch wenn das ursprüngliche Dateiname gelöscht wird
+- Gleiche Inode → gleiches Dateiinhalte
+
+6. Bonusfrage – Verhalten bei unterschiedlichen Dateisystemen:
+
+Hardlinks funktionieren nur innerhalb desselben Dateisystems.
+→ Wenn „original.txt“ auf einer anderen Partition liegt, schlägt  fehl.
+Symbolische Links hingegen funktionieren auch über Partitionsgrenzen hinweg, da sie nur einen Pfad speichern.
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:27 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:30 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:26 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:26 symlink.txt -> original.txt
