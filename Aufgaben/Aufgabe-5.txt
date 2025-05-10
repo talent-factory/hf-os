@@ -1,0 +1,21 @@
+Speicheradressanalyse:
+---------------------
+Stack-Variable:     0x7fffe505e7e0
+Heap-Variable:      0x60729edf22a0
+Statische Variable: 0x60729d9dc010
+
+Adressdifferenzen (in Bytes):
+Heap - Stack:      -34691627795776
+Static - Stack:    -34691648858064
+Heap - Static:     21062288
+
+Wachstumsrichtungen:
+Adresse von local1: 0x7fffe505e7a8
+Adresse von local2: 0x7fffe505e7ac
+Der Stack wächst nach oben (höhere Adressen)
+
+
+
+Am Anfang wird ein Speicherbereich reserviert. Wenn dieser zu klein ist, werden die variablen in einem anderen Bereich gespeichert.
+Die Informationen, welche in einem anderen Speicherbereich gespeichert werden, können theoretisch von anderen Programmen oder dem Betriebssystem überschreiben werden. Dies würde zu einem programmfehler führen.
+

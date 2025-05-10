@@ -1,0 +1,4 @@
+    12300₁₀	--> frame 1, 4096₁₀
+    16384₁₀	--> frame 7, 28672₁₀
+    32800₁₀	--> zu diesem Zeipunkt keine physische Adresse
+

@@ -1,9 +1,0 @@
-insgesamt 24
-drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:48 .
-drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:47 ..
--rw-rw-r-- 1 vmadmin vmadmin  429 Mai 10 08:47 Aufgabe-3-Anhang.txt
--rw-rw-r-- 1 vmadmin vmadmin    0 Mai 10 08:48 Aufgabe-3.txt
--rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:47 hardlink.txt
--rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:47 original.txt
-drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:47 subdir
-lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:47 symlink.txt -> original.txt

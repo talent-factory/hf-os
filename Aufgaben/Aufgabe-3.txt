@@ -38,7 +38,7 @@ Die innode nummer ist dieselbe, weil ein Hardlink auf die original datei zeigt u
 	echo "Neuer Inhalt" > original.txt	# überschreibt den Inhalt von original.txt
 	cat symlink.txt hardlink.txt		# Gibt den "Inhalt" der Link (verlinkten Datei) aus
 	mv original.txt ../original.txt		# verschiebt original.txt in das parent dir
-	cat symlink.txt hardlink.txt 2>&1	# Gibt nochmals den Inhalt aus
+	cat symlink.txt hardlink.txt 2>&1	# Gibt nochmals den Inhalt aus (Beim symlink nicht mehr, da der Pfad relativ ist und die Datei nicht mehr gefunden)
 	
 Der Hardlink funktioniert weiterhin, der symlink jedoch nicht, da er nur auf einen anderen Pfad verweist.
 Dadurch könnte bei symlinks der Fehler auftreten, dass die Datei nicht mehr gefunden wird oder sie gelöscht wird.
