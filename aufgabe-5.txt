@@ -1,0 +1,20 @@
+Ausgabeanalyse aufgabe-5
+
+Speicheradressanalyse zeigt drei unterschiedliche Adressbereiche
+Stack liegt bei 0x7ffd...
+Heap liegt bei 0x6366...
+Statische Variable liegt auch bei 0x6366 aber an anderer Stelle
+
+Adressdifferenz zeigt grosse Abstände zwischen Stack und den anderen Bereichen
+Das liegt daran dass Stack ganz oben im Adressraum liegt
+Heap und statische Variablen liegen weiter unten
+
+Die Richtung des Stackwachstums wird im Code durch Vergleich zweier lokaler Variablen geprüft
+Die Ausgabe zeigt Stack wächst nach oben
+Das ist eher ungewöhnlich denn in vielen Systemen wächst der Stack nach unten
+Erklärung könnte sein dass Compiler oder Optimierung Einfluss genommen hat oder die Adressvergabe zufällig so war
+
+Fazit
+Das Betriebssystem trennt die Speicherbereiche sauber
+Jeder Bereich hat seinen festen Zweck und wächst in eigene Richtung
+Speicherlecks wie im Code bleiben vom OS oft unbemerkt aber können langfristig Probleme machen
