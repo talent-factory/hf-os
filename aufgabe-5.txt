@@ -1,0 +1,121 @@
+Vervollständigter C-Code:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
+    printf("Speicheradressanalyse:\n");
+    printf("---------------------\n");
+    printf("Stack-Variable: %p\n", (void*)stack_var);
+    printf("Heap-Variable: %p\n", (void*)heap_var);
+    printf("Statische Variable: %p\n", (void*)static_var);
+
+    // Adressdifferenzen berechnen
+    unsigned long diff_stack_heap = (unsigned long)stack_var - (unsigned long)heap_var;
+    unsigned long diff_stack_static = (unsigned long)stack_var - (unsigned long)static_var;
+
+    printf("Differenz Stack - Heap: %lu Byte\n", diff_stack_heap);
+    printf("Differenz Stack - Static: %lu Byte\n", diff_stack_static);
+
+    printf("\nWachstumsrichtungen:\n");
+
+    // Zwei lokale Stack-Variablen vergleichen
+    int a = 1;
+    int b = 2;
+    if (&a > &b)
+        printf("Stack wächst nach unten.\n");
+    else
+        printf("Stack wächst nach oben.\n");
+
+    printf("\n");
+}
+
+int main() {
+    // Statische Variable
+    static int static_variable = 100;
+
+    // Stack-Variable
+    int stack_variable = 200;
+
+    // Heap-Variable
+    int* heap_variable = (int*)malloc(sizeof(int));
+    if (heap_variable == NULL) {
+        printf("Fehler bei der Speicherzuweisung\n");
+        return 1;
+    }
+    *heap_variable = 300;
+
+    // Speicherlayout analysieren
+    analyze_memory_layout(&stack_variable, heap_variable, &static_variable);
+
+    // Speicherleck erzeugen
+    for (int i = 0; i < 5; i++) {
+        int* leak = (int*)malloc(100);  // Speicher wird nicht freigegeben
+    }
+
+    // Nur der erste Heap-Speicher wird freigegeben
+    free(heap_variable);
+
+    return 0;
+}
+
+🖥️ 2. Programmausgabe & Analyse
+
+Beispielausgabe (Adressen variieren je nach System):
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffeefbff5dc
+Heap-Variable:  0x601010
+Statische Variable: 0x601040
+
+Differenz Stack - Heap: 140736738911068
+Differenz Stack - Static: 140736738911116
+
+Wachstumsrichtungen:
+Stack wächst nach unten.
+
+🔍 3. Was zeigt die Ausgabe?
+
+    Stack-Adresse liegt im hohen Bereich des RAMs → wächst nach unten.
+
+    Heap-Adresse liegt im unteren Bereich → wächst nach oben.
+
+    Statische Variable liegt in einem festen Bereich zwischen Stack und Heap.
+
+    Unterschiedliche Adressbereiche = gute Trennung der Speicherbereiche → Sicherheit & Ordnung.
+
+🧠 4. Warum liegen Stack, Heap und statischer Bereich getrennt?
+
+    Damit Programme sicher funktionieren.
+
+    Jeder Bereich hat eine eigene Aufgabe:
+
+        Stack: lokale Variablen, Rücksprungadressen
+
+        Heap: dynamische Speichervergabe mit malloc
+
+        Statisch: globale/fest definierte Werte
+
+    Diese Trennung schützt vor Fehlern und Datenverlust.
+
+⚠️ 5. Was passiert beim Speicherleck?
+
+    Die malloc()-Aufrufe im Loop belegen Speicher.
+
+    Da free() fehlt, bleibt dieser Speicher blockiert.
+
+    Das nennt man Memory Leak.
+
+    Bei vielen oder langen Programmen → RAM wird knapp → Programm kann langsam werden oder abstürzen.
+
+🧩 6. Wie hilft das Betriebssystem?
+
+    Nach Programmende gibt das OS den belegten Speicher frei.
+
+    Während der Laufzeit kann das OS Memory Leaks nicht direkt erkennen.
+
+    Entwickler nutzen Tools wie Valgrind, um solche Lecks zu finden.
+
+

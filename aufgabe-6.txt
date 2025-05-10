@@ -1,0 +1,42 @@
+✅ 1. Was zeigt die Ausgabe des Programms?
+
+Die Ausgabe zeigt die Metadaten einer Datei:
+
+    Größe (in Bytes)
+
+    Inode-Nummer
+
+    Anzahl der Hardlinks
+
+    Zugriffsrechte (z. B. 644)
+
+    Letzter Zugriff (Datum/Zeit)
+
+    Letzte Änderung (Datum/Zeit)
+
+Wenn man Text anhängt, wird:
+
+    die Größe größer
+
+    die Änderungszeit (mtime) neu gesetzt
+
+Die Inode bleibt gleich, weil es dieselbe Datei ist.
+✅ 2. Inode-Nummer vs. Dateiname
+
+    Der Dateiname ist nur eine „Verknüpfung“ zu den Daten.
+
+    Die Inode-Nummer zeigt auf den echten Speicherplatz mit Inhalt und Metadaten.
+
+    Zwei Dateien mit gleicher Inode-Nummer sind Hardlinks → sie teilen sich denselben Inhalt.
+
+✅ 3. Unterschied bei symbolischem Link (Symlink)
+Aspekt	Hardlink	Symbolischer Link (Symlink)
+Inode	gleich wie Original	eigene Inode
+Inhalt	direkt verbunden	zeigt nur auf Pfad
+Bei Löschung der Datei	bleibt erhalten	„kaputt“ (Broken Link)
+über Partitionen	nicht möglich	möglich
+➡️ Symlinks sind flexibler, aber abhängig vom Pfad.
+➡️ Hardlinks sind robuster, aber nur im selben Dateisystem.
+
+
+

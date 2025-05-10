@@ -1,0 +1,42 @@
+Hier meine Antwort:
+
+Interne Fragmentierung:
+Ein Programm bekommt mehr Speicher als es braucht. Der Rest bleibt ungenutzt.
+Beispiel: Ein Prozess braucht 18 KB, bekommt aber 20 KB. Die 2 KB gehen verloren.
+
+Externe Fragmentierung:
+Der freie Speicher ist verteilt und nicht zusammenhängend. Große Programme passen nicht rein.
+Beispiel: Es gibt 3 freie Blöcke (4 KB, 3 KB, 2 KB), aber ein Prozess braucht 8 KB. Kein Block ist groß genug.
+
+🧠 Zwei Strategien zur Vermeidung von Speicherfragmentierung
+1. Paging (Seitentechnik)
+
+Der Speicher wird in gleich große Blöcke (Seiten) aufgeteilt. Programme bekommen nur die Seiten, die sie brauchen.
+
+    ✅ Vorteile:
+
+        Keine externe Fragmentierung
+
+        Einfache Verwaltung durch feste Größe
+
+    ❌ Nachteile:
+
+        Interne Fragmentierung möglich (wenn Seite nicht ganz gefüllt ist)
+
+        Verwaltungsaufwand durch Seitentabellen
+
+	2. Compaction (Speicherverdichtung)
+
+Freier Speicher wird zusammengelegt, indem Prozesse verschoben werden.
+
+    ✅ Vorteile:
+
+        Große Speicherblöcke entstehen
+
+        Bessere Nutzung des Hauptspeichers
+
+    ❌ Nachteile:
+
+        Sehr aufwendig und langsam
+
+        Benötigt viel Rechenleistung

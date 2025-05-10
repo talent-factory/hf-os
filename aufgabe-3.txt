@@ -1,0 +1,110 @@
+Ein Speicherleck (Memory Leak) passiert, wenn ein Programm Speicher reserviert (z. B. mit malloc()), aber nicht wieder freigibt (free() fehlt).
+
+    📉 Auswirkungen:
+
+        Der Speicher bleibt blockiert, obwohl er nicht mehr gebraucht wird.
+
+        Bei langen Programmen oder vielen Lecks kann der Speicher ausgehen.
+
+        Das Programm wird langsam oder stürzt ab.
+
+    🧠 Was macht das Betriebssystem?
+
+        Das OS kann den gesamten Speicher beim Programmende zurückholen.
+
+        Während der Laufzeit merkt das OS das Leak nicht sofort.
+
+        Tools wie Valgrind helfen, Lecks zu finden.
+
+Teil 1: Erklärung der Befehle
+
+mkdir -p test/subdir && cd test
+
+Erstellt einen Ordner „test“ mit Unterordner „subdir“ und wechselt in den Ordner „test“.
+
+echo "Inhalt-$(date +%s)" > original.txt
+
+Erstellt die Datei original.txt mit aktuellem Zeitwert als Inhalt.
+
+ln -s original.txt symlink.txt
+
+Erstellt einen symbolischen Link (Pfadverweis) auf original.txt.
+
+ln original.txt hardlink.txt
+
+Erstellt einen Hardlink – eine zweite Referenz zur gleichen Datei (gleiche Inode).
+
+chmod 640 original.txt
+
+Setzt die Dateiberechtigung:
+
+    Eigentümer darf lesen & schreiben,
+
+    Gruppe darf lesen,
+
+    Andere nichts.
+
+touch -d "2 days ago" original.txt
+
+Ändert den Zeitstempel (Änderungsdatum) auf vor 2 Tagen.
+
+ls -la
+
+Zeigt eine detaillierte Liste aller Dateien mit Inodes, Berechtigungen, Zeitstempeln usw.
+
+Teil 2: Analyse der Ausgabe ls -la
+Bedeutung der Spalten:
+
+    Berechtigungen (z. B. -rw-r-----)
+
+    Anzahl der Hardlinks
+
+    Benutzer
+
+    Gruppe
+
+    Dateigröße
+
+    Zeitstempel der letzten Änderung
+
+    Dateiname
+
+Unterschiede:
+
+    original.txt und hardlink.txt haben gleiche Inode, weil sie denselben Inhalt teilen.
+
+    symlink.txt hat einen eigenen Inode, verweist nur auf original.txt.
+
+    Zeitstempel ist bei symlink.txt meist der Erstellzeitpunkt des Links, nicht der Zieldatei.
+    
+     Teil 3: Weitere Befehle
+
+echo "Neuer Inhalt" > original.txt
+
+Überschreibt den Inhalt der Datei. Da hardlink.txt dieselbe Inode hat, sieht man dort denselben neuen Inhalt.
+
+cat symlink.txt hardlink.txt
+
+Gibt den Inhalt der Datei zweimal aus. Beide zeigen auf dieselben Daten.
+
+mv original.txt ../original.txt
+
+Verschiebt original.txt in das übergeordnete Verzeichnis.
+→ symlink.txt ist jetzt „broken“, weil der Pfad nicht mehr gültig ist.
+→ hardlink.txt bleibt funktionierend (gleiche Inode).
+
+cat symlink.txt hardlink.txt 2>&1
+
+    hardlink.txt: zeigt den Inhalt.
+
+    symlink.txt: Fehler, da Datei nicht mehr existiert → „No such file or directory“.
+
+📌 Auswirkungen auf die Inode-Tabelle:
+
+    Der Hardlink behält die Inode.
+
+    Der Symbolische Link hat eigene Inode und verweist nur.
+
+    Beim mv wird der Inode von original.txt nicht gelöscht, weil hardlink.txt noch existiert.
+
+

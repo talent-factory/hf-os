@@ -1,0 +1,30 @@
+Korrekte Lösung – basierend auf dem Buch:
+🔹 1. Virtuelle Adresse: 12300
+
+    Seite = 12300 ÷ 4096 = 3
+
+    Offset = 12300 % 4096 = 12
+
+    Laut Buch: Seite 3 → Frame 4
+
+    ➤ Physische Adresse = 4 × 4096 + 12 = 16400
+
+🔹 2. Virtuelle Adresse: 16384
+
+    Seite = 16384 ÷ 4096 = 4
+
+    Offset = 0
+
+    Seite 4 → Frame 1
+
+    ➤ Physische Adresse = 1 × 4096 + 0 = 4096
+
+🔹 3. Virtuelle Adresse: 32800
+
+    Seite = 32800 ÷ 4096 = 8
+
+    Offset = 32800 % 4096 = 32
+
+    Seite 8 → Frame 6
+
+    ➤ Physische Adresse = 6 × 4096 + 32 = 24576 + 32 = 24608
