@@ -5,3 +5,19 @@ Beispiel: Wenn ein System Speicherblöcke nur in 4 KB vergibt, ein Programm aber
 Externe: 
 Externe Fragmentierung passiert, wenn zwar noch genug freier Speicher da ist, dieser aber in viele kleine Stücke aufgeteilt ist. Dadurch kann ein größeres Programm nicht geladen werden, obwohl insgesamt genug Platz wäre.
 Beispiel: Es sind viele kleine freie Bereiche im RAM verteilt, aber es findet sich kein großes, zusammenhängendes Stück für ein neues großes Programm.
+
+Paging (Arbeiten mit Seiten)
+Beim Paging wird der Speicher in kleine, gleich große Stücke (zum Beispiel 4 KB Seiten) aufgeteilt. Programme bekommen diese Seiten zugewiesen, egal wo sie im Speicher liegen. So entstehen keine Lücken zwischen den Programmen.
+
+Vorteile: Keine freien Lücken (keine externe Fragmentierung), einfacher für das System zu verwalten.
+
+Nachteile: Am Ende jeder Seite kann trotzdem etwas Speicher ungenutzt bleiben (interne Fragmentierung). Außerdem braucht das System extra Tabellen, was Speicher kostet.
+
+Speicher zusammenräumen (Kompaktierung)
+Hier versucht das System, belegte Speicherblöcke „zusammenzuschieben“, damit ein großer freier Bereich entsteht. So kann auch ein großes Programm wieder geladen werden.
+
+Vorteile: Alle Lücken werden entfernt, es gibt wieder großen freien Speicher.
+
+Nachteile: Das braucht viel Rechenleistung und kann den Computer verlangsamen, deshalb wird es nicht oft gemacht.
+
+
