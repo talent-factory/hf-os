@@ -1,0 +1,75 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546203
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-10 11:25:18
+Letzte Änderung: 2025-05-10 11:25:18
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 136 Bytes
+Inode-Nummer: 546203
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-10 11:25:18
+Letzte Änderung: 2025-05-10 11:25:18
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 136 Bytes
+Inode-Nummer: 546203
+Anzahl der Hardlinks: 2
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-10 11:25:18
+Letzte Änderung: 2025-05-10 11:25:18
+
+
+Beobachtungen aus der Programmausgabe:
+
+Nach dem ersten Öffnen und Schreiben in die Datei testdatei.txt:
+
+Grösse: 96 Bytes
+
+Hardlinks: 1
+
+Inode-Nummer: 546203
+
+Nach dem Anhängen von Text:
+
+Grösse: auf 136 Bytes erhöht → korrekt, da mehr Inhalt geschrieben wurde.
+
+Zugriffs- und Änderungszeit blieben gleich → da das Betriebssystem u. U. zwischenspeichert oder der Zugriff nicht aktualisiert wurde (z. B. durch Cache oder verzögerte Aktualisierung).
+
+Nach dem Erstellen des Hardlinks:
+
+testdatei_hardlink.txt hat:
+
+dieselbe Inode-Nummer wie testdatei.txt, dieselbe Dateigrösse und Metadaten, aber die Hardlink-Anzahl erhöht sich auf 2.
+
+2. Erklärung: Inode-Nummer vs. Dateiname
+
+Die Inode-Nummer ist ein eindeutiger Bezeichner für den tatsächlichen Inhalt und die Metadaten einer Datei im Dateisystem.
+
+Der Dateiname ist lediglich ein Verzeichniseintrag, der auf einen Inode zeigt.
+
+Wenn zwei Dateinamen dieselbe Inode-Nummer besitzen, teilen sie sich denselben physischen Inhalt.
+→ Änderungen über einen Namen wirken sich direkt auf den anderen aus.
+
+3. Unterschied bei Verwendung eines symbolischen Links (Symlink):
+
+Ein Symlink ist eine separate Datei mit eigenem Inode, die nur einen Pfad zum Original speichert.
+Metadaten eines Symlinks betreffen nur den Link selbst (nicht die Zieldatei):
+eigener Inode, eigene Zugriffszeit usw., zeigt im Inhalt den Pfad zum Ziel.
+
+Verhalten beim Löschen
+
+Wird die Originaldatei gelöscht:
+Hardlink: Inhalt bleibt erhalten, solange mindestens ein Hardlink existiert.
+Symlink: ist „broken“ – verweist ins Leere und löst z. B. bei cat einen Fehler aus.
+
