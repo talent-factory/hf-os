@@ -1,0 +1,100 @@
+Beschreibung der Ausgabe und Änderungen an den Metadaten:
+Die Ausgabe zeigt, wie sich die Metadaten der Datei nach dem Hinzufügen von Text ändern:
+
+Vor der Änderung:
+Dateigröße: 96 Bytes
+
+Inode-Nummer: 546269
+
+Anzahl der Hardlinks: 1
+
+Zugriffsrechte: 664 (Lesen und Schreiben für den Besitzer und die Gruppe, Lesen für andere)
+
+Letzter Zugriff und Letzte Änderung: Beide auf den gleichen Zeitpunkt gesetzt.
+
+Nach der Änderung:
+Dateigröße: 135 Bytes (die Größe ist gestiegen, da neuer Text hinzugefügt wurde)
+
+Inode-Nummer: 546269 (die Inode-Nummer bleibt unverändert, da der Inhalt der Datei geändert wurde, aber die Datei selbst nicht verschoben oder gelöscht wurde)
+
+Anzahl der Hardlinks: 1 (bleibt gleich, weil keine neuen Hardlinks hinzugefügt wurden)
+
+Zugriffsrechte: 664 (bleiben unverändert)
+
+Letzter Zugriff und Letzte Änderung: Beide bleiben gleich, was darauf hinweist, dass das System den Zugriff und die Änderung nicht neu gesetzt hat, obwohl Text angehängt wurde.
+
+Nach dem Erstellen des Hardlinks:
+Dateigröße: 135 Bytes (bleibt gleich wie bei der Originaldatei, da Hardlinks den gleichen Inhalt teilen)
+
+Inode-Nummer: 546269 (die gleiche wie die der Originaldatei, da Hardlinks denselben Inode verwenden)
+
+Anzahl der Hardlinks: 2 (die Anzahl der Hardlinks wurde auf 2 erhöht, da ein neuer Hardlink zur Datei erstellt wurde)
+
+Zugriffsrechte: 664 (bleiben unverändert)
+
+Letzter Zugriff und Letzte Änderung: Die gleichen wie bei der Originaldatei, da der Hardlink dieselbe Datei referenziert.
+
+Schlussfolgerung:
+
+Nach dem Anhängen von Text zu der Datei (testdatei.txt) wurde die Dateigröße erhöht, was zu einer Änderung der Metadaten führte.
+
+Der Inode der Datei bleibt jedoch unverändert, da der Inhalt der Datei bearbeitet wurde, aber der Speicherort und die Identität der Datei nicht verändert wurden.
+
+Die Anzahl der Hardlinks wurde durch das Erstellen des Hardlinks auf 2 erhöht, da nun zwei Verweise auf denselben Inode existieren.
+
+2. Unterschied zwischen Inode-Nummer und Dateiname:
+Inode-Nummer:
+
+Eine Inode-Nummer ist eine eindeutige Identifikationsnummer für jede Datei oder jedes Verzeichnis auf einem Dateisystem. Diese Nummer verweist auf die Metadaten der Datei, wie z.B. die Dateigröße, die Dateiberechtigungen und den physischen Speicherort der Datei.
+
+Ein Inode enthält keine Informationen über den Dateinamen oder den Pfad; er enthält nur die relevanten Informationen zur Datei selbst.
+
+Dateiname:
+
+Der Dateiname ist der Name, mit dem der Benutzer oder das System auf eine Datei zugreift. Der Dateiname ist mit einer Inode-Nummer in einem Verzeichnis verknüpft.
+
+Während die Inode-Nummer die Datei eindeutig identifiziert, stellt der Dateiname den benutzerfreundlichen Verweis auf diese Datei dar.
+
+Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+Wenn zwei Dateien die gleiche Inode-Nummer haben, bedeutet dies, dass sie im Wesentlichen dieselbe Datei sind, obwohl sie unterschiedliche Dateinamen haben können. Dies passiert, wenn Hardlinks erstellt werden.
+
+Ein Hardlink ist ein weiterer Verweis auf denselben Inode und somit auf dieselbe Datei. Solange einer dieser Links existiert, bleibt der Inhalt der Datei auf der Festplatte gespeichert, auch wenn die anderen Links gelöscht werden.
+
+3. Unterschiede zwischen Hardlink und symbolischem Link (Symlink):
+Hardlink:
+
+Ein Hardlink ist ein zusätzlicher Verweis auf denselben Inode, der eine Datei identifiziert. Der Hardlink und die Originaldatei sind nicht voneinander zu unterscheiden, weil sie denselben Inode teilen.
+
+Das Verhalten beim Löschen der Originaldatei:
+
+Wenn Sie die Originaldatei löschen, bleibt der Inhalt der Datei immer noch auf der Festplatte vorhanden, solange der Hardlink existiert. Die Datei wird erst dann vollständig gelöscht, wenn alle Hardlinks (auch der ursprüngliche) entfernt wurden.
+
+Metadaten:
+
+Alle Hardlinks zu einer Datei teilen sich die gleichen Metadaten (wie Größe, Inode-Nummer und Zugriffsrechte), da sie denselben Inode verwenden.
+
+Symbolischer Link (Symlink):
+
+Ein symbolischer Link (oder Softlink) ist eine Datei, die auf eine andere Datei verweist, aber nicht denselben Inode wie die Originaldatei verwendet. Stattdessen enthält der Symlink den Pfad zur Originaldatei.
+
+Das Verhalten beim Löschen der Originaldatei:
+
+Wenn die Originaldatei gelöscht wird, wird der Symlink ungültig (er verweist auf eine nicht existierende Datei), aber die Daten der Originaldatei sind nicht mehr vorhanden, da sie physisch gelöscht wurde.
+
+Metadaten:
+
+Der Symlink hat eigene Metadaten, wie die Inode-Nummer und den Dateinamen des Symlinks. Die Inode-Nummer des Symlinks ist nicht dieselbe wie die der Originaldatei. Der Symlink enthält lediglich den Pfad zur Zieldatei und verweist nicht direkt auf denselben Inode.
+
+Zusammenfassung:
+Hardlink:
+
+Verweist auf denselben Inode und teilt sich die Metadaten der Originaldatei.
+
+Die Datei bleibt bestehen, auch wenn der Originaldateiname gelöscht wird, solange der Hardlink existiert.
+
+Symbolischer Link (Symlink):
+
+Verweist auf die Originaldatei über einen Pfad und hat eigene Metadaten.
+
+Wird ungültig, wenn die Originaldatei gelöscht wird.

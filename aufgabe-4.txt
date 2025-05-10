@@ -1,0 +1,5 @@
+12300 = physische Adresse 28700
+
+16384 = physische Adresse 16384
+
+32800 = physische Adresse 
