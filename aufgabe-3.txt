@@ -1,0 +1,119 @@
+Aufgabe 3 – Erweiterte Datei Operationen
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:35 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:34 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:35 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:35 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:34 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:34 symlink.txt -> original.txt
+
+Aufgabe 3 – Erweiterte Datei Operationen (Anhang & Analyse)
+
+===== Ausgabe von 'ls -la' =====
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:35 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:34 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 10 08:35 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 10 08:35 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:34 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:34 symlink.txt -> original.txt
+
+
+===== Analyse der Ausgabe =====
+
+1. Bedeutung der Spalten (von 'ls -la'):
+
+Spalte 1: Dateityp und Berechtigungen (z. B. -rw-r--r--)
+Spalte 2: Anzahl Hardlinks (bei Dateien) oder Einträge (bei Verzeichnissen)
+Spalte 3: Benutzername (Besitzer)
+Spalte 4: Gruppenname
+Spalte 5: Dateigröße in Bytes
+Spalte 6–8: Datum und Uhrzeit der letzten Änderung
+Spalte 9: Dateiname (bei Symlinks mit '->' und Ziel)
+
+2. Unterschiede zwischen original.txt, hardlink.txt und symlink.txt:
+
+- original.txt und hardlink.txt:
+  • Gleiche Inode (nicht direkt sichtbar, aber durch Link-Anzahl und identische Metadaten erkennbar)
+  • Gleiche Rechte: -rw-r-----
+  • Gleicher Zeitstempel: Mai 10 08:35
+  • Beide zeigen auf denselben physischen Speicherort (Hardlink)
+
+- symlink.txt:
+  • Hat eigene Inode
+  • Typisch für Symlink: 'l' am Anfang (lrwxrwxrwx)
+  • Hat anderen Zeitstempel: Mai 10 08:34
+  • Verweist nur symbolisch auf original.txt (Pfadangabe)
+
+3. Warum gleiche oder unterschiedliche Inodes?
+
+- hardlink.txt und original.txt haben dieselbe Inode, weil ein Hardlink eine zweite Referenz auf denselben Speicherbereich ist.
+- symlink.txt hat eine eigene Inode, da es eine eigenständige Datei mit einem Pfadinhalt ist – nicht direkt mit dem Zieldatenblock verbunden.
+
+===== Fazit =====
+
+- Hardlinks = gleiches Dateisystemobjekt, geteilte Inode
+- Symlinks = eigene Datei, verweist nur auf Pfad, neue Inode
+- 'ls -la' zeigt diese Unterschiede indirekt über Dateityp, Rechte, Zeit und Anzahl der Links
+===== Erweiterung: Letzte Befehle und Analyse =====
+
+1. echo "Neuer Inhalt" > original.txt
+
+- Schreibt neuen Inhalt in original.txt
+- Alte Daten werden überschrieben
+- Da hardlink.txt und original.txt dieselbe Inode haben, zeigen beide nun "Neuer Inhalt"
+- symlink.txt verweist symbolisch auf original.txt (Pfad bleibt gültig)
+
+2. cat symlink.txt hardlink.txt
+
+Ausgabe:
+Neuer Inhalt
+Neuer Inhalt
+
+→ Beide zeigen denselben Inhalt, obwohl sie unterschiedliche Arten von Links sind.
+
+3. mv original.txt ../original.txt
+
+- Die Datei "original.txt" wird in das übergeordnete Verzeichnis verschoben
+- Der symbolische Link `symlink.txt` verweist weiterhin auf `original.txt`, aber nun **ist der Pfad nicht mehr gültig**, da `original.txt` im aktuellen Verzeichnis fehlt
+- `hardlink.txt` bleibt funktionsfähig, da er **direkt auf die Inode zeigt**, nicht auf einen Pfad
+
+4. cat symlink.txt hardlink.txt 2>&1
+
+Ausgabe:
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden  
+Neuer Inhalt
+
+→ symlink.txt schlägt fehl (Pfad existiert nicht mehr), aber hardlink.txt funktioniert weiterhin.
+
+---
+
+===== Technische Analyse =====
+
+🧩 Auswirkungen auf die Inode-Tabelle:
+
+- `hardlink.txt` und `original.txt` haben dieselbe Inode → eine Änderung an einer wirkt auf beide
+- Nach dem `mv` ist nur noch `hardlink.txt` im aktuellen Verzeichnis mit gültiger Verbindung zur Inode
+- `symlink.txt` zeigt weiterhin auf `original.txt`, aber dieser Pfad ist jetzt ungültig
+
+Unterschied Hardlink vs. Symlink:
+
+| Art         | Zeigt auf       | Gültig nach mv? | Teilt Inode? |
+|-------------|------------------|------------------|--------------|
+| Hardlink    | Daten (Inode)    | ✅ Ja             | ✅ Ja         |
+| Symlink     | Pfad             | ❌ Nein          | ❌ Nein       |
+
+Fehlerquellen:
+
+- **symlink.txt** bricht nach dem `mv`, da der relative Pfad `original.txt` im Verzeichnis nicht mehr existiert
+- Hardlinks sind robuster, da sie unabhängig vom Pfad funktionieren
+
+---
+
+Bonusfrage – Verhalten auf unterschiedlichen Dateisystemen:
+
+- **Hardlinks funktionieren nur innerhalb desselben Dateisystems (Partition)**, weil die Inode-Verwaltung lokal ist
+- **Symlinks funktionieren auch über Dateisystemgrenzen hinweg**, da sie nur Pfade speichern
+- Ein `mv` zwischen Partitionen ist in Wirklichkeit ein Kopieren + Löschen, wodurch Inodes sich ändern können
+
+
