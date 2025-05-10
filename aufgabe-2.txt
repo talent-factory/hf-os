@@ -1,0 +1,26 @@
+Unterschied zwischen interner und externer Speicherfragmentierung:
+
+Interne Fragmentierung:
+Dabei bleibt ungenutzter Speicher innerhalb eines zugewiesenen Blocks.
+Beispiel: Wenn ein Programm 18 KB braucht, aber das Betriebssystem nur 20 KB große Blöcke vergibt, bleiben 2 KB ungenutzt.
+
+Externe Fragmentierung:
+Dabei gibt es viele kleine freie Speicherstücke zwischen belegten Blöcken, die zusammen groß genug wären, aber nicht zusammenhängend sind.
+Beispiel: Wenn im RAM viele kleine freie Lücken (z. B. 4 KB, 6 KB, 3 KB) verteilt sind, kann ein Programm mit 10 KB Speicherbedarf keinen Platz finden, obwohl insgesamt genug Speicher da ist.
+
+Zwei Strategien zur Vermeidung von Speicherfragmentierung:
+
+Paging (Seitentechnik):
+Der Speicher wird in gleich große Seiten (z. B. 4 KB) unterteilt. Prozesse bekommen Seiten, die nicht zusammenhängend sein müssen.
+
+Vorteile: Keine externe Fragmentierung, einfache Speicherverwaltung.
+
+Nachteile: Interne Fragmentierung möglich (wenn die letzte Seite nicht ganz genutzt wird), zusätzlicher Aufwand für Seitentabellen.
+
+Speicherkompaktierung (Defragmentierung):
+Das Betriebssystem verschiebt belegte Speicherblöcke, damit freie Bereiche zusammengefasst werden.
+
+Vorteile: Reduziert externe Fragmentierung effektiv.
+
+Nachteile: Zeitaufwändig, hohe CPU-Last, nicht während Laufzeit aller Prozesse möglich.
+
