@@ -1,0 +1,22 @@
+1. Virtuelle Adresse 12300
+- 12300 geteilt durch 4096 = Seite 3, Rest 12
+- Seite 3 zeigt auf physische Seite 6
+- 6 * 4096 = 24576
+- 24576 + 12 = 24588
+
+2. Virtuelle Adresse 16384
+- 16384 geteilt durch 4096 = Seite 4, Rest 0
+- Seite 4 ist nicht im Speicher
+- Ergebnis: Fehler
+
+3. Virtuelle Adresse 32800
+- 32800 geteilt durch 4096 = Seite 8, Rest 16
+- Seite 8 zeigt auf physische Seite 5
+- 5 * 4096 = 20480
+- 20480 + 16 = 20496
+
+
+Ergebnis:
+1. 24588
+2. gibt ein fehler
+3. 20496
