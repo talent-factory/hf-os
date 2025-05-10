@@ -8,3 +8,20 @@ Konkrete Beispiele
 Intern: Aufteilung des Speichers beim Lesen einer Datei, Festlegen der möglichen Speichergrösse, aber eine der Zeilen (meist die Letzte) ist kleiner als erwartet. Der überschüssige Speicher ist "verschwendet" bzw. fragmentiert.
 
 Extern: Vorherige Prozesse wurden beendet und haben verschiedene "Lücken" gelassen, 40, 10 und 5 KB jeweils gross. Ein Prozess braucht nun 50 KB an Speicher, was theoretisch machbar ist, aber da die Fragmente nicht zusammenhängen, wird nach einer anderen, 50KB grossen, Lücke gesucht.
+
+Strategien zur Fragmentierungsvermeidung
+
+1. Speicherverwaltung mit Bitmaps
+Unterteilung des Speichers in kleinere Zuweisungseinheiten mit Hilfe einer Bitmap, wobei jede Einheit einem Bit der Bitmap entspricht. Hierbei definiert die Grösse der Zuweisungseinheit die Grösse der Bitmap. 
+
+Vor-/Nachteile: Geringe Komplexität, dafür aber sehr langsames Speichermanagement. Braucht dementsprechend hohe Ressourcen bzw. eine hohe Leistung
+
+2. Speicherverwaltung mit verketteten Listen
+Verschiedene Speichersegmente werden als Liste gespeichert, wobei ein Element entweder belegt oder leer sein kann. Dadurch können Algorithmen diese Liste dann entsprechend durchgehen und befüllen (Beispiele wären "First fit", "Next fit" und "best fit", welche alle den Speicher nach anderen Kriterien vergibt).
+
+Vor-/Nachteile: Je nach Algorithmus unterschiedlich.
+
+Reihenfolge Bester -> Schlechtester
+Komplexität: Alle in etwa gleich
+Leistung: First fit - next fit - best fit
+Ressourcen: next fit - first fit - best fit
