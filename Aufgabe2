@@ -1,0 +1,24 @@
+Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+*** 
+  Interne Fragmentierung:
+  -- der Speicher wird in festen Blöcken wie Seiten oder Sektoren zugeteilt, aber die angeforderten Daten füllen den Block nicht ganz vollständig aus.
+  -- Beispiel: Das Betriebssystem weist einer Anwendung eine ganze Speicherseite (z. B. 4 KB) zu, auch wenn nur 2 KB benötigt werden.
+  
+  Externe Fragmentierung:
+  -- Häufiges Anlegen/Löschen von Objekten unterschiedlicher Größe hinterlässt "Lücken".
+  -- Beispiel: Viele Prozesse belegen und geben Speicher in unterschiedlichen Größen frei.aber dann neue Prozess findet keinen zusammenhängenden Speicherblock, obwohl die Summe der Fragmente ausreicht.
+
+***
+Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+
+***
+1. Paging: Ein sehr einfaches Beispiel dafür, wie diese Zuordnung funktioniert, ist in Abbildung 20 dargestellt. In diesem Beispiel haben wir einen Computer, der 16-Bit-Adressen von 0 bis 64K- 1 erzeugt.
+---Vorteil: Keine externe Fragmentierung, Einfach Verwaltung
+---Nachteil. Interne Fragmentierung und Overhead durch Seitentabellen.
+
+2.Page Table: In einer einfachen Implementierung lässt sich die Zuordnung von virtuellen Adress zu physischen Adressen. 
+---Vorteil: Keine Extern Fragmentierung, und MMU hat Übersetzt virtuelle Adressen automatisch
+---Nachteil: Overhead 
+
+
+
