@@ -1,0 +1,85 @@
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:36 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:36 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:37 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:37 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:36 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:36 symlink.txt -> original.txt
+
+Analyse der ls -la Ausgabe
+
+1 Bedeutung jeder Spalte
+
+Spalte 1 zeigt Dateityp und Berechtigungen
+Beispiel rwxrwxrwx oder -rw-r-----
+Erstes Zeichen steht für Typ Minus ist eine normale Datei l ist ein symlink d ist ein Verzeichnis
+Dann folgen drei Gruppen mit je drei Zeichen für Rechte von Benutzer Gruppe und andere
+
+Spalte 2 ist die Anzahl der Links
+Das heisst wie viele Dateinamen auf denselben Inode zeigen
+
+Spalte 3 ist der Benutzername also der Besitzer der Datei
+Spalte 4 ist die Gruppe zu der der Benutzer gehört
+
+Spalte 5 zeigt die Grösse der Datei in Bytes
+
+Spalte 6 bis 8 zeigen das Datum und die Uhrzeit der letzten Änderung
+
+Spalte 9 ist der Dateiname
+Bei symlinks steht auch auf was der Link zeigt
+
+2 Unterschiede zwischen den drei Dateien
+
+originaltxt und hardlinktxt haben denselben Inode das sieht man an der gleichen Linkanzahl 2
+Beide sind normale Dateien mit denselben Rechten rw-r-----
+
+hardlinktxt wurde mit ln originaltxt hardlinktxt erstellt
+Das bedeutet beide zeigen direkt auf denselben Speicherbereich
+
+symlinktxt ist ein symbolischer Link das erkennt man am l am Anfang der Rechte
+Er hat andere Rechte und einen anderen Zeitstempel
+Er zeigt nur auf den Pfad von originaltxt hat aber einen eigenen Inode
+
+3 Warum haben manche Dateien denselben Inode
+
+originaltxt und hardlinktxt haben denselben Inode weil sie Hardlinks sind
+Das heisst sie teilen sich denselben Inhalt auf der Festplatte
+
+symlinktxt hat einen eigenen Inode weil symbolische Links nur Pfade speichern
+Sie verweisen nicht direkt auf den Inhalt sondern nur auf den Namen
+
+Analyse der Befehle
+
+1 echo Neuer Inhalt > originaltxt
+Ersetzt den Inhalt der Datei originaltxt mit dem Text Neuer Inhalt
+
+2 cat symlinktxt hardlinktxt
+Zeigt den Inhalt beider Dateien an
+Beide zeigen auf originaltxt deshalb steht zweimal Neuer Inhalt
+
+3 mv originaltxt ../originaltxt
+Verschiebt die Datei originaltxt eine Ebene höher
+Der Inode der Datei bleibt gleich
+Nur der Pfad im aktuellen Verzeichnis wird entfernt
+
+4 cat symlinktxt hardlinktxt 2>&1
+hardlinktxt zeigt immer noch auf den gleichen Inode also wird Neuer Inhalt angezeigt
+symlinktxt funktioniert nicht mehr weil es auf den Pfad originaltxt zeigt und dieser nicht mehr im Verzeichnis existiert
+Deshalb kommt die Fehlermeldung Datei oder Verzeichnis nicht gefunden
+
+Inode Auswirkungen
+hardlinktxt zeigt immer noch auf den existierenden Inode
+symlinktxt zeigt auf einen Pfad nicht auf einen Inode also ist er nun ungültig
+
+Unterschied zwischen Hardlink und Symlink
+hardlink bleibt gültig solange der Inode existiert egal wo die Datei liegt
+symlink funktioniert nur solange der Pfad gültig ist
+
+Fehler
+symlink gibt Fehler weil das Ziel unter dem alten Namen nicht mehr existiert
+
+Bonus
+Wenn originaltxt und hardlinktxt auf verschiedenen Dateisystemen liegen würde
+könnte man keinen Hardlink mit ln machen
+ln funktioniert nur innerhalb desselben Dateisystems
+Symlinks funktionieren systemübergreifend weil sie nur den Pfad speichern
