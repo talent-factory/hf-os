@@ -1,0 +1,44 @@
+Aufgaben nach der Ausführung: 
+1. Output erklären
+Vor dem Anhängen:
+
+Dateigröße: 96 Bytes
+Hardlinks: 1
+Inode: 419420
+
+Nach dem Anhängen:
+
+Dateigröße: 137 Bytes → erwartungsgemäß größer
+Inode-Nummer: bleibt identisch
+Zugriffs- und Änderungszeitpunkte: keine Veränderung sichtbar, obwohl Text angehängt wurde.
+
+Erklärung:
+- Die Dateigröße ist korrekt aktualisiert worden.
+- Die Zeitstempel (st_atime und st_mtime) bleiben gleich, was ungewöhnlich ist – möglicherweise, weil:
+- Das Filesystem (z. B. ext4 mit "noatime"-Mount-Option) die Timestamps nicht automatisch aktualisiert.
+- Die Zeitänderung zu gering war, um sich sichtbar auszuwirken.
+- Der Zeitwert wurde direkt nach der Änderung wieder ausgelesen und war systemseitig noch nicht aktualisiert.
+
+2. Unterschied vo Inode zu Dateinamen
+- Der Dateiname ist lediglich ein Eintrag im Verzeichnis – eine Art „Verweis“ auf den Inode.
+- Der Inode identifiziert die tatsächliche Datei (Daten + Metadaten) im Dateisystem.
+
+In der Ausgabe haben testdatei.txt und testdatei_hardlink.txt beide den Inode 419420.
+
+Das bedeutet: 
+- Beide Dateinamen verweisen auf denselben Speicherblock und dieselben Metadaten.
+- Änderungen am Inhalt oder an Metadaten (z. B. Rechten, Größe) wirken sich auf beide aus.
+- Der Zähler Hardlinks: 2 zeigt korrekt an, dass zwei Namen auf denselben Inode zeigen.
+
+3. Symbolsicher link anstelle von Hardlink
+Symbolischer Link (Symlink):
+- Hat einen eigenen Inode und speichert nur den Pfad zur Zieldatei.
+- Ist daher abhängig vom Dateinamen der Zieldatei.
+
+Wenn testdatei.txt gelöscht wird:
+- Hardlink: testdatei_hardlink.txt funktioniert weiterhin → Daten sind noch da.
+- Symlink: symlink.txt zeigt auf einen nicht mehr existierenden Pfad → cat symlink.txt ergibt einen Fehler.
+
+Das Programm zeigt, dass das Anhängen an eine Datei die Größe erhöht, während andere Metadaten gleich bleiben können, abhängig vom Dateisystem.
+Zwei Dateien mit gleicher Inode-Nummer sind harte Links, also vollwertige Zugriffe auf dieselben Daten.
+Ein symbolischer Link dagegen ist pfadabhängig, verliert also bei Umbenennung oder Löschung der Originaldatei seine Funktion.
