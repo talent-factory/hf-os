@@ -1,0 +1,193 @@
+mkdir -p test/subdir && cd test
+
+Beschreibung:
+Erstellt das Verzeichnis test und darin das Unterverzeichnis subdir. Falls test noch nicht existiert, wird es ebenfalls angelegt (-p). Der Wechsel in das Verzeichnis test erfolgt nur, wenn die Erstellung erfolgreich war (&&).
+
+Zugrundeliegende Konzepte:
+	•	Verzeichnisse sind spezielle Dateien, die andere Dateien referenzieren.
+	•	Das UNIX-Dateisystem verwendet eine hierarchische Struktur.
+	•	Der Operator && verknüpft zwei Kommandos logisch – das zweite wird nur ausgeführt, wenn das erste erfolgreich ist.
+
+
+echo "Inhalt-$(date +%s)" > original.txt
+
+Beschreibung:
+Schreibt einen Text mit Zeitstempel in die Datei original.txt. Existiert die Datei nicht, wird sie neu erstellt; existiert sie, wird sie überschrieben.
+
+Zugrundeliegende Konzepte:
+	•	Standardausgabe wird mit > in eine Datei umgeleitet.
+	•	Dynamische Inhalte können per Shell-Substitution ($(...)) erzeugt werden.
+	•	Dateien werden bei der ersten Ausgabe automatisch angelegt oder ersetzt.
+
+
+ln -s original.txt symlink.txt
+
+Beschreibung:
+Erstellt einen symbolischen Link namens symlink.txt, der auf original.txt zeigt.
+
+Zugrundeliegende Konzepte:
+	•	Symbolische Links speichern Pfadangaben, nicht den Inode der Zieldatei.
+	•	Der Link ist unabhängig vom tatsächlichen Vorhandensein der Zieldatei (kann ins Leere zeigen).
+	•	Symlinks haben eigene Inodes und Metadaten.
+
+
+ln original.txt hardlink.txt
+
+Beschreibung:
+Erstellt einen Hardlink hardlink.txt, der auf dieselbe Datei wie original.txt verweist. Beide Dateinamen zeigen auf denselben Inode.
+
+Zugrundeliegende Konzepte:
+	•	Hardlinks referenzieren denselben Inode; es handelt sich um identische Dateien mit verschiedenen Namen.
+	•	Die Datei bleibt bestehen, solange mindestens ein Hardlink vorhanden ist.
+	•	Änderungen an Inhalt oder Metadaten (z. B. chmod) wirken sich auf beide Namen aus.
+
+⸻
+
+chmod 640 original.txt
+
+Beschreibung:
+Setzt die Zugriffsrechte von original.txt auf: Besitzer darf lesen und schreiben, Gruppenmitglieder dürfen nur lesen, andere Benutzer haben keinen Zugriff.
+
+Zugrundeliegende Konzepte:
+	•	Zugriffsrechte werden im Inode gespeichert und in Oktalnotation angegeben (hier: rw- r– —).
+	•	UNIX trennt Berechtigungen für Benutzer, Gruppe und andere.
+	•	Das chmod-Kommando steuert diese Zugriffsrechte.
+
+
+touch -d "2 days ago" original.txt
+
+Beschreibung:
+Ändert den Änderungszeitpunkt (mtime) der Datei original.txt auf das angegebene Datum („vor 2 Tagen“). Der Inhalt bleibt unverändert.
+
+Zugrundeliegende Konzepte:
+	•	Dateien besitzen mehrere Zeitstempel: atime, mtime, ctime.
+	•	touch kann Metadaten manipulieren, ohne den Inhalt zu verändern.
+	•	Diese Daten werden vom Dateisystem im Inode verwaltet.
+
+
+ls -la
+
+Beschreibung:
+Listet alle Dateien und Verzeichnisse im aktuellen Pfad in Langform auf, inklusive versteckter Dateien. Zeigt Typ, Rechte, Größe, Zeitstempel, Inode-Informationen und Verknüpfungen.
+
+Zugrundeliegende Konzepte:
+	•	Die Ausgabe zeigt unterschiedliche Dateitypen: reguläre Datei (-), Verzeichnis (d), symbolischer Link (l).
+	•	Die Anzahl der Hardlinks wird über den Link-Count im Inode angezeigt.
+	•	Symlinks zeigen den Pfad zur Zieldatei an (symlink.txt -> original.txt).
+	
+	
+	
+	
+LB2 git:(hfi2024c/kristian-bilus) ✗ ls -la
+insgesamt 80
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 10 08:36 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-rw-r-- 1 vmadmin vmadmin  2442 Mai 10 08:31 aufgabe2.txt
+-rw-rw-r-- 1 vmadmin vmadmin  3261 Mai 10 08:36 aufgabe3.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 10 08:23 .git
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 10 08:23 LB2-FS25.html
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+
+Analyse der Ausgabe von ls -la
+
+Bedeutung der Spalten:
+	•	Dateityp und Zugriffsrechte:
+Der erste Eintrag gibt den Dateityp und die Zugriffsrechte an. Ein führendes Zeichen - kennzeichnet eine reguläre Datei, ein d ein Verzeichnis. Es folgen drei Gruppen zu je drei Zeichen: Rechte für den Besitzer, die Gruppe und andere Benutzer. Die Zeichen r, w, x stehen für lesen, schreiben und ausführen.
+	•	Link-Zahl:
+Die zweite Spalte zeigt die Anzahl der Hardlinks, also wie viele Dateinamen auf denselben Inode verweisen.
+	•	Besitzer und Gruppe:
+Die dritte und vierte Spalte geben den Benutzer und die Benutzergruppe an, denen die Datei gehört.
+	•	Dateigröße:
+Die fünfte Spalte zeigt die Größe der Datei in Bytes an.
+	•	Zeitstempel:
+Die nächsten drei Spalten (Datum und Uhrzeit) geben den Zeitpunkt der letzten Inhaltsänderung an (mtime).
+	•	Dateiname:
+Die letzte Spalte ist der Name der Datei oder des Verzeichnisses.
+
+
+Unterschiede zwischen den Dateien:
+	•	Zugriffsrechte:
+Die Datei README.md hat die Rechte -rw-r--r--. Das bedeutet: der Eigentümer darf lesen und schreiben, Gruppe und andere dürfen nur lesen.
+Die Dateien aufgabe2.txt, aufgabe3.txt und LB2-FS25.html haben -rw-rw-r--. Hier dürfen sowohl Eigentümer als auch Gruppenmitglieder lesen und schreiben, andere dürfen nur lesen.
+	•	Zeitstempel:
+Die Datei aufgabe3.txt wurde zuletzt am 10. Mai um 08:36 geändert.
+aufgabe2.txt wurde am 10. Mai um 08:31 geändert.
+LB2-FS25.html wurde am 10. Mai um 08:23 geändert.
+README.md wurde bereits am 9. Mai um 22:58 geändert.
+Der Zeitstempel bezieht sich jeweils auf die letzte Änderung des Dateiinhalts (mtime).
+	•	Inodes:
+Die Inode-Nummern werden in der Ausgabe von ls -la nicht angezeigt. Um diese zu sehen, müsste der Befehl ls -lai verwendet werden.
+Da alle Dateien in der vorliegenden Ausgabe jeweils nur eine Link-Zahl von 1 haben, ist davon auszugehen, dass es sich um eigenständige Dateien mit jeweils eigenen Inodes handelt. Es sind keine Hardlinks sichtbar.
+
+Erklärung zu gleichen und unterschiedlichen Inode-Nummern:
+	•	Wenn mehrere Dateinamen auf dieselbe Inode-Nummer verweisen, handelt es sich um Hardlinks. Diese verweisen auf denselben Datenblock im Dateisystem, haben also denselben Inhalt und dieselben Metadaten.
+	•	Dateien mit unterschiedlichen Inode-Nummern wurden unabhängig voneinander erstellt und sind physisch separate Objekte im Dateisystem.
+	•	Symbolische Links besitzen grundsätzlich einen eigenen Inode. Sie verweisen nicht auf einen Inode, sondern auf den Pfad einer Datei.
+	
+	
+Befehl:
+
+echo "Neuer Inhalt" > original.txt
+
+Ausgabe: Es erfolgt keine Ausgabe auf dem Bildschirm. Die Zeichenkette “Neuer Inhalt” wird in die Datei original.txt geschrieben. Existiert die Datei bereits, wird ihr Inhalt vollständig überschrieben.
+
+Inode-Auswirkung: Der Inhalt der Datei ändert sich, nicht jedoch der Inode selbst. Der Inode bleibt erhalten, lediglich der Datenblock, auf den er verweist, wird überschrieben. Die Inode-Nummer von original.txt sowie von hardlink.txt bleibt gleich, da beide auf denselben Inode zeigen. Der symbolische Link symlink.txt bleibt unverändert, da er nur den Pfad speichert.
+
+Verhalten von Symlink und Hardlink: hardlink.txt zeigt auf denselben Inode wie original.txt, daher zeigt hardlink.txt nun ebenfalls den neuen Inhalt. symlink.txt zeigt weiterhin auf den Pfad “original.txt” und greift somit auch auf den geänderten Inhalt zu.
+
+Fehler: Es tritt kein Fehler auf. Alle Verweise bleiben gültig.
+
+⸻
+
+Befehl:
+
+cat symlink.txt hardlink.txt
+
+Ausgabe: Der neue Inhalt (“Neuer Inhalt”) wird zweimal angezeigt, einmal durch Zugriff über symlink.txt, einmal über hardlink.txt.
+
+Inode-Auswirkung: Keine Änderung. Beide Dateinamen greifen auf dieselben Inhalte zu.
+
+Verhalten von Symlink und Hardlink: hardlink.txt ist ein weiterer Name für dieselbe Datei (gleicher Inode), symlink.txt verweist symbolisch auf den Pfad original.txt, der nach wie vor existiert. Daher liefern beide denselben Inhalt.
+
+Fehler: Kein Fehler, da beide Links gültig sind und auf lesbaren Inhalt verweisen.
+
+Befehl:
+
+mv original.txt ../original.txt
+
+Ausgabe: Keine Ausgabe. Die Datei original.txt wird eine Ebene nach oben verschoben.
+
+Inode-Auswirkung: Die Inode-Nummer der Datei bleibt gleich, da der Inode durch den Verschiebevorgang nicht verändert wird. Nur der Verzeichniseintrag ändert sich. Da hardlink.txt ebenfalls auf denselben Inode verweist, bleibt er weiterhin funktionsfähig. symlink.txt verweist jedoch symbolisch auf den Pfad “original.txt”, dieser existiert nun nicht mehr im aktuellen Verzeichnis. Der Link ist nun “dangling”.
+
+Verhalten von Symlink und Hardlink: hardlink.txt funktioniert weiterhin, da er direkt auf den Inode zeigt. symlink.txt ist nun ungültig, da sein Pfadziel (original.txt im aktuellen Verzeichnis) nicht mehr existiert.
+
+Fehler: symlink.txt verweist auf eine nicht vorhandene Datei. Das führt zu Fehlern beim Lesen über den symbolischen Link.
+
+Befehl:
+
+cat symlink.txt hardlink.txt 2>&1
+
+Ausgabe: Da symlink.txt auf eine nicht existierende Datei zeigt, erscheint eine Fehlermeldung. Der Inhalt von hardlink.txt wird jedoch korrekt ausgegeben.
+
+Beispielausgabe:
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+Inode-Auswirkung: Keine Änderung.
+
+Verhalten von Symlink und Hardlink: symlink.txt schlägt fehl, da der Pfad nicht mehr gültig ist. hardlink.txt funktioniert weiterhin normal, da er den gleichen Inode wie original.txt verwendet.
+
+Fehler: Der symbolische Link zeigt auf eine Datei, die unter dem gespeicherten Pfad nicht mehr vorhanden ist. Das Lesen über den symbolischen Link schlägt daher fehl.
+
+
+Bonusfrage: Verhalten bei unterschiedlichen Dateisystemen
+
+Hardlinks können nur innerhalb desselben Dateisystems erstellt werden. Wenn original.txt und hardlink.txt sich auf unterschiedlichen Partitionen befinden, kann kein gültiger Hardlink bestehen. Ein Versuch, mit ln einen Hardlink zwischen Dateien auf verschiedenen Dateisystemen zu erstellen, schlägt mit einer Fehlermeldung fehl.
+
+Symbolische Links hingegen sind pfadbasiert und funktionieren auch über Dateisystemgrenzen hinweg. Sie verweisen auf einen Pfad, unabhängig davon, auf welchem Dateisystem sich das Ziel befindet.
+
+Fazit: Symbolische Links sind flexibler, da sie auch auf andere Dateisysteme verweisen können. Hardlinks sind robuster, aber auf ein Dateisystem beschränkt.
+	
+	
+	
+

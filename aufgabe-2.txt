@@ -1,0 +1,42 @@
+1. Unterschied zwischen interner und externer Fragmentierung
+
+Interne Fragmentierung
+
+Bei der internen Fragmentierung wird einem Prozess mehr Speicher zugewiesen, als tatsächlich benötigt wird. Die ungenutzten Bytes innerhalb der zugewiesenen Speicherblöcke gehen verloren – sie sind zwar allokiert, aber unbrauchbar.
+Beispiel:
+Ein Speicherzuteilungsalgorithmus reserviert stets Speicher in 4-KB-Blöcken. Ein Programm benötigt nur 3,6 KB. Die restlichen 0,4 KB im Block bleiben ungenutzt und bilden die interne Fragmentierung.
+
+Externe Fragmentierung
+
+Die externe Fragmentierung tritt auf, wenn durch wiederholtes Laden und Entladen von Prozessen viele kleine, nicht zusammenhängende freie Speicherbereiche entstehen. Obwohl genug Gesamtspeicher vorhanden ist, reicht kein einzelner Block für einen großen neuen Prozess aus.
+Beispiel:
+Angenommen, der Speicher enthält fünf freie Segmente zu je 1 MB, aber ein neuer Prozess benötigt 3 MB am Stück. Trotz 5 MB freiem Speicher scheitert die Zuteilung – wegen externer Fragmentierung.
+
+2. Strategien zur Reduzierung oder Vermeidung von Speicherfragmentierung (basierend auf den Quellen):
+
+Paging (virtueller Speicher mit festen Seitengrößen)
+
+Beim Paging wird der Speicher in gleich große Seiten (z. B. 4 KB) unterteilt. Der virtuelle Adressraum jedes Prozesses wird ebenfalls in Seiten zerlegt, die auf beliebige physische Speicherblöcke (Page Frames) abgebildet werden.
+
+Vorteile:
+	•	Keine externe Fragmentierung, da der Speicher gleichmäßig belegt wird
+	•	Flexibel in Mehrprozessumgebungen
+	•	Einfachere Speicherverwaltung durch MMU (Memory Management Unit)
+
+Nachteile:
+	•	Interne Fragmentierung kann auftreten (z. B. 1-KB-Datei auf 4-KB-Seite)
+	•	Erhöhte Komplexität bei Adressumrechnung (virtuell → physisch)
+	•	Verwaltung der Page Tables kostet Speicher und Zeit
+
+
+B. Speicherkompaktierung (Compaction)
+
+Bei der Kompaktierung werden Prozesse im Speicher verschoben, um freie Bereiche zusammenzulegen. Dadurch entsteht ein großer, zusammenhängender freier Block.
+
+Vorteile:
+	•	Effektive Beseitigung externer Fragmentierung
+	•	Ideal für Systeme mit dynamischer Speichervergabe (z. B. Partitionierung)
+Nachteile:
+	•	Sehr rechenintensiv, da Prozesse aktiv verschoben werden müssen
+	•	Erfordert zusätzlichen Verwaltungsaufwand (Tracking von Speicherbewegung)
+	•	Kann zu Performance-Einbrüchen bei häufigem Einsatz führen
