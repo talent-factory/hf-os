@@ -77,7 +77,7 @@ cat symlink.txt hardlink.txt 2>&1
  **** output: 
  	cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
 	Neuer Inhalt
- **** kann nicht lessené Ziel existiert nicht mehr
+ **** kann nicht lessené Ziel existiert nicht mehr 
 
 
 
