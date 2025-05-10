@@ -1,0 +1,74 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse (Bytes): 96
+Inode-Nummer:        546195
+Hardlink-Anzahl:     1
+Zugriffsrechte:      664 (oktal)
+Letzter Zugriff:     2025-05-10 09:03:48
+Letzte Änderung:     2025-05-10 09:03:48
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse (Bytes): 132
+Inode-Nummer:        546195
+Hardlink-Anzahl:     1
+Zugriffsrechte:      664 (oktal)
+Letzter Zugriff:     2025-05-10 09:03:48
+Letzte Änderung:     2025-05-10 09:03:48
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigrösse (Bytes): 132
+Inode-Nummer:        546195
+Hardlink-Anzahl:     2
+Zugriffsrechte:      664 (oktal)
+Letzter Zugriff:     2025-05-10 09:03:48
+Letzte Änderung:     2025-05-10 09:03:48
+
+Aufgabe 6 – Dateioperationen und Metadatenanalyse
+
+1. Beschreibung der Programmausgabe:
+
+Das Programm zeigt die Metadaten einer Datei vor und nach dem Anhängen von Text.  
+Beobachtungen:
+- Die **Dateigröße** steigt von 96 auf 132 Bytes (wegen des neuen Inhalts).
+- Die **Inode-Nummer** bleibt gleich → es ist dieselbe Datei.
+- **Zugriffsrechte** und **Timestamps** (Zugriff/Änderung) wurden aktualisiert.
+- Nach dem Erstellen des Hardlinks steigt die Hardlink-Anzahl auf **2**, da nun zwei Dateinamen auf dieselbe Inode verweisen.
+
+Das zeigt, wie präzise das Dateisystem Metadaten aktualisiert, wenn sich Inhalte oder Verlinkungen ändern.
+
+---
+
+2. Unterschied zwischen Inode-Nummer und Dateiname:
+
+- Der **Dateiname** ist nur ein Eintrag im Verzeichnis – er verweist auf eine Inode.
+- Die **Inode-Nummer** identifiziert eindeutig den Dateiinhalt und die zugehörigen Metadaten.
+- Wenn **zwei Dateien die gleiche Inode-Nummer** haben, handelt es sich um **Hardlinks**:
+  → sie teilen denselben Speicherinhalt, dieselbe Größe, Rechte, Zeitstempel.
+
+Beispiel im Output:
+- `testdatei.txt` und `testdatei_hardlink.txt` → gleiche Inode = 546195
+
+---
+
+3. Unterschied zu einem symbolischen Link (Symlink):
+
+Würde man statt `link()` einen Symlink (`symlink()`) erstellen:
+
+- Der **Symlink hat eine eigene Inode** (er ist eine eigene Datei)
+- Er speichert nur den **Pfad zur Zieldatei**
+- Wird die Zieldatei gelöscht, bleibt der Symlink bestehen – aber er wird **ungültig** ("broken link")
+
+Metadatenunterschiede:
+- Symlink: andere Inode, andere Größe, andere Timestamps
+- Hardlink: identisch zu Original, teilt alles mit Original
+
+Fazit:
+- **Hardlinks sind inhaltsbezogen**, robust
+- **Symlinks sind pfadbasiert**, flexibel, aber anfälliger bei Umbenennungen oder Löschung
+
