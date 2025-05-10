@@ -1,0 +1,48 @@
+Beschreibung der einzelnen Befehle und Konzepte
+
+1. mkdir -p test/subdir && cd test
+Erstellt einen Ordner 'test' mit Unterordner 'subdir', falls sie noch nicht existieren.
+Wechselt danach ins 'test'-Verzeichnis.
+Konzept: Arbeiten mit Ordnern und Navigation im Dateisystem.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+Schreibt den Text "Inhalt-" gefolgt vom aktuellen Zeitstempel in die Datei 'original.txt'.
+Die Datei wird neu erstellt oder überschrieben.
+Konzept: Erzeugen von Dateien und Schreiben von Inhalten.
+
+3. ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link 'symlink.txt', der auf 'original.txt' zeigt.
+Der Link speichert den Pfad zur Zieldatei.
+Konzept: Symbolische Links (Verknüpfungen).
+
+4. ln original.txt hardlink.txt
+Erstellt einen Hardlink 'hardlink.txt', der direkt auf denselben Speicherbereich wie 'original.txt' zeigt.
+Beide sind technisch dieselbe Datei mit zwei Namen.
+Konzept: Hardlinks (gleicher Inode, gleicher Inhalt).
+
+5. chmod 640 original.txt
+Setzt die Rechte von 'original.txt' auf:
+Besitzer: lesen, schreiben (rw-)
+Gruppe: lesen (r--)
+Andere: kein Zugriff (---)
+Konzept: Dateirechte nach dem Unix/Linux-Rechtesystem.
+
+6. touch -d "2 days ago" original.txt
+Ändert das Datum der letzten Änderung von 'original.txt' auf "vor 2 Tagen".
+Der Inhalt bleibt gleich.
+Konzept: Arbeiten mit Zeitstempeln von Dateien.
+
+7. ls -la
+Zeigt eine ausführliche Liste aller Dateien, inklusive versteckter, mit Rechten, Datum usw.
+Konzept: Anzeigen von Dateiinformationen.
+
+Ausgabe des letzten Befehls:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:31 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:30 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  9 06:31 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  9 06:31 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:30 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:31 symlink.txt -> original.txt
+
+
