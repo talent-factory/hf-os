@@ -1,0 +1,28 @@
+Beschreibung der Ausgabe:
+Die Ausgabe zeigt die Metadaten der Datei vor und nach dem Anhängen sowie die Metadaten des Hardlinks.
+
+Nach der Änderung:
+
+    Dateigröße erhöht auf 147 Bytes (weil Text angehängt wurde)
+
+    Inode-Nummer unverändert (546145)
+
+    Anzahl der Hardlinks immer noch 1
+
+    Zugriffszeit & Änderungszeit gleich geblieben (weil Datei nur geöffnet & geschrieben, aber nicht gelesen wurde → Zugriffstime bleibt gleich)
+
+Die Ausgabe zeigt, dass der Hardlink und die Originaldatei denselben Inode nutzen und daher dieselben Metadaten teilen.
+
+
+Unterschied Inode und Dateiname:
+Der Dateiname ist nur ein Verzeichniseintrag, welcher auf den Inode verweist.
+Der Inode ist die zentrale Datenstruktur, die alle Metadaten und Verweise auf die Datenblöcke enthält.
+
+Wenn zwei Dateien dieselbe Inode-Nummer haben, sind sie zwei verschiedene Namen für dieselbe Datei (Hardlinks).
+
+Verhalten ändern:
+Bei einem Symlink hätte die Ausghabe gezeigt:
+	Eigenen Inode für den Symlink
+	Dateigrösse des Symlinks = Länge des Pfadnames der Zieldatei
+	Einen Hardlink
+	Zugriffszeit und Änderungszeigt wären unabhängig vom Orginal

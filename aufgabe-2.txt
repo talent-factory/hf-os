@@ -1,0 +1,33 @@
+Frage1:
+Interne Speicherfragmentierung
+Tritt auf, wenn einem Prozess mehr Speicher zugewiesen wird, als er tatsächlich benötigt und der daher ungenutzte Speicher innerhalb der zugewiesenen Partion verloren geht.
+	Beispiel: Ein Speicherblock von 8KB wird einem Prozess zugewiesen der nur 6KB benötigt
+Externe Speicherfragmentierung
+Entseht wenn im Gesamtspeicher zwar genug freier Speicher vorhande ist, dieser aber nicht zusammenhängend ist. Dadurch kann keine ausreichendgrosse zusammenhängende Blockmenge für einen neuen Prozess gefunden werden.
+	Beispiel: System hat 100KB freien Speicher, verteilt auf 10 Lücken an je 10KB
+Unterschied:
+Interne Fragmentierung entsteht durch ungenutzten Speicher innerhalb zugewiesener Blöcke, während externe Fragmentierung durch viele kleine, nicht zusammenhängende freie Speicherbereiche ausserhalb belegter Blöcke entsteht.
+
+Frage2:
+Speicherkompaktierung (Compaction):
+Verschiebt laufende Prozesse so, dass alle verfüghbaren, freien Speicherbereiche zu einem einzigen grossen Block zusammengeführt werden.
+
+	Vorteile:
+		Neue grosse Prozesse können in den Speicher geladen werden
+		Beseitigt externe Fragmentierung vollständig
+	Nachteile:
+		Hohe Rechen und Zeitkosten, da die Prozesse im Speicher hin und her bewegt werden müssen
+		Nicht immer möglich, wenn Prozesse Hardware Mapping oder feste Speicheradressen benutzten
+		CPU Intensiv
+		
+Paging (Seitentabellen, Paging):
+Beim Paging wird der Speicher in kleine gleich große Blöcke (Seiten) unterteilt. Prozesse werden in beliebige Seiten geladen. Virtuelle Adressen werden über eine Seitentabelle auf physische Speicheradressen abgebildet.
+
+	Vorteile:
+		Beseitigt externe Fragmentierung vollständig
+		Erleichtert dynamische Speicherverwaltung
+		Schneller als Speicherkompaktierung
+	Nachteile:
+		Interne Fragmentierung innerhalb der letzten genutzten Seite (wenn Prozess nicht genau Vielfaches der Seitengröße ist)
+		Erhöhter Verwaltungsaufwand (Seitentabellen müssen gepflegt und ggf. im Speicher gehalten werden)
+		MMU (Memory Management Unit) erforderlich, um die Adressumsetzung durchzuführen → Hardwareabhängigkeit.

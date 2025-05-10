@@ -1,0 +1,120 @@
+Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden dabei angewendet?
+
+
+    mkdir -p test/subdir && cd test
+	Erstellt das Verzeichnis test und darin subdir. Option -p erstellt auch übergeordnete Verzeichnisse, falls diese noch nicht existieren. cd test wechselt in das Verzeichnis "test"
+	Dateisystem Konzepte:
+		Erstellung von Verzeichnissen (Spezialdateien vom Typ "directory").
+		Hierarchische Dateisystemstruktur
+
+    echo "Inhalt-$(date +%s)" > original.txt
+	echo: Gibt den Text "Inhalt-$(date +%s)" aus.
+	$(date +%s): Aktueller Zeitstempel in Sekunden seit 1970 (Unix Epoch).
+	>: Umleitung → schreibt die Ausgabe in die Datei original.txt. Existiert die Datei, wird sie überschrieben, existiert sie nicht, wird sie neu angelegt.
+	Dateisystem Konzepte:
+		Schreiben in eine Datei.
+		Anlegen einer neuen Datei und zugehörigem Inode.
+		Metadaten (wie Zugriffszeit, Änderungszeit) werden gesetzt.		
+
+    ln -s original.txt symlink.txt
+	ln -s: Erstellt einen symbolischen Link (Symlink) namens symlink.txt, der auf original.txt verweist.
+	symlink.txt enthält den Pfadnamen als Inhalt, nicht die Inode-Nummer.
+	Dateisystem Konzepte:
+		Erstellung eines symbolischen Links
+		Unterstützt auch Verweise auf andere Dateisysteme.
+
+    ln original.txt hardlink.txt
+	ln: Erstellt einen harten Link namens hardlink.txt, der auf denselben Inode zeigt wie original.txt.
+	Beide Namen verweisen auf denselben Dateieintrag im Dateisystem.
+    	Dateisystem Konzepte:
+		Hardlink = zusätzlicher Verzeichnis-Eintrag zum gleichen Inode.
+
+    chmod 640 original.txt
+	Setzt die Berechtigungen von original.txt auf rw-r-----:
+		Besitzer: lesen & schreiben
+		Gruppe: lesen
+		Andere: keine Rechte
+	Dateisystem Konzepte:
+		Änderung der Zugriffsrechte
+		Auswirkungen gelten auch für den Hardlink
+
+    touch -d "2 days ago" original.txt
+	Setzt den Zeitstempel (mtime) der Datei original.txt auf "vor 2 Tagen".
+	Dateisystem Konzepte:
+		Änderung von Metadaten
+		Keine Datenänderung sondern nur Attribute
+    ls -la
+	Zeigt Dateiinformationen im aktuellen Verzeichnis an:
+    		Rechte
+    		Anzahl der Links
+    		Besitzer
+		Gruppe
+    		Größe
+    		Zeitstempel
+    		Inode-Nummer (optional mit ls -lai)
+	Dateisystem Konzepte:
+		Darstellung der Link Anzahl
+		Auflistung von Verzeichniseinträgen inkl. Metadaten
+
+Ausgabe "ls -la":
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 10 10:53 .
+drwxr-x--- 22 vmadmin vmadmin 4096 Mai 10 10:53 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 10:53 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai  8 10:53 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 10 10:53 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 10 10:53 symlink.txt -> original.txt
+
+Analysiere die Ausgabe im Detail:
+	Spaltenerklärung:
+		- / d / l	Dateityp (d=directory, -=reguläre Datei, l=Symlink)
+		rw-r-----	Zugriffsrechte: owner (rw-), group (r--), others (---)
+		2 / 1 / 3	Anzahl der Hardlinks (wie viele Verzeichniseinträge zeigen auf denselben Inode)
+		vmadmin		Besitzer der Datei
+		vmadmin		Gruppe der Datei
+		4096 / 18 / 12	Dateigröße in Bytes
+		Mai 10 10:53	Zeitpunkt der letzten Änderung
+		Dateiname	Name der Datei (Symlink zeigt mit -> auf Ziel)
+
+	Unterschiede:
+		Orginal.txt & Hardlink.txt sind beides Dateien, mit der selben Annzahl an Links,selbe Grösse,Rechte und Zeitstempel.Während der symlink.txt als Typ "Syimlink" ist und unterschiedliche Rechte, Zeitstempel sowie Grösse besitzt. Zudem verweist dieser auf orginal.txt während orginal.txt ein geteilter Inode mit Hardlink.txt ist
+
+	Warum gleiche Inode Nummer?:
+		original.txt und hardlink.txt sind zwei Verzeichniseinträge zum selben Inode.
+		Inode-Nummer identisch, weil beides Hardlinks auf dieselbe Datei sind.
+		Der Link-Zähler (2) zeigt, dass zwei Verzeichniseinträge existieren, die auf diesen Inode zeigen.
+
+Weitere Befehle:
+	
+	echo "Neuer Inhalt" > original.txt
+		Überschreibt den Inhalt der Datei, auf die original.txt und hardlink.txt zeigen.
+		Inhalt in Inode überschrieben (da beide denselben Inode nutzen).
+		symlink.txt verweist weiterhin auf original.txt (Name).
+		Inhalt des Inodes (Datenblöcke) wird überschrieben.
+		Berechtigungen, Inode-Nummer bleiben gleich.
+	
+	cat symlink.txt hardlink.txt
+		symlink.txt → verweist auf original.txt, deren Inhalt jetzt "Neuer Inhalt" ist.
+		hardlink.txt → identisch mit original.txt, gleicher Inode.
+		Ausgabe:
+			Neuer Inhalt
+			Neuer Inhalt
+		
+	mv original.txt ../original.txt
+		original.txt wird ins übergeordnete Verzeichnis verschoben.
+		Inode bleibt erhalten! Nur der Verzeichniseintrag in test/ wird gelöscht, in ../ neu erstellt.
+		Link-Zähler bleibt 1 (wegen hardlink.txt).
+		Symlink bricht nicht, hardlink.txt funktioniert weiter
+
+	cat symlink.txt hardlink.txt 2>&1
+		symlink.txt → verweist auf original.txt im Verzeichnis test.
+		original.txt existiert dort nicht mehr (verschoben) → Symlink "broken" (dangling symlink).
+		hardlink.txt zeigt weiter korrekt auf den Inode (noch im Verzeichnis test).
+		Ausgabe:
+			cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+			Neuer Inhalt
+		
+BonusFrage:
+	Ein Hardlink kann nicht über Dateisystemgrenzen hinweg erstellt werden, weil ein Hardlink auf einen Inode innerhalb desselben Dateisystems verweist.
+
+	Sym Links hingegen funktionieren über Dateisystemgrenzen hinweg, weil sie nur einen Pfadnamen speichern, nicht den Inode

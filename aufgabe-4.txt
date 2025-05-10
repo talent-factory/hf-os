@@ -1,0 +1,15 @@
+12300₁₀:
+Seitengrösse: 4096 Bytes
+12300÷4096 -> Virtuellle Seite 3 -> Page 4
+Offset -> 12300 - (3 * 4096) = 12
+4 * 4096 = 16384 -> Basisadresse
+16384+12=16396 -> Physische Adresse
+
+
+16384₁₀:
+16384:4096 = 4 -> Virtuelle Seite 4 -> Page 0
+Offset -> 0
+0 * 4096 = 0 -> Physische Adresse
+
+32800₁₀:
+32800 : 4096 = Virtuelle Seite 8 -> Page nicht gemappt, Page Fault

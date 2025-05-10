@@ -1,0 +1,23 @@
+Ausgabe des Programms:
+Die Ausgabe zeigt Speicheradressen der drei Variaablentypen.
+	Stack Variable leigt im oberen Speicherbereich (Hohe Adresse)
+	Heap Variable liegt im mittleren Bereich
+	Statische Variable liegt im unteren Bereich, nahe am Code
+Die Ausgabe zeigt auch, dass der Stack im System nach oben wächst, da die Adresse der später deklarierten Variable grösser ist
+Die Ausgabe sagt aus, dass das OS den Speicher in verschiedene Segmente für unterschiedliche Zwecke unterteil. (Stack, Heap und statische Daten)
+Jeder Bereich hat einzelne Adressräume und wächst in eine bestimme Richtung.
+
+Erklärung der unterschiedlichen Speicherbereiche:
+Die Adressen liegen in verschiedenen Berecihen, weil das OS für jeden Typ einen eigenen Speicherbereich zugewiesen hat:
+	Stack-Variablen liegen im Stack, der beim Funktionsaufruf Speicher für lokale Variablen reserviert
+	Heap-Variablen liegen im Heap-Bereich, der dynamisch wöchst, wenn Speicher angefordert wird
+	Statische Variablen liegen im Daten-Segment, das beim Programmstart fest reserviert wird
+
+Diese Trennung dient um Speicherschutz zu gewährleisten, für Effiziente Verwaltung und um die unterschiedlichen Lebensdauern der Variablen zu berücksichtigen
+
+
+
+Auswirkung Speicherleck:
+Sorgt dafür, dass wöhrend der Programmlaufzeigt Speicher von Heap belegt bleibt.
+Dadurch wird Speicher für den Prozess reserviert, ist aber nicht mehr Nutzbar, da die Referenz fehlt. Bei grossen Programmen kann dies zu Speichermangel führen.
+Das Betriebssystem gibt den belegten Speicher erst beim Beenden des Prozesses automatisch wieder frei. Während der Laufzeit erkennt es das Leck jedoch nicht automatisch
