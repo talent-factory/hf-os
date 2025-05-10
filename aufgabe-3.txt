@@ -1,0 +1,54 @@
+➜  test git:(hfi2024c/balint-seres) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:33 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:32 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:33 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:33 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:32 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:33 symlink.txt -> original.txt
+
+Speicheranalyse von ls -la
+Bedeutung jeder Spalte:
+-rw-r----- -> Dateityp und Berechtigungen
+- = normale Datei
+rw- = Besitzer darf lesen und schreiben
+r-- = Gruppe darf lesen
+--- = andere dürfen nichts
+2 -> Anzahl der Hardlinks auf die Datei
+vmadmin -> Besitzer
+vmadmin -> Gruppe
+18 -> Dateigrösse in Bytes
+Mai 8 08:33 -> Zeitpunkt der letzten Änderung
+hardlink.txt -> Dateiname
+
+Unterschiede zwischen den Dateien:
+Datei: original.txt
+gleiche Inode wie hardlink.txt
+Berechtigung: -rw-r-----
+Zeitstempel: Mai 8 08:33
+Datei: hardlink.txt
+gleiche Inode wie original.txt
+Berechtigung: -rw-r-----
+Zeitstempel: Mai 8 08:33
+Datei: symlink.txt
+eigene Inode
+Berechtigung: lrwxrwxrwx (symbolischer Link)
+Zeitstempel: Mai 10 08:33
+
+Warum gleiche oder unterschiedliche Inodes?
+original.txt und hardlink.txt sind Hardlinks. Sie zeigen direkt auf dieselben Daten
+im Dateisystem und haben darum die gleiche Inode-Nummer
+symlink.txt ist ein symbolischer Link. Er enthält nur den Pfad zur Zieldatei
+und ist selbst eine eigene Datei mit eigenem Inode
+
+Analyse der Befehle: 
+1. echo "Neuer Inhalt" > original.txt -> gibt nichts aus, überschreibt aber original.txt mit dem Text "Neuer Inhalt" -> Inode bleibt gleich, da nur der Inhalt ersetzt wird -> hardlink.txt zeigt auf denselben Inode, also gleicher Inhalt -> symlink.txt zeigt symbolisch auf den Pfad original.txt, also zeigt auch "Neuer Inhalt" an solange die Datei noch da ist
+2. cat symlink.txt hardlink.txt -> gibt zweimal "Neuer Inhalt" aus -> beide zeigen auf denselben Inhalt, hardlink direkt über Inode, symlink über Pfad
+3. mv original.txt ../original.txt -> verschiebt original.txt in das übergeordnete Verzeichnis -> Inode bleibt gleich, nur Pfade ändern sich -> hardlink.txt bleibt gültig, da er direkt auf den Inode zeigt -> symlink.txt zeigt jetzt auf einen nicht mehr existierenden Pfad
+4. cat symlink.txt hardlink.txt 2>&1 -> Ausgabe: Fehler bei symlink.txt, weil die Zieldatei fehlt -> hardlink.txt gibt weiterhin "Neuer Inhalt" aus, weil er den Inode direkt nutzt
+
+Unterschiede: Hardlinks zeigen auf den Inode, sind robuster bei Umbenennung oder Verschieben. Symlinks zeigen auf einen Pfad und funktionieren nicht mehr, wenn der Pfad verschwindet.
+
+Fehler: symlink.txt schlägt fehl, wenn original.txt verschoben oder gelöscht wird. hardlink.txt bleibt funktionsfähig, solange der Inode existiert.
+
+Bonus: Wenn Dateien auf unterschiedlichen Dateisystemen liegen, funktionieren Hardlinks nicht (ln gibt einen Fehler). Symlinks gehen trotzdem, weil sie nur einen Pfad speichern. Dafür brechen sie bei Pfadänderungen.
