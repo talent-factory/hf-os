@@ -1,0 +1,16 @@
+a) Physische Adresse 12300 
+PFN = 12300 ÷ 4096 = 3 → Offset = 12300 % 4096 = 12
+In Page Table: PFN 3 → kommt von VPN 0
+Virtuelle Adresse = 0 × 4096 + 12 = 12
+
+b) Physische Adresse 16384
+PFN = 16384 ÷ 4096 = 4, Offset = 16384 % 4096 = 0
+PFN 4 → kommt von VPN 7
+Virtuelle Adresse = 7 × 4096 + 0 = 28672
+--> Virtuelle Adresse: 28672
+
+c) Physische Adresse 32800
+PFN = 32800 ÷ 4096 = 8, Offset = 32800 % 4096 = 32800 - 32768 = 32
+PFN 8 ist nicht in der Tabelle enthalten → keine Zuordnung möglich
+
+→ Ergebnis: Kein gültiger Eintrag – keine virtuelle Adresse vorhanden (Page not mapped)
