@@ -1,0 +1,42 @@
+Aufgabe 4: "Logische- und Physische Adressen | 6P | 10'"
+4.1: "Anhand dieser Page Table sind die folgenden physischen Adressen zu den virtuellen Adressen gesucht:
+    12300₁₀
+    16384₁₀
+    32800₁₀
+"
+
+Lösung:
+1. 12300(10)
+Virtuelle Seite: 
+12300 / 4096 = 3 (Bereich 12KB–16KB)
+
+Physischer Rahmen: Laut Abbildung ist virtuelle Seite 3 in Rahmen 0 (0KB–4KB) abgelegt.
+
+Offset: 12300−(3×4096)=12
+
+Physische Adresse:
+Rahmenstart + Offset
+0 + 12 = 12(10)
+
+
+2. 16384(10)
+Virtuelle Seite:
+16384 / 4096 = 4 (Bereich 16KB–20KB)
+
+Physischer Rahmen: Laut Abbildung ist virtuelle Seite 4 in Rahmen 3 (12KB–16KB) abgelegt.
+
+Offset: 16384 − (4 × 4096) = 0
+
+Physische Adresse:
+Rahmenstart + Offset
+12288 + 0 = 12288(10)
+
+
+3. 32800(10)
+Virtuelle Seite:
+32800 / 4096 = 8 (Bereich 32KB–36KB)
+
+Physischer Rahmen: Laut Abbildung ist virtuelle Seite 8 mit X markiert -> Nicht im RAM (Page Fault).
+
+Offset: 32800 − (8 × 4096) = 32
+Ergebnis: Keine physische Adresse (Seite muss erst von der Festplatte geladen werden).
