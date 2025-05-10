@@ -1,0 +1,17 @@
+1. Adresse 12300 
+Virtuelle seite 12300 // 4096 = 3
+Offset 12300 % 4096 = 12
+virtuelle Seite 3 => Physische seite 6
+Physische adresse: 6 * 4096 + 12 = 24576 + 12 = **24588**
+
+2 Adresse 16384
+Virtuelle seite : 16384 // 4096 =4
+offset : 16384 % 4096 = 0
+virtuelle seite 4 -> physische seite 4
+Physische adresse: 4* 4096 + 0 = **16384**
+
+3 Adresse 32800
+virtuelle seite 32800 //4096 = 8
+Offset =  32800 % 4096 = 32800 - 32768 = 32
+virtuele seite 8 -> nicht gemappt 
+steienfehler page fault
