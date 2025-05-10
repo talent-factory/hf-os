@@ -1,0 +1,27 @@
+Das C-Programm führt grundlegende Dateioperationen durch, einschließlich des Erstellens einer 
+Datei, Hinzufügens von Text und Analysierens der Metadaten. Zu Beginn wird mit `fopen()` die 
+Datei geöffnet und ein Textblock wird in die Datei geschrieben. Mit `stat()` werden 
+Metadaten zur Datei abgerufen, darunter die Dateigröße, die Inode-Nummer, die Anzahl der 
+Hardlinks, die Zugriffsrechte sowie der letzte Zugriffs- und Änderungszeitpunkt. Nach der ersten 
+Änderung der Datei durch das Anhängen von Text wird erneut `stat()` aufgerufen, um die 
+neuen Metadaten zu überprüfen.
+
+Beim Erstellen eines Hardlinks mit der `link()`-Funktion wird ein weiterer Name für 
+die bestehende Datei erstellt. Es ist wichtig zu beachten, dass der Hardlink und die 
+Originaldatei die gleiche Inode-Nummer haben. Das bedeutet, sie teilen sich den gleichen 
+Speicherort und die gleichen Daten auf der Festplatte, aber sie haben unterschiedliche 
+Namen und Pfade im Dateisystem.
+
+Die Metadaten ändern sich, wenn Text zur Datei hinzugefügt wird, insbesondere die Dateigröße 
+und der Änderungszeitpunkt. Die Inode-Nummer bleibt jedoch unverändert, da die Datei selbst 
+nicht verändert, sondern lediglich erweitert wurde. Zwei Dateien mit derselben Inode-Nummer 
+sind letztlich zwei verschiedene Namen für dieselbe Datei, und daher zeigen beide auf 
+denselben Speicherplatz auf der Festplatte.
+
+Wenn anstelle eines Hardlinks ein symbolischer Link (Symlink) erstellt würde, wären 
+die Metadaten anders. Ein Symlink hat eine eigene Inode-Nummer und enthält den Pfad 
+zur Originaldatei. Beim Löschen der Originaldatei wird der Symlink ungültig, da er auf 
+den nicht mehr vorhandenen Speicherort verweist, während ein Hardlink weiterhin funktioniert, 
+solange eine der Referenzen auf die Datei besteht. Das Verhalten von Symlinks und Hardlinks 
+unterscheidet sich erheblich beim Löschen der Originaldatei, da Hardlinks den tatsächlichen 
+Inhalt der Datei beibehalten, während Symlinks nur auf den Pfad zur Datei verweisen.
