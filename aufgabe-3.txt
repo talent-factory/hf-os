@@ -1,0 +1,204 @@
+mkdir -p test/subdir erstellt das Verzeichnis test und darin das Unterverzeichnis subdir. Der Parameter -p sorgt dafür, dass keine Fehlermeldung erscheint, falls test bereits existiert.
+
+cd test wechselt in das gerade erstellte test-Verzeichnis.
+
+echo "Inhalt-$(date +%s)" > original.txt
+Schreibt den Text "Inhalt-[UNIX-Timestamp]" in die Datei original.txt. Beispiel: Inhalt-1715325280.
+
+> überschreibt die Datei, falls sie schon existiert.
+
+ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link (symlink.txt), der auf original.txt zeigt.
+Wenn original.txt gelöscht oder umbenannt wird, wird der Symlink "broken".
+
+ln original.txt hardlink.txt
+Erstellt einen Hardlink: hardlink.txt zeigt auf denselben Inode wie original.txt. Beide Dateinamen verweisen nun auf denselben Inhalt.
+Hardlinks teilen sich denselben Inode → gleiches Dateisystemobjekt, mehrere Namen.
+
+chmod 640 original.txt
+Setzt die Zugriffsrechte von original.txt:
+
+6 (rw-) für Besitzer
+
+4 (r--) für Gruppe
+
+0 (---) für andere Nutzer
+
+touch -d "2 days ago" original.txt
+Setzt den Zugriffs- und Änderungszeitstempel (atime und mtime) von original.txt auf ein Datum vor zwei Tagen.
+
+
+
+ls -la Ausgabe
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:30 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 10 08:29 ..
+-rw-rw-r-- 1 vmadmin vmadmin    0 Mai 10 08:30 aufgabe-2.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:30 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai  8 08:30 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 10 08:29 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:30 symlink.txt -> original.txt
+
+
+-rw-r-----	Dateityp & Berechtigungen (siehe unten)
+2		Link Count: Anzahl der Verweise (Hardlinks) auf den Inode
+vmadmin		Besitzer (User)
+vmadmin		Gruppe
+18		Dateigröße in Bytes
+Mai 8 08:30	Zeitstempel (mtime: letzte Änderung des Inhalts)
+original.txt	Dateiname
+
+
+Unterschiede zwischen original.txt, hardlink.txt und symlink.txt
+➤ Berechtigungen
+Datei	Typ	Rechte	Erklärung
+original.txt	Datei (-)	rw-r-----	Besitzer: lesen/schreiben; Gruppe: lesen; Andere: kein Zugriff
+hardlink.txt	Datei (-)	rw-r-----	identisch – da es dieselbe Datei ist wie original.txt
+symlink.txt	Symlink (l)	lrwxrwxrwx	Symbolische Links haben i. d. R. vollen Zugriff auf sich selbst; Zugriff auf das Ziel hängt von dessen Rechten ab
+
+
+Link Count & Inode-Zuordnung
+Datei	Link Count	Bedeutung
+original.txt	2	Zwei Verweise (Hardlinks) auf denselben Inode
+hardlink.txt	2	Teilt denselben Inode wie original.txt → gleiche Datei
+symlink.txt	1	Eigener Inode; verweist nur symbolisch auf original.txt
+
+Das bedeutet:
+
+original.txt und hardlink.txt sind identisch (gleiche Inode, gleicher Inhalt, gleicher mtime, gleicher Speicherort).
+
+symlink.txt ist ein eigenständiges Objekt (eigener Inode, enthält Pfad-String zu original.txt).
+
+Zeitstempel (mtime)
+Datei	mtime
+original.txt	Mai 8 08:30
+hardlink.txt	Mai 8 08:30 (identisch – ist dieselbe Datei)
+symlink.txt	Mai 10 08:30 (Erstellungszeitpunkt des Links, nicht des Ziels)
+
+Beachte: symlink.txt zeigt auf original.txt, aber sein eigener Zeitstempel gibt an, wann der Link selbst erstellt wurde – nicht wann die Zieldatei geändert wurde.
+
+Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+Hardlinks (z. B. original.txt und hardlink.txt) teilen sich denselben Inode, weil sie physisch dieselbe Datei sind – nur unter verschiedenen Namen.
+
+Sie zeigen direkt auf denselben Inode im Dateisystem.
+
+Änderungen an einer dieser Dateien betreffen alle Hardlinks.
+
+→ Das erklärt den identischen Link Count (2).
+
+Symbolische Links (z. B. symlink.txt) besitzen einen eigenen Inode, da sie nur Pfadreferenzen sind.
+
+Sie speichern den Pfad "original.txt" als Inhalt.
+
+Das Dateisystem behandelt sie als eigene Datei vom Typ „symbolischer Link“ (l).
+
+Sie zeigen nicht direkt auf den Inode des Ziels.
+
+
+
+ 1. echo "Neuer Inhalt" > original.txt
+Ausgabe:
+Keine Ausgabe im Terminal.
+
+Auswirkungen:
+Der Inhalt von original.txt wird überschrieben.
+
+Der zugehörige Inode bleibt unverändert, da die Datei über ihren Namen angesprochen und neu beschrieben wird.
+
+Da hardlink.txt denselben Inode wie original.txt hat, wird auch hardlink.txt den neuen Inhalt anzeigen.
+
+mtime (modified time) wird aktualisiert.
+
+Verhalten:
+Hardlink (hardlink.txt) zeigt immer noch auf denselben Inode → Inhalt ebenfalls aktualisiert.
+
+Symlink (symlink.txt) zeigt weiterhin auf original.txt → ebenfalls korrekt.
+
+Fehler:
+Kein Fehler – alle Links funktionieren.
+
+2. cat symlink.txt hardlink.txt
+Ausgabe:
+nginx
+Kopieren
+Bearbeiten
+Neuer Inhalt
+Neuer Inhalt
+Auswirkungen:
+Keine Änderungen an der Inode-Tabelle.
+
+Beide Dateien zeigen (direkt oder indirekt) auf denselben Inhalt → 2× „Neuer Inhalt“
+
+Verhalten:
+Symlink folgt Pfad zu original.txt, Datei wird gelesen.
+
+Hardlink ist dieselbe Datei wie original.txt.
+
+
+🔹 3. mv original.txt ../original.txt
+Ausgabe:
+Keine Ausgabe im Terminal.
+
+Auswirkungen:
+Der Hardlink „original.txt“ in diesem Verzeichnis wird entfernt, aber der Inode bleibt erhalten (Link Count sinkt von 2 auf 1).
+
+Die Datei wird unter neuem Namen in das übergeordnete Verzeichnis .. verschoben → neuer Verzeichniseintrag, aber derselbe Inode.
+
+hardlink.txt bleibt bestehen und verweist weiterhin auf den Inode.
+
+Der symbolische Link symlink.txt zeigt jetzt auf einen nicht mehr vorhandenen Pfad: original.txt (Broken Symlink).
+
+Verhalten:
+Hardlink (hardlink.txt) funktioniert weiter, da er den Inode referenziert.
+
+Symlink (symlink.txt) zeigt auf original.txt im aktuellen Verzeichnis → dieser Name existiert nicht mehr → broken symlink.
+
+Fehler:
+symlink.txt ist jetzt kaputt, weil der Pfad original.txt nicht mehr existiert.
+
+🔹 4. cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+bash
+Kopieren
+Bearbeiten
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+Erklärung:
+cat versucht, symlink.txt zu lesen → schlägt fehl, da der Pfad original.txt (Ziel des Symlinks) nicht mehr im aktuellen Verzeichnis existiert.
+
+hardlink.txt funktioniert einwandfrei → zeigt „Neuer Inhalt“.
+
+Auswirkungen:
+Keine Änderung der Inode-Tabelle.
+
+Nur Lesezugriffe.
+
+Fehler:
+Symlink ist ungültig (broken) → führt zu Fehlermeldung.
+
+cat schreibt diese Fehlermeldung auf STDERR; 2>&1 leitet sie nach STDOUT → daher im Output sichtbar.
+
+
+Bonusfrage: Unterschiedliche Dateisysteme (z. B. Partitionen)
+➤ Hardlinks:
+Hardlinks können nur innerhalb desselben Dateisystems existieren.
+
+Versuchst du ln original.txt /mnt/anderesfs/hardlink.txt, bekommst du:
+
+bash
+Kopieren
+Bearbeiten
+ln: failed to create hard link ...: Invalid cross-device link
+➤ Symlinks:
+Funktionieren über Dateisystemgrenzen hinweg, da sie nur Pfade speichern, keine Inode-Beziehung haben.
+
+Fazit:
+Hardlinks sind robust gegen Umbenennung oder Verschieben innerhalb des Dateisystems.
+
+Symbolische Links sind flexibler, aber anfällig für Pfadänderungen.
+
+Beim Verschieben der Zieldatei ist der Symlink gebrochen, der Hardlink bleibt korrekt.
+
+Auf verschiedenen Dateisystemen sind nur symbolische Links möglich.
+

@@ -1,0 +1,44 @@
+Interne Fragmentierung tritt auf, wenn einem Prozess ein fester Speicherblock zugewiesen wird, dieser Block aber nicht vollständig genutzt wird. Der ungenutzte Speicher innerhalb des Blocks ist verschwendet.
+
+Beispiel: Ein System verwendet eine feste Blockgröße von 8 KB für Prozesse. Wenn ein Prozess nur 6 KB benötigt, bleiben 2 KB ungenutzt – interne Fragmentierung.
+
+Externe Fragmentierung entsteht, wenn durch das wiederholte Starten und Beenden von Prozessen im Arbeitsspeicher viele kleine, nicht zusammenhängende freie Speicherbereiche entstehen. Es ist insgesamt genügend freier Speicher vorhanden, aber nicht am Stück, sodass neue Prozesse keinen ausreichend großen Speicherblock bekommen können.
+
+Beispiel: Angenommen, es gibt drei freie Speicherblöcke von je 2 MB, 3 MB und 1 MB. Ein neuer Prozess benötigt 5 MB am Stück, aber es gibt keinen zusammenhängenden Block dieser Größe – externe Fragmentierung.
+
+
+1. Paging (Seitentechnik)
+Prinzip: Der Speicher wird in gleich große Seiten (z. B. 4 KB) unterteilt. Prozesse werden in Seiten zerlegt, die in beliebige physische Speicherbereiche geladen werden können. Es gibt keine Notwendigkeit für zusammenhängenden Speicher.
+
+Vorteile:
+
+Vermeidet externe Fragmentierung vollständig.
+
+Erlaubt effiziente Nutzung des physischen Speichers.
+
+Einfaches Speichermanagement durch gleich große Seiten.
+
+Nachteile:
+
+Kann zu interner Fragmentierung führen, da die letzte Seite eines Prozesses oft nicht komplett genutzt wird.
+
+Benötigt eine Seitentabelle pro Prozess → zusätzlicher Speicherverbrauch.
+
+TLB-Misses (Translation Lookaside Buffer) können die Leistung beeinträchtigen.
+
+2. Speicherkompaktierung (Compaction)
+Prinzip: Nicht zusammenhängende freie Speicherblöcke werden im RAM „zusammengeschoben“, um wieder größere zusammenhängende Bereiche zu schaffen.
+
+Vorteile:
+
+Beseitigt externe Fragmentierung.
+
+Ermöglicht die Ausführung großer Prozesse, die zusammenhängenden Speicher benötigen.
+
+Nachteile:
+
+Hoher Rechenaufwand: Daten müssen verschoben werden, inklusive Aktualisierung aller Zeiger.
+
+Kann Systemleistung stark beeinträchtigen, besonders bei häufigem Einsatz.
+
+Eher geeignet für Batch-Systeme als für Echtzeitsysteme.
