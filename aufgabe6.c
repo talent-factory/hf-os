@@ -18,7 +18,7 @@ void print_file_metadata(const char* filename) {
 
     printf("Metadaten für Datei: %s\n", filename);
     printf("------------------------\n");
-    printf("Dateigröße:         %ld Bytes\n", file_info.st_size);
+    printf("Dateigrösse:         %ld Bytes\n", file_info.st_size);
     printf("Inode-Nummer:       %ld\n", file_info.st_ino);
     printf("Anzahl Hardlinks:   %ld\n", file_info.st_nlink);
     printf("Zugriffsrechte:     %o (oktal)\n", file_info.st_mode & 0777);
@@ -86,7 +86,43 @@ int main() {
     return 0;
 }
 
+/*
+Ausgabe:
 
+➜  LB2 git:(hfi2024a/kavindu-JasinPathiranage) ✗ ./aufgabe6
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse:         96 Bytes
+Inode-Nummer:       533399
+Anzahl Hardlinks:   1
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-17 12:22:29
+Letzte Änderung:    2025-05-17 12:22:29
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse:         134 Bytes
+Inode-Nummer:       533399
+Anzahl Hardlinks:   1
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-17 12:22:29
+Letzte Änderung:    2025-05-17 12:22:29
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigrösse:         134 Bytes
+Inode-Nummer:       533399
+Anzahl Hardlinks:   2
+Zugriffsrechte:     664 (oktal)
+Letzter Zugriff:    2025-05-17 12:22:29
+Letzte Änderung:    2025-05-17 12:22:29
+
+
+*/
 
 
 /*

@@ -70,6 +70,24 @@ int main() {
     return 0;
 }
 
+/*
+Ausgabe:
+➜  LB2 git:(hfi2024a/kavindu-JasinPathiranage) ./aufgabe5
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffdc1e7acc0
+Heap-Variable: 0x5d94903d72a0
+Statische Variable: 0x5d948f805010
+
+Adressunterschiede:
+Stack - Heap:       37835200150048 Bytes
+Stack - Static:     37835212545200 Bytes
+Heap - Static:      12395152 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (höhere Adressen)
+
+*/
 
 
 
