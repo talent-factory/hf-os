@@ -1,28 +1,61 @@
-1. Virtuelle Adresse: 12300₁₀
+Gegeben:
 
-    Seitengröße = 4096
+    Seitengröße: 4 KB = 4096 Bytes
 
-    Seitenzahl (VPN) = 12300 ÷ 4096 = 3 (ganzzahlig), Rest = 12300 - (3×4096) = 1012
+    Virtuelle Adresse = Seitenzahl × Seitengröße + Offset
 
-    Offset = 1012
+    Umrechnungsschritte:
 
-→ VPN = 3
-→ Laut Tabelle: nicht vorhanden (Seitenfehler, Page Fault)
+        Bestimmen der virtuelle Seitennummer (VPN): virtuelle Adresse / 4096
 
-Antwort: Page Fault (Seite nicht im Speicher)
-2. Virtuelle Adresse: 16384₁₀
+        Ermittlen des Offset: virtuelle Adresse % 4096
 
-    VPN = 16384 ÷ 4096 = 4, Offset = 0
-    → VPN = 4
-    → PFN = 2
+        Suche in der Page Table den entsprechenden physikalischen Seitenrahmen (PFN)
 
-→ Physische Adresse = 2 × 4096 + 0 = 8192
+        Berechnen der physische Adresse: PFN × 4096 + Offset
 
-Antwort: 8192
-3. Virtuelle Adresse: 32800₁₀
+Virtuelle Adresse 12300₁₀
 
-    VPN = 32800 ÷ 4096 = 8, Offset = 32800 - (8×4096) = 32800 - 32768 = 32
+Berechnung:
 
-→ VPN = 8 → nicht in der Tabelle enthalten
+    VPN = 12300 ÷ 4096 = 3, Offset = 12300 % 4096 = 1020
 
-Antwort: Page Fault (ungültige virtuelle Seite)
+→ Aus der Page Table:
+Virtuelle Seite 3 → Physischer Rahmen 4
+
+→ Physische Adresse = 4 × 4096 + 1020 = 16384 + 1020 = 17404
+
+Antwort:
+Physische Adresse: 17404₁₀
+
+
+
+
+
+Virtuelle Adresse 16384₁₀
+
+Berechnung:
+
+    VPN = 16384 ÷ 4096 = 4, Offset = 16384 % 4096 = 0
+
+→ Page Table:
+Virtuelle Seite 4 → Physischer Rahmen 0
+
+→ Physische Adresse = 0 × 4096 + 0 = 0
+
+Antwort:
+Physische Adresse: 0₁₀
+
+
+
+Virtuelle Adresse 32800₁₀
+
+Berechnung:
+
+    VPN = 32800 ÷ 4096 = 8, Offset = 32800 % 4096 = 32800 - 32768 = 32
+
+→ Page Table:
+Virtuelle Seite 8 → mit "X" markiert → nicht im physischen Speicher
+
+Antwort:
+Page Fault (die Seite ist nicht im physischen Speicher vorhanden)
