@@ -1,0 +1,63 @@
+5. Praktische Aufgabe: Speicherverwaltung | 15P | 20'
+Aufgaben nach der Ausführung:
+
+1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+- Die Ausgabe des Programms zeigt die Speicheradressen verschiedener Variablentypen (Stack, Heap und statisch).
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+- Die verschiedenen Variablentypen liegen aus funktionalen und Sicherheitsgründen in unterschiedlichen Speicherbereichen:
+-- Stack-Variablen:
+--- Werden automatisch beim Funktionsaufruf zugewiesen und beim Verlassen der Funktion freigegeben
+--- Eignen sich für temporäre Daten mit bekannter, konstanter Größe
+--- Schneller Zugriff, da LIFO-Prinzip (Last In, First Out)
+---- Limitierte Größe (typischerweise einige MB)
+
+-- Heap-Variablen:
+--- Werden explizit durch Befehle wie malloc() allokiert und mit free() freigegeben
+--- Benötigt für Daten unbekannter oder variabler Größe
+--- Ermöglicht Persistenz über Funktionsaufrufe hinweg
+--- Flexiblere Speicherverwaltung, aber höherer Verwaltungsaufwand
+
+-- Statische Variablen:
+--- Existieren für die gesamte Programmlaufzeit
+--- Werden beim Programmstart initialisiert
+--- Im Data-Segment gespeichert, das bereits beim Kompilieren festgelegt wird
+
+- Die Trennung bietet mehrere Vorteile:
+-- Sicherheit: Verhindert, dass fehlerhafte Programme leicht auf unerlaubte Speicherbereiche zugreifen
+-- Effizienz: Jeder Bereich kann mit optimalen Algorithmen verwaltet werden
+-- Flexibilität: Unterschiedliche Lebensdauern der Variablen werden effizient unterstützt
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Das absichtlich erzeugte Speicherleck hat folgende Auswirkungen:
+- Unmittelbare Konsequenzen:
+-- Der allokierte Speicher bleibt belegt, obwohl er nicht mehr verwendet wird
+-- Der verfügbare Heap-Speicher wird schrittweise reduziert
+-- Die Referenz zum allokierten Speicher geht verloren, wodurch keine Freigabe mehr möglich ist
+
+
+- Langfristige Probleme:
+-- Bei langläufigen Programmen führt dies zu kontinuierlich steigendem Speicherverbrauch
+-- Irgendwann ist der Heap-Speicher erschöpft, was zu malloc()-Fehlern führt
+-- Das System wird insgesamt langsamer durch vermehrtes Paging
+
+Betriebssysteme gehen mit Speicherlecks folgendermaßen um:
+- Prozessbeendigung:
+-- Der einfachste Mechanismus: Wird ein Prozess beendet, gibt das Betriebssystem seinen gesamten Speicher frei
+-- Dies ist ein "grober" Ansatz, der bei einem Absturz oder Programmende funktioniert
+
+- Virtuelle Speicherverwaltung:
+-- Modernes Memory Management überträgt nicht genutzten Speicher auf die Festplatte (Paging/Swapping)
+-- Ermöglicht vorübergehende Entlastung des physischen Speichers
+
+- Ressourcenbegrenzungen:
+-- Betriebssysteme können Limits für Speicher pro Prozess festlegen
+-- Wenn ein Prozess zu viel Speicher allokiert, wird er beendet
+
+- Garbage Collection:
+-- Nicht in C, aber in höheren Sprachen (Java, C#, Python) üblich
+-- Automatische Erkennung und Freigabe nicht mehr referenzierter Objekte
+
+- Monitoring und Diagnostik:
+-- Tools wie Valgrind, LeakSanitizer oder der Windows Task Manager helfen, Speicherlecks zu identifizieren
+-- Ermöglichen Entwicklern, problematische Stellen im Code zu finden
