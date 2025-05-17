@@ -1,0 +1,34 @@
+4. Logische- und Physische Adressen | 6P | 10'
+Das folgende Bild kennen wir aus dem Buch:
+page table
+
+Anhand dieser Page Table sind die folgenden physischen Adressen zu den virtuellen Adressen gesucht:
+AUFGABE:
+1) 12300₁₀
+
+2) 16384₁₀
+
+3) 32800₁₀
+_______________________________________________________
+ANTWOERTEN
+
+1. Antwort: Physikalische Adresse: 8204
+Seitennummer = 12300 ÷ 4096 = 3 (ganzzahlig)
+Offset = 12300 % 4096 = 12300 - 3×4096 = 12300 - 12288 = 12
+Aus der Abbildung: Virtuelle Seite 3 → physischer Seitenrahmen 2
+Physische Adresse = 2 × 4096 + 12 = 8192 + 12 = 8204
+Physische Adresse = 8204
+
+
+2. Antwort: Physikalische Adresse: 12288
+Seitennummer = 16384 ÷ 4096 = 4
+Offset = 16384 % 4096 = 0
+Virtuelle Seite 4 → physischer Seitenrahmen 3
+Physische Adresse = 3 × 4096 + 0 = 12288
+Physische Adresse = 12288
+
+
+3. Antwort: Die Seite ist nicht im Speicher
+Virtuelle Seite: 32800 ÷ 4096 = 8
+Offset: 32800 - (8 × 4096) = 32800 - 32768 = 32
+Virtuelle Seite 8 → nicht zugeordnet (X) Kein Mapping vorhanden und die Seite nicht im physischen Speicher.

@@ -1,0 +1,29 @@
+AUSGABE DES Programs:
+./speicherverwaltung
+Speicheradressanalyse:\n---------------------\nStack-Variable:     0x7ffef8ad5680\nHeap-Variable:      0x5a3d2f2ad2a0\nStatische Variable: 0x5a3d2e52b010\n\nAdressdifferenzen:\nHeap - Stack:       18446702559469861920 Bytes\nStatic - Heap:      18446744073695386992 Bytes\n\nWachstumsrichtungen:\nAdresse local1:     0x7ffef8ad5650\nAdresse local2:     0x7ffef8ad5654\n→ Stack wächst nach oben\n%   
+
+_________________________________________________________________________________________________________________________
+Antworten auf die Fragen:
+
+1.Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Das Programm zeigt die Speicheradressen von drei Variablen:
+•	Die Stack-Variable ist im Bereich für lokale Variablen.
+•	Die Heap-Variable ist im Bereich für dynamisch reservierten Speicher.
+•	Die statische Variable liegt im Bereich für feste, globale Variablen.
+Ausserdem zeigt es, wie der Stack wächst, indem es die Adressen von zwei lokalen Variablen vergleicht.
+
+2.Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+Stack: Speicherbereich für lokale Variablen und Funktionsaufrufe. Er wird automatisch verwaltet und wächst meist in eine Richtung.
+Heap: Speicherbereich für dynamisch angeforderten Speicher mit malloc. Man muss ihn selbst freigeben.
+Statisch: Speicherbereich für globale oder statische Variablen, die während der gesamten Programmlaufzeit bestehen bleiben.
+
+3.Welche Auswirkungen hat das absichtlich erzeugte Speicherleck?
+Wenn Speicher mit malloc reserviert wird, aber nicht freigegeben, spricht man von einem Speicherleck. Das führt dazu, dass der Speicher belegt bleibt, obwohl er nicht mehr gebraucht wird. Das kann dazu führen, dass das Programm mehr und mehr Speicher verbraucht und irgendwann abstürzt oder das System langsamer wird.
+
+4.Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Das Betriebssystem gibt den gesamten vom Programm genutzten Speicher wieder frei, wenn das Programm beendet wird.
+Während das Programm läuft, hilft das Betriebssystem nicht direkt gegen Speicherlecks – deshalb muss der Programmierer den Speicher sauber verwalten.
+Es gibt Tools (z.B. valgrind), die helfen, Speicherlecks zu finden und zu verhindern.
+Betriebssysteme setzen oft Limits, damit Programme nicht zu viel Speicher belegen und das System stabil bleibt.
+______________________________________________________________________________________________________________________

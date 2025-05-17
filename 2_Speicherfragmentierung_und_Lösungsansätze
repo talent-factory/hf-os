@@ -1,0 +1,31 @@
+2. Speicherfragmentierung und Lösungsansätze | 5P | 5'
+Speicherfragmentierung ist ein häufiges Problem in Betriebssystemen.
+
+-- Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+ANTWORT:
+Die Interne Fragmentierung entsteht, wenn ein Programm mehr Speicher bekommt, als es tatsächlich benötigt. Und Der restliche Platz im Block bleibt ungenutzt.
+Zum Beispiel: Ein Programm braucht 17 KB, aber das System arbeitet mit 4 KB Blöcken. Das Programm erhält also 20 KB (5 Blöcke). 3 KB davon werden nicht genutzt.
+Externe Fragmentierung entsteht, wenn im Speicher viele kleine freie Bereiche vorhanden sind, aber kein grosser, zusammenhängender Block.
+Zum  Beispiel: Es sind insgesamt 20 KB frei, aber nur verteilt in kleinen Stücken, z. B. 3 KB hier, 5 KB dort. Ein Programm, das 10 KB zusammenhängend benötigt, kann nicht geladen werden.
+
+
+-- Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+ANTWORT:
+Es gibt zwei Strategien: Paging und Kompaktieren
+Paging:
+Beim Paging wird der Hauptspeicher in gleich grosse Seiten untert Und die Prozesse werden in Seiten zerlegt, die unabhängig voneinander im physischen Speicher abgelegt werden können.
+Programme müssen dadurch nicht zusammenhängend im RAM liegen.
+Vorteile:
+– Vermeidung von  externer Fragmentierung
+– Flexible Speicherzuteilung für Prozesse
+Nachteile:
+– Interne Fragmentierung am Ende von pages möglich
+– Zusätzlicher Verwaltungsaufwand durch Seitentabellen
+
+Kompaktierung:
+Beim der Kompaktierung werden belegte Speicherblöcke physisch verschoben, sodass die freien Speicherbereiche zusammenhängend werden. Ziel ist es, wieder grössere freie Speicherbereiche bereitzustellen.
+Vorteile:
+– Grosse Programme finden wieder Platz
+Nachteile:
+– Hoher Rechenleistung und Zeitaufwand, da Prozesse verschoben werden müssen
+– Komplex in der Umsetzung und daher selten in Echtzeit-Systemen eingesetzt

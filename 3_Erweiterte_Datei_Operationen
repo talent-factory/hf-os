@@ -1,0 +1,105 @@
+3. Erweiterte Datei Operationen | 10P | 15'
+Wir geben auf der Konsole folgende Befehle in genau dieser Reihenfolge ein. 
+Beschreibe jeden einzelnen Schritt/Befehl detailliert und erkläre die zugrundeliegenden Konzepte.
+
+--> Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden dabei angewendet?
+ANTWOERTEN:
+#1.  mkdir -p test/subdir && cd test
+Mit mkdir -p wird die Verzeichnisstruktur test/subdir erstellt. Das -p sorgt dafür, dass auch Zwischenverzeichnisse angelegt werden.Durch "&&" wird cd test nur dann ausgeführt, wenn der erste Befehl erfolgreich ist.
+Man wechselt also ins neue Verzeichnis. Folgende zugrundeliegenden Konzepte werden beschrieben,es werden die Verzeichnishierarchie, relativen Pfade und die Verzeichniserstellung angewendet.
+
+#2. echo "Inhalt-$(date +%s)" > original.txt
+Dieser Befehl schreibt den Text "Inhalt-" plus aktuelle Unix-Zeit in die Datei original.txt.
+überschreibt vorhandene Inhalte. Der Zeitstempel kommt von date +%s.
+und die zugrundeliegenden Konzepte sind Dateischreiben, Zeitstempel und Dateiinhalte ersetzen.
+
+#3. ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link. symlink.txt verweist auf den Pfad original.txt. Eigener Inode, funktioniert nicht mehr, wenn original.txt verschoben oder gelöscht wird.
+Angewendete Konzepte:Symbolische Links, Inode-Zuordnung, Pfadverweise.
+
+#4. ln original.txt hardlink.txt
+erstellt einen harten Link, der direkt auf dieselbe Datei (denselben Inode) zeigt wie original.txt
+und die Angewendete Konzepte sind Harte Links, Inodes und Dateiverweise.
+
+#5.chmod 640 original.txt
+setzt Dateirechte auf lese und schreibe recht: Besitzer darf lesen & schreiben, Gruppe nur lesen, andere nichts. Angewendete Konzepte: Dateiberechtigungen, Rechteverwaltung im Unix-Dateisystem.
+Angewendete Konzepte: Dateiberechtigungen, Rechteverwaltung im Unix-Dateisystem.
+
+#6. touch -d "2 days ago" original.txt
+setzt den Änderungszeitpunkt der Datei auf vor 2 Tagen.
+Angewendete Konzepte: Zeitstempelverwaltung, Metadaten von Dateien.
+
+#7. ls -la
+zeigt alle Dateien im Verzeichnis mit Details.
+Angewendete Konzepte: Dateiansicht, Metadaten, Dateiattribute, versteckte Dateien.
+_______________________________________________________________________________________________________________________
+- Kopiere die Ausgabe des letzten Befehles als Anhang zu der Lösung.
+➜  test git:(hfi2024a/mathumithan-jegatheeswaran) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:22 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:20 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:23 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:23 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:20 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:22 symlink.txt -> original.txt
+________________________________________________________________________________________________________________________
+- Analysiere die Ausgabe im Detail:
+--> Erkläre die Bedeutung jeder Spalte in der Ausgabe
+Mit der Befehl ls -la sieht man  Informationen über Dateien.
+Ganz links sieht man, was für eine Datei es ist.
+Ein Minuszeichen - bedeutet: Es ist eine normale Datei.
+Ein d bedeutet: Es ist ein Ordner.
+Ein l bedeutet: Es ist ein Link.
+Daneben sieht man die Rechte. Die zeigen, was der Besitzer, die Gruppe und andere machen dürfen.
+Zum Beispiel: lesen (r), schreiben (W) oder nichts machen(-) und ausführen (X).
+Danach sieht man eine Zahl.
+Sie zeigt, wie oft die Datei im System vorhanden ist. Das nennt man Links.
+Dann kommt der Name vom Besitzer der Datei, und danach die Gruppe, zu der der Besitzer gehört.
+In der nächsten Spalte steht, wie gross die Datei ist
+zum Beispiel 18 Bytes.
+Dann sieht man das Datum und die Uhrzeit, wann die Datei zuletzt geändert wurde.
+Am Schluss steht der Name der Datei – zum Beispiel original.txt.
+________________________________________________________________________________________________________________________
+1.Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+
+--> original.txt und hardlink.txt haben:
+- gleiche Inode-Nummer (sieht man mit ls -li)
+- gleiche Berechtigungen und gleichen Inhalt
+- gleicher Zeitstempel
+- beide zeigen auf dieselbe Datei im Speicher (es sind zwei Namen für dieselbe Datei)
+
+--> symlink.txt ist ein symbolischer Link:
+- hat einen eigene Inode
+- zeigt nur den Dateinamen original.txt
+- hat alle Rechte RWX (lesen, schreiben, ausführen) für alle Users
+- zeigt nur auf den Pfad zur Datei, nicht auf den Inhalt
+- ist technisch eine eigene Datei mit Verweis
+_______________________________________________________________________________________________________________________
+2. Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+
+- Wenn zwei Dateien denselben Inode haben, wie original.txt und hardlink.txt, handelt es sich um Hardlinks.
+- Sie zeigen beide direkt auf denselben Speicherort auf der Festplatte.
+- Ein symbolischer Link (symlink.txt) hat immer einen eigenen Inode, weil er nur den Pfad speichert, nicht den Inhalt.
+_____________________________________________________________________________________________________________________________	
+-- echo "Neuer Inhalt" > original.txt
+Der Befehl echo "Neuer Inhalt" > original.txt 
+schreibt den Text „Neuer Inhalt“ in die Datei original.txt. Es gibt keine Ausgabe. Die Datei behält ihre gleiche Kennung (Inode), nur der Text in der Datei ändert sich.Die Datei hardlink.txt zeigt auf dieselbe Datei und sieht deshalb auch den neuen Text. Ein harter Link verbindet direkt zur Datei, ein symbolischer Link verbindet zu dem Namen der Datei. Hier gibt es keine Fehler.
+
+-- cat symlink.txt hardlink.txt
+Der Befehl cat symlink.txt hardlink.txt
+zeigt den Inhalt von beiden Dateien. Beide Dateien zeigen auf dieselbe Datei, deshalb sieht man den gleichen Text. An der Inode Tabelle ändert sich nichts,weil nur gelesen wird. Der harte Link und der symbolische Link zeigen auf denselben Inhalt.
+Es gibt keine Fehler,weil beide Dateien vorhanden sind.
+
+-- mv original.txt ../original.txt
+Mit Befehl mv original.txt ../original.txt 
+wird die Datei original.txt in einen anderen Ordner verschoben. Die Inode-Tabelle bleibt gleich, weil die Datei nur umbenennt oder verschoben wird, aber nicht gelöscht.Der harte Link funktioniert weiter, weil er direkt auf die Inode zeigt.
+Der symbolische Link aber zeigt noch auf den alten Pfad und ist deshalb kaputt. Es gibt keinen Fehler beim Verschieben.
+
+-- cat symlink.txt hardlink.txt 2>&1
+Der Befehl cat symlink.txt hardlink.txt
+bekomme ich eine Fehlermeldung, weil die Originaldatei jetzt an einem anderen Ort ist und der symbolische Link falsch ist.Der harte Link zeigt weiterhin den Inhalt, weil er die Inode noch findet. Die Inode Tabelle ändert sich nicht. Der Fehler heisst „Datei nicht gefunden“ und passiert nur beim symbolischen Link.
+______________________________________________________________________________________________________________________________________________________________________
+Bonus-Frage:
+- Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+ANTWORT:
+Wenn die Dateien auf unterschiedlichen Dateisystemen liegen würden, können Hardlinks nicht funktionieren, weil Hardlinks nur innerhalb eines Dateisystems möglich sind. Symbolische Links funktionieren aber weiterhin, da sie nur auf einen Pfad verweisen – auch über Dateisystemgrenzen hinweg. Das heisst: Hardlink zwischen zwei Partitionen ist nicht erlaubt.

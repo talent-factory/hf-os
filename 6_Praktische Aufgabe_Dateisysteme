@@ -1,0 +1,51 @@
+AUSGABE:
+➜  LB2 git:(hfi2024a/mathumithan-jegatheeswaran) ✗ ./metadatenanalyse    
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Grösse: 96 Bytes
+Inode: 546218
+Anzahl Hardlinks: 1
+Rechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:37:09
+Letzte Änderung: 2025-05-17 12:37:09
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Grösse: 125 Bytes
+Inode: 546218
+Anzahl Hardlinks: 1
+Rechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:37:09
+Letzte Änderung: 2025-05-17 12:37:09
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Grösse: 125 Bytes
+Inode: 546218
+Anzahl Hardlinks: 2
+Rechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:37:09
+Letzte Änderung: 2025-05-17 12:37:09
+_____________________________________________________________________________________________________________________
+ANTWORTEN:
+1. Beschreiben Sie die Metadaten vor und nach dem Anhängen.
+Vor dem Anhängen war die Datei 96 Bytes gross. Nach dem Anhängen wurde die Datei grösser, nämlich 125 Bytes. Die Inode-Nummer, die Rechte und die Anzahl der Hardlinks haben sich nicht geändert. Das heisst, es ist dieselbe Datei, nur mit mehr Inhalt.
+
+2. Unterschied zwischen Inode-Nummer und Dateinamen?
+Der Dateiname ist der Name, den wir sehen und benutzen, um die Datei zu öffnen.
+Die Inode-Nummer ist eine Nummer, die das Betriebssystem benutzt, um die Datei auf der Festplatte eindeutig zu erkennen.
+Man kann sich die Inode als die „ID“ der Datei vorstellen, der Dateiname ist nur eine „Adresse“ oder ein „Label“, um die Datei zu finden.
+
+3. Was bedeutet es, wenn zwei Dateien denselben Inode haben?
+Wenn zwei Dateien dieselbe Inode-Nummer haben, bedeutet das, dass beide auf denselben Inhalt zeigen. Das passiert bei Hardlinks. Beide Namen sind wie zwei verschiedene „Türschilder“ an der gleichen Tür (Datei).
+
+4. Was ändert sich, wenn stattdessen ein symbolischer Link verwendet wird?
+Ein symbolischer Link (Symlink) ist wie eine Verknüpfung oder ein Shortcut. Er hat eine eigene Inode-Nummer und verweist auf den Dateinamen, nicht direkt auf die Datei. Wenn die Originaldatei gelöscht wird, funktioniert der Symlink nicht mehr, weil er nur auf den Namen zeigt, nicht auf den Inhalt selbst.
+
+5. Unterschiede bei Metadaten und Verhalten beim Löschen?
+Hardlink: Teilt sich die Metadaten mit der Originaldatei (gleiche Inode). Löscht man einen Namen, bleibt die Datei bestehen, solange mindestens ein Hardlink existiert.
+Symbolischer Link: Hat eigene Metadaten (eigene Inode). Löscht man die Originaldatei, bleibt der Symlink bestehen, zeigt aber ins Leere (kaputter Link).
