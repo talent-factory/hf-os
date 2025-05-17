@@ -1,20 +1,19 @@
-Virtuelle Adresse: 12300
-→ Binär:     0011 0000 0001 0100
-→ Seite:     3
-→ Offset:    0000 0001 0100 = 20
-→ Frame:     100 (aus Seitentabelle) = 4
-→ Physische Adresse: (4 × 4096) + 20 = 16404
+Adresse 1: 12300
+Virtuelle Seitennummer (VPN): 12300 / 4096 = 3
+Offset: 12300 % 4096 = 12
+→ Virtuelle Seite 3 → Seitenrahmen 6
+→ Physische Adresse: 6 * 4096 + 12 = 24588
+Ergebnis: Virtuell 12300 → Physisch 24588
 
-Virtuelle Adresse: 16384
-→ Binär:     0100 0000 0000 0000
-→ Seite:     4
-→ Offset:    0000 0000 0000 = 0
-→ Frame:     nicht vorhanden in Seitentabelle
-→ Physische Adresse: ungültig
+Adresse 2: 16384
+Virtuelle Seitennummer (VPN): 16384 / 4096 = 4
+Offset: 16384 % 4096 = 0
+→ Virtuelle Seite 4 → Seitenrahmen 4
+→ Physische Adresse: 4 * 4096 + 0 = 16384
+Ergebnis: Virtuell 16384 → Physisch 16384
 
-Virtuelle Adresse: 32800
-→ Binär:     1000 0000 0010 0000
-→ Seite:     8
-→ Offset:    0000 0010 0000 = 32
-→ Frame:     nicht vorhanden in Seitentabelle
-→ Physische Adresse: ungültig
+Adresse 3: 32800
+Virtuelle Seitennummer (VPN): 32800 / 4096 = 8
+Offset: 32800 % 4096 = 32
+→ Virtuelle Seite 8 → nicht im Speicher (X)
+Ergebnis: Seitenfehler (Page Fault)

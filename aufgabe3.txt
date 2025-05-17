@@ -36,7 +36,7 @@ wendet die octal permissions von 0640 (das erste null am anfang ist optional) an
 # command
 touch -d "2 days ago" original.txt
 # erklaerung
-mit touch wird ein file erstellt. die -d option macht es möglich direkt ein datum anzugeben welches dann verwendet wird alsctime also als zeitpunkt wo das file zuletzt modifiziert wurde
+mit touch wird ein file erstellt. die -d option macht es möglich direkt ein datum anzugeben welches dann verwendet wird alsmtime also als zeitpunkt wo das file zuletzt modifiziert wurde
 
 --------------------------------------
 
