@@ -10,7 +10,6 @@ Eine strategien zur Vermeidung oder Reduktion von Fragmentiertung ist Paging.
 Paging ist eine Technik zur Speicherverwaltung, bei der Prozesse in kleine, gleich grosse Teile (Pages) aufgeteilt werden. Diese Pages können beliebig im RAM gespeichert werden, wodurch externe Fragmentierung vermieden wird.
 
 Vorteil: vermeidet externe Fragmentierung komplett.
-
 Nachteil: Verwaltung der Seitentabellen verbraucht zusätzliche Speicher.
 
 

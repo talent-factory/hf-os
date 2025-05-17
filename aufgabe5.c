@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 void analyze_memory_layout(int* stack_var, int* heap_var, int* static_var) {
     printf("Speicheradressanalyse:\n");
     printf("---------------------\n");

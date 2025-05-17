@@ -1,4 +1,4 @@
-Um die physischen Adressen zu den gegebenen virtuellen Adressen zu berechnen, analysieren wir das Bild. Es stellt die Seitentabelle (Page Table) dar 0 eine Zuordnung zwischen virtuellen Seiten und physischen Seitenrahmen.
+um die physischen Adressen zu den gegebenen virtuellen Adressen zu berechnen, analysieren wir das Bild. Es stellt die Seitentabelle (Page Table) dar 0 eine Zuordnung zwischen virtuellen Seiten und physischen Seitenrahmen.
 
 Gegeben:
 Seitengrösse: 4 KB = 4096 Bytes

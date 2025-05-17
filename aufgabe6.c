@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+
 void print_file_metadata(const char* filename) {
     struct stat file_info;
 
