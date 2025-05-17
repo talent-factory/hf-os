@@ -1,0 +1,39 @@
+# der output des c programms sieht folgendermassen aus
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable:      0x7ffcf0b1b350
+Heap-Variable:       0x59230cf1a2a0
+Statische Variable:  0x59230bf6d010
+
+Adressdifferenzen:
+Stack - Heap:        42717270773936 Bytes
+Stack - Static:      42717287211840 Bytes
+Heap - Static:       16437904 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (niedrige -> hohe Adressen)
+
+
+-------------------------------------------------
+
+### Aufgaben nach der Ausführung
+
+# 1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+# Antwort
+Die Ausgabe zeigt, dass Stack-, Heap- und statische Variablen in ganz unterschiedlichen Speicherbereichen liegen. Das heisst das Betriebssystem trennt diese Bereiche voneinander, um den Speicher besser zu verwalten. Man sieht auch, dass der Stack wahrscheinlich nach unten wächst, weil die Adressen kleiner werden.
+
+----
+
+# 2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+# Antwort
+Jede Art von Variable hat einen anderen Zweck. Statische Variablen bleiben das ganze Programm über erhalten, Stack-Variablen sind nur während einer Funktion aktiv, und Heap-Variablen werden manuell verwaltet. Deshalb gibt es getrennte Speicherbereiche – das macht alles sicherer und übersichtlicher.
+
+----
+
+# 3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+# Antwort
+Das Speicherleck sorgt dafür, dass Speicher verloren geht, weil man ihn nicht wieder freigibt. Bei kurzen Programmen ist das meist kein Problem, weil das Betriebssystem nach dem Ende alles aufräumt. Wenn das aber oft passiert oder das Programm lange läuft, kann es zu Speicherproblemen kommen. Das OS kann dann im schlimmsten Fall Prozesse beenden. Normalerweise muss man sowas aber selbst im Code vermeiden.
