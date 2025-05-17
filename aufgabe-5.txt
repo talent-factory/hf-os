@@ -17,7 +17,7 @@ Stack wächst nach oben (höhere Adressen)
 Die Ausgabe zeigt, dass verschiedene Variablentypen (Stack, Heap, statisch) in getrennten Speicherbereichen liegen.
 Der Stack liegt im oberen Adressbereich und wächst in diesem Fall nach oben (höhere Adressen).
 Der Heap befindet sich im mittleren Bereich.
-Statische Variablen liegen nochmals an einem anderen Ort, meist im Data- oder BSS-Segment.
+Statische Variablen liegen nochmals an einem anderen Ort.
 
 Das spiegelt die segmentierte Speicherorganisation moderner Betriebssysteme wider, bei der unterschiedliche Speicherarten klar getrennt verwaltet werden.
 ----------------------------------------------
@@ -25,7 +25,7 @@ Das spiegelt die segmentierte Speicherorganisation moderner Betriebssysteme wide
 Die Ausgabe zeigt, dass verschiedene Variablentypen (Stack, Heap, statisch) in getrennten Speicherbereichen liegen.
 Der Stack liegt im oberen Adressbereich und wächst in diesem Fall nach oben (höhere Adressen).
 Der Heap befindet sich im mittleren Bereich.
-Statische Variablen liegen nochmals an einem anderen Ort, meist im Data- oder BSS-Segment.
+Statische Variablen liegen nochmals an einem anderen Ort.
 Das spiegelt die segmentierte Speicherorganisation moderner Betriebssysteme wider, bei der unterschiedliche Speicherarten klar getrennt verwaltet werden.
 ----------------------------------------------
 Das Programm reserviert mehrfach Speicher mit malloc(), gibt diesen aber nicht frei (free() fehlt). Dadurch entsteht ein Speicherleck belegter Speicher, der nicht mehr genutzt wird.

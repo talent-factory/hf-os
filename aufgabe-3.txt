@@ -106,7 +106,7 @@ cat symlink.txt schlägt fehl, da symlink.txt auf original.txt verweist, diese a
 
 Inode-Auswirkung:
 
-Keine Änderung am Inode selbst – nur der symbolische Link ist gebrochen.
+Keine Änderung am Inode selbst nur der symbolische Link ist gebrochen.
 
 Das zeigt den entscheidenden Unterschied:
 Symbolische Links → Pfadabhängig
@@ -115,7 +115,7 @@ Harte Links → Inode-abhängig (robuster)
 Fehler die auftreten könnte: 
 Symbolische Links brechen leicht, wenn der Zielpfad gelöscht, verschoben oder umbenannt wird.
 Harte Links funktionieren nicht über verschiedene Dateisysteme hinweg.
-Nach mv muss bedacht werden, ob ein Symlink relativ oder absolut war – das beeinflusst, ob er noch gültig ist.
+Nach mv muss bedacht werden, ob ein Symlink relativ oder absolut war das beeinflusst, ob er noch gültig ist.
 
 
 

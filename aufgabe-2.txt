@@ -2,11 +2,11 @@ Unterschied zwischen interner und externer Fragmentierung:
 
 Interne Fragmentierung:
 Hierbei wird einem Prozess mehr Speicher zugewiesen, als er tatsächlich braucht. Der ungenutzte Teil innerhalb dieses Bereichs ist verschwendet.
-Beispiel: Ein Prozess benötigt 18 KB, aber das System teilt nur in Blöcken von 20 KB zu. Die 2 KB extra bleiben ungenutzt – das ist interne Fragmentierung.
+Beispiel: Ein Prozess benötigt 18 KB, aber das System teilt nur in Blöcken von 20 KB zu. Die 2 KB extra bleiben ungenutzt das ist interne Fragmentierung.
 
 Externe Fragmentierung:
 Dabei bleibt zwischen belegten Speicherblöcken ungenutzter Speicher, der zu klein ist, um sinnvoll verwendet zu werden.
-Beispiel: Ein Speicherbereich hat noch drei freie Lücken mit 5 KB, 10 KB und 4 KB – kein neuer Prozess mit 15 KB passt dort rein, obwohl genug Gesamtspeicher vorhanden ist.
+Beispiel: Ein Speicherbereich hat noch drei freie Lücken mit 5 KB, 10 KB und 4 KB kein neuer Prozess mit 15 KB passt dort rein, obwohl genug Gesamtspeicher vorhanden ist.
 
 
 
@@ -26,4 +26,4 @@ Hier werden Prozesse im Arbeitsspeicher verschoben, um alle freien Speicherlück
 
 Vorteile: Speicher wird effektiver nutzbar gemacht, externe Fragmentierung wird reduziert oder verhindert.
 
-Nachteile: Das Verschieben der Daten kostet Rechenzeit und kann die Systemleistung kurzzeitig stark belasten. Es ist außerdem technisch komplexer umzusetzen, besonders bei laufenden Prozessen.
+Nachteile: Das Verschieben der Daten kostet Rechenzeit und kann die Systemleistung kurzzeitig stark belasten. Es ist ausserdem technisch komplexer umzusetzen, besonders bei laufenden Prozessen.

@@ -1,0 +1,54 @@
+Ausgabe: 
+➜  Schreibtisch ./aufgabe-6                 
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse: 96 Bytes
+Inode-Nummer: 419426
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664 (Oktal)
+Letzter Zugriff: 2025-05-17 12:16:50
+Letzte Änderung: 2025-05-17 12:16:50
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse: 132 Bytes
+Inode-Nummer: 419426
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664 (Oktal)
+Letzter Zugriff: 2025-05-17 12:16:50
+Letzte Änderung: 2025-05-17 12:16:50
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigrösse: 132 Bytes
+Inode-Nummer: 419426
+Anzahl Hardlinks: 2
+Zugriffsrechte: 664 (Oktal)
+Letzter Zugriff: 2025-05-17 12:16:50
+Letzte Änderung: 2025-05-17 12:16:50
+
+1. 
+Nach dem Anhängen ist Folgendes sichtbar:
+Dateigrösse ist von 96 Bytes auf 132 Bytes gestiegen das zeigt, dass zusätzlicher Inhalt erfolgreich an die Datei angehängt wurde.
+Inode-Nummer und Zugriffsrechte bleiben unverändert die Datei bleibt dieselbe.
+Letzter Zugriff und letzte Änderung wurden in deinem Fall nicht aktualisiert vermutlich, weil das Betriebssystem das Schreiben aus dem Puffer noch nicht als „modifizierend“ bewertet hat oder fopen()/fprintf() den Zeitstempel nicht automatisch setzt (dies kann auch je nach Systemkonfiguration variieren).
+-------------------------------------------------------
+2. 
+Die Inode-Nummer (hier: 419426) verweist auf die tatsächliche Datei inklusive Inhalt und Metadaten.
+Der Dateiname ist nur ein Eintrag im Verzeichnis, der auf den Inode zeigt.
+Da sowohl testdatei.txt als auch testdatei_hardlink.txt denselben Inode haben, handelt es sich um Hardlinks:
+Sie teilen sich dieselbe Datei.
+Änderungen über einen Namen wirken sich sofort auch auf den anderen aus.
+Die Datei wird erst gelöscht, wenn alle Hardlinks entfernt wurden.
+
+3.
+Der Symlink hätte eine andere Inode-Nummer, da es sich um eine eigene Datei handelt.
+Er würde lediglich den Pfad zur Zieldatei speichern, nicht deren Inhalt.
+Beim Löschen von testdatei.txt würde testdatei_symlink.txt ins Leere zeigen („broken link“).
+Die Dateigrösse des Symlinks entspräche der Länge des Pfadnamens, nicht der Inhalt der Zieldatei.
+
+
