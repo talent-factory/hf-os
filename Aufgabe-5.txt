@@ -3,12 +3,7 @@ Die Ausgabe „Stack wächst nach oben“ zeigt, dass bei deinem System lokale V
 Die Adressdifferenz im Heap: -32 bedeutet, dass der zweite malloc()-Block unterhalb des ersten im Speicher liegt. Das deutet darauf hin, dass der Heap in deinem System nach unten wächst, also zu niedrigeren Adressen.
 
 # Was sagt das über die Speicherorganisation aus?
-
-Dein Betriebssystem oder deine Architektur verwendet ein nicht-standardmäßiges Layout, bei dem:
-	•	der Stack nach oben wächst (zu höheren Adressen),
-	•	der Heap nach unten wächst (zu niedrigeren Adressen).
-
-Dies unterscheidet sich vom üblichen Verhalten (Stack ↓, Heap ↑), ist aber technisch gültig und hängt von der Prozessorarchitektur und Betriebssystemkonfiguration ab.
+Das (verwendete) Betriebssystem oder die Architektur verwendet ein nicht-standardmäßiges Speicherlayout, bei dem der Stack nach oben wächst – also zu höheren Adressen – und der Heap nach unten, in Richtung niedrigerer Adressen. Dieses Verhalten weicht vom üblichen Modell ab, bei dem der Stack nach unten und der Heap nach oben wächst, ist jedoch technisch gültig und abhängig von der Prozessorarchitektur sowie der Konfiguration des Betriebssystems.
 
 # --------------------------------
 
@@ -26,16 +21,12 @@ Schutzmechanismen wie Zugriffskontrollen einsetzen.
 
 # --------------------------------
 
-#Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+# Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
 
-Auswirkungen des Speicherlecks
+# Auswirkungen des Speicherlecks
+Das absichtlich nicht freigegebene malloc(100) führt zu einem Speicherleck, da der reservierte Speicher nicht zurückgegeben wird. Tritt dieses Verhalten häufiger auf, kann es zu einem stetig steigenden RAM-Verbrauch kommen, was das System verlangsamt und im Extremfall sogar zu einem Absturz durch Speichermangel führen kann.
 
-Das absichtlich nicht freigegebene malloc(100) führt zu einem Speicherleck, da der zugewiesene Speicher nicht zurückgegeben wird. Bei wiederholtem Auftreten kann dies zu:
-	•	steigendem RAM-Verbrauch,
-	•	langsamerem System,
-	•	im Extremfall zu einem Absturz durch Speichermangel führen.
+# Wie geht das Betriebssystem damit um?
+Nach Beenden eines Prozesses gibt das Betriebssystem den belegten Speicher in der Regel automatisch frei. Während der Laufzeit jedoch wird ein Speicherleck nicht automatisch erkannt – hierfür werden spezielle Werkzeuge wie valgrind oder AddressSanitizer benötigt. In sicherheitskritischen Systemen kommen zusätzlich Überwachungsmechanismen zum Einsatz, um Speicherlecks frühzeitig zu erkennen und deren Auswirkungen zu begrenzen.
 
-Wie geht das Betriebssystem damit um?
-	•	Nach Beenden des Prozesses gibt das Betriebssystem den belegten Speicher normalerweise automatisch frei.
-	•	Während der Laufzeit erkennt es das Leck nicht automatisch – dafür braucht es Tools wie valgrind oder AddressSanitizer.
-	•	Bei sicherheitskritischen Systemen werden Überwachungsmechanismen eingesetzt, um Ressourcenlecks frühzeitig zu erkennen und zu begrenzen.
+
