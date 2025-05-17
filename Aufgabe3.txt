@@ -1,0 +1,71 @@
+mkdir -p test/subdir && cd test
+mit "mkdir" erstellt einen Ordner. Die Option "-p" in diesem Fall stellt auch sicher, dass das obere Verzeichnis (in unserem Fall test) erstellt wird, falls dieses noch nicht existieren sollte. Wiederum mit dem "&&" Operator kann man dann gerade einen weiteren Befehl ausführen, in diesem Fall ist das ein wechsel in das "test" Verzeichnis, welches wir gerade erstellt haben.
+In diesem Befehl wurden die folgenden Konzepte des Dateisystems verwendet:
+- Verzeichnisse (erstellen und wechseln)
+- Pfadnamen (test/subdir)
+- Hierarchisches Dateisystem (Ober und Unterordner / Verzeichnisse)
+
+echo "Inhalt-$(date +%s)" > original.txt
+Echo schreibt hier eine Zeichenkette in eine neue Datei, in unserem Fall "original.txt". Diese Zeichenkette beginnt dann mit "Inhalt-" und wird dann durch einen Timestamp ergänzt mit dem Befehl "date +%s". Zu guter letzt wird dann diese Zeichenkette mit dem Operator ">" in die Text Datei "original.txt" hinzugefügt. Falls diese bereits besteht, wird sie überschrieben und sonst wird die Datei erstellt und danach die Zeichenkette eingefügt.
+Hier werden die folgenden Konzepte verwendet:
+- Dateien (original.txt)
+- Dateiinhalte (Inhalt + Datum)
+- Standardausgabe (das Resultat am Schluss)
+- Überschreiben (der > Operator bewirkt, dass vorherige Daten in der Datei überschrieben werden) 
+
+
+ln -s original.txt symlink.txt
+Dieser Befehl erstellt einen sogenannten "Softlink" mit dem namen "symlink.txt", welcher auf die original.txt Datei verweist. Der "Softlink" wird hierbei mit der Option "-s" erstellt. Ein Softlink ist eine Datei, welche den Pfad zu einer anderen Datei oder einem Verzeichnis enthält.
+Konzepte in verwendung:
+- Symbolische- / Softlinks (Wie oben genannt) 
+
+ln original.txt hardlink.txt
+Anders als beim oberen Link wird hier ein "Hardlink" erstellt. Danach zeigt die Datei "hardlink.txt" auch auf die "original.txt" Datei. Der unterschied zwischen Hard- und Softlinks ist hierbei, dass ein Hardlink einen direkten Verweis auf die sogenannte Index Node erstellt der Originaldatei. Diese Index Node enthält Metadaten über die Datei wie Berechtigungen, Grösse oder der Speicherort. Ein Hardlink führt dazu, dass die Daten in der Datei erhalten bleiben.
+Konzepte:
+- Hardlinks (wie oben erklärt)
+
+chmod 640 original.txt
+Mit dem Befehl "chmod" werden die Berechtigungen auf der Datei "original.txt" angepasst. Mit der Zahl "640" werden hierbei die gewünschten Berechtigungen für den (6) User, (4) Gruppe und (0) Andere Benutzer vergeben. 6 Bedeutet hierbei Lese und Schreiberechte für den User, 4 Leserechte für die Gruppe und andere Benutzer haben keine Rechte (0).
+Konzepte:
+- Dateiberechtigungen (wer kann was mit welchen Daten machen)
+
+touch -d "2 days ago" original.txt
+Touch wird normalerweise dafür verwendet um Zugriffs- und Änderungszeiten einer Datei zu aktualisieren (was hier auch gemacht wurde. Mit der Option "-d" für "date" kann man jedoch explizit eine Zeit für die Datei setzen-
+Konzepte:
+- Zeitstempel (original.txt wurde nicht heute sondern vor 2 Tagen erstellt"
+
+ls -la
+"ls" listet alle Dateien im Verzeichnis auf, in welchem man sich gerade befindet. Die Optionen "-la" stehen hierbei für die Detaillierten Informationen der Datei (l für long) und "a" das auch versteckte Dateien im System angezeigt werden.
+Konzepte:
+- Dateiliste (ls)
+- Metadaten (wann erstellt, wem gehört sie, etc.)
+- Versteckte Dateien
+
+
+Ausgabe letzter Befehl:
+➜  test git:(hfi2024a/haris-sakiri) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:28 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:28 ..
+-rw-rw-r-- 2 vmadmin vmadmin   18 Mai 15 11:29 hardlink.txt
+-rw-rw-r-- 2 vmadmin vmadmin   18 Mai 15 11:29 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:28 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+
+Die Spalte ganz links mit den Buchstaben (drwxrwxr-x, etc.) Zeigt die Berechtigungen jeder Datei an.
+Die Nächste Spalte (von Unten 1, 2, 2, etc.) Zeigt die Anzahl Hardlinks zu den Dateien an.
+Die zwei Darauffolgenden Spalten zeigen links einmal den Eigentümer und rechts die gruppe (in diesem Fall 2x vmadmin) an.
+Als nächstes wird dann gerade die Dateigrösse der einzelnen Daten angezeigt.
+Rechts von der Dateigrösse befindet sich dann auch das letzte Änderungsdatum, mit Datum und Uhrzeit
+Und zu guter letzt die namen der Daten in dem Verzeichnis.
+
+Unterschiede:
+original.txt und hardlink.txt haben hierbei die selbe Inode Nummer, sowie auch die Metadaten.
+symlink.txt hingegen hat eine eigene Inode Nummer, da diese ein Softlink ist und daher eine eigene Datei ist.
+Auch beid en Berechtigungen haben original.txt und hardlink.txt die selben und symlink.txt hat die eigenen Berechtigungen. Die Berechtigungen vom Softlink werden jedoch ignoriert auf der Hauptdatei.
+Die Zeitstempel von den Hard- und Softlinks unterscheiden sich wiederum (hardlink gleich wie original, softlink nicht).
+
+Der Grund warum original.txt und hardlink.txt die gleiche Inode Nummer haben ist auch weil sie eben ein Hardlink, und daher ein direkter Verweis zur Originaldatei ist.
+Generell liegt es immer daran, dass die eine Datei ein Hardlink ist und die andere ein Softlink und daher eine eigene Datei.
+
+
