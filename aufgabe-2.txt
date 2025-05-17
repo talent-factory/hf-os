@@ -1,0 +1,29 @@
+Unterschied zwischen interner und externer Fragmentierung:
+
+Interne Fragmentierung:
+Hierbei wird einem Prozess mehr Speicher zugewiesen, als er tatsächlich braucht. Der ungenutzte Teil innerhalb dieses Bereichs ist verschwendet.
+Beispiel: Ein Prozess benötigt 18 KB, aber das System teilt nur in Blöcken von 20 KB zu. Die 2 KB extra bleiben ungenutzt – das ist interne Fragmentierung.
+
+Externe Fragmentierung:
+Dabei bleibt zwischen belegten Speicherblöcken ungenutzter Speicher, der zu klein ist, um sinnvoll verwendet zu werden.
+Beispiel: Ein Speicherbereich hat noch drei freie Lücken mit 5 KB, 10 KB und 4 KB – kein neuer Prozess mit 15 KB passt dort rein, obwohl genug Gesamtspeicher vorhanden ist.
+
+
+
+
+
+Zwei Strategien zur Vermeidung/Reduktion von Fragmentierung:
+
+Paging (Seitentechnik):
+Der physische Speicher wird in kleine, gleich grosse Blöcke (Seiten) aufgeteilt, und Prozesse erhalten nur so viele Seiten, wie sie tatsächlich brauchen. Diese Seiten können an beliebigen Stellen im Speicher liegen.
+
+Vorteile: Keine externe Fragmentierung, effizient bei vielen kleinen Prozessen, flexible Speicherverwaltung.
+
+Nachteile: Interne Fragmentierung bleibt möglich (wenn eine Seite nicht ganz gefüllt ist). Ausserdem muss das System zusätzlich Seitentabellen verwalten, was Speicher und Rechenzeit braucht.
+
+Defragmentierung (Kompaktierung):
+Hier werden Prozesse im Arbeitsspeicher verschoben, um alle freien Speicherlücken zu einem grossen Block zusammenzufassen. Dadurch kann der Speicher besser genutzt werden.
+
+Vorteile: Speicher wird effektiver nutzbar gemacht, externe Fragmentierung wird reduziert oder verhindert.
+
+Nachteile: Das Verschieben der Daten kostet Rechenzeit und kann die Systemleistung kurzzeitig stark belasten. Es ist außerdem technisch komplexer umzusetzen, besonders bei laufenden Prozessen.
