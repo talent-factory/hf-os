@@ -1,0 +1,8 @@
+Interne Fragmentierung tritt auf, wenn einem Prozess ein Speicherblock zugewiesen wird, der größer ist als tatsächlich benötigt. Der ungenutzte Teil innerhalb dieses Blocks ist verschwendet.
+Beispiel: Ein Betriebssystem vergibt feste Speicherblöcke von 8 KB an Prozesse. Ein Prozess benötigt jedoch nur 6 KB. Die verbleibenden 2 KB im Block werden nicht genutzt, obwohl sie reserviert sind – das ist interne Fragmentierung.
+
+Externe Fragmentierung entsteht, wenn nach vielen Speicherzuweisungen und -freigaben im Hauptspeicher zwar insgesamt genügend freier Speicher vorhanden ist, dieser jedoch in viele kleine, nicht zusammenhängende Blöcke aufgeteilt ist. Prozesse,
+die größere zusammenhängende Speicherbereiche benötigen, können trotz insgesamt freiem Speicher nicht untergebracht werden.
+Beispiel: Angenommen, ein Prozess A (12 MB) wird beendet und sein Speicher freigegeben. Danach wird ein kleinerer Prozess B (6 MB) gestartet. Jetzt bleiben 6 MB ungenutzt. Wenn viele solche Prozesse starten und beendet werden,
+entstehen viele kleine Lücken (zusammen vielleicht 100 MB) aber kein durchgängiger Block von 20 MB für einen neuen großen Prozess.
+

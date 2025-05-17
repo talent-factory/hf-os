@@ -1,0 +1,44 @@
+1.Beschreibung des Programms:
+
+Adressdifferenz-Berechnung:
+Verwendet unsigned long-Typecasts, um die Differenzen in Bytes korrekt zu berechnen.
+
+Stack-Wachstumsrichtung:
+Zwei lokale Variablen werden verglichen – abhängig davon, ob die Adresse von local_var2 größer oder kleiner als local_var1 ist, lässt sich ableiten,
+ob der Stack wächst oder schrumpft.
+
+Speicherleck:
+Innerhalb der Schleife wird Speicher allokiert, aber nicht freigegeben – klassisches Beispiel für ein Leck.
+
+
+2.Unterschiedliche Speicherbereiche:
+
+Die Trennung hilft dem Compiler und Betriebssystem, genau zu wissen, wann welcher Speicher gültig ist und wie er behandelt werden muss.
+
+Sicherheit und Schutz:
+Wenn du z. B. einen Pufferüberlauf im Stack erzeugst, kannst du nicht einfach den Heap überschreiben.
+Das verhindert, dass ein Programm versehentlich (oder absichtlich) auf andere Bereiche zugreift → Speicherschutz.
+
+Effizientes Speichermanagement:
+Heap wächst nach oben (zu höheren Adressen).
+Stack wächst nach unten.
+
+Dadurch können beide flexibel wachsen, ohne sich sofort in die Quere zu kommen.
+
+
+
+3.Auswirkungen im Programm:
+
+Kurzfristig (einmalige Lecks):
+Bei kurzen Programmen meist kein sichtbares Problem.
+Betriebssystem gibt am Ende der Programmausführung normalerweise gesamten Speicher automatisch frei.
+
+Langfristig (z. B. in Servern oder Schleifen):
+Speicherverbrauch steigt stetig → RAM wird knapp.
+Das Programm wird langsamer, kann abstürzen oder keine weiteren Speicheranforderungen erfüllen.
+Im Extremfall: Out-of-Memory (OOM) → Programmabsturz oder Systemprobleme.
+
+Wie geht ein Betriebssystem damit um?
+Jeder Prozess bekommt einen isolierten virtuellen Speicherbereich.
+Nach dem Programmende gibt das OS den gesamten Speicher automatisch frei.
+Das schützt das System davor, dauerhaft durch einen fehlerhaften Prozess beschädigt zu werden.
