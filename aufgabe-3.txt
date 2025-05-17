@@ -1,0 +1,121 @@
+Befehlerklärung:
+
+mkdir -p test/subdir && cd test
+Erstellt das Verzeichnis test und darin subdir. Das -p sorgt dafür, dass auch Elternverzeichnisse automatisch erstellt werden.
+cd test wechselt ins test-Verzeichnis.
+----------------------------------------
+echo "Inhalt-$(date +%s)" > original.txt
+Erstellt die Datei original.txt mit dem Text Inhalt-<Unix-Zeit>.
+> original.txt überschreibt (oder erstellt) die Datei.
+----------------------------------------
+ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link symlink.txt, der auf original.txt zeigt.
+Der Symlink enthält den Pfadnamen als Inhalt.
+----------------------------------------
+ln original.txt hardlink.txt
+Erstellt einen Hardlink namens hardlink.txt, der auf denselben Inode wie original.txt zeigt.
+Beide Dateien teilen sich den Inhalt und Metadaten (ausser Name).
+----------------------------------------
+chmod 640 original.txt
+Setzt die Dateirechte von original.txt auf rw-r----- (Besitzer: Lesen+Schreiben, Gruppe: Lesen, Andere: keine Rechte).
+
+Diese Rechte gelten automatisch auch für hardlink.txt, da beide denselben Inode verwenden.
+----------------------------------------
+touch -d "2 days ago" original.txt
+Ändert den Zeitstempel der Datei original.txt auf vor zwei Tagen.
+Auch hardlink.txt ist betroffen, da es auf denselben Inode zeigt.
+----------------------------------------
+ls -la
+Zeigt alle Dateien, inklusive versteckter, mit Details (Langformat) im aktuellen Verzeichnis an.
+
+
+Analyse der Ausgabe:
+
+➜  test ls -la
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 17 11:11 .
+drwxr-x--- 22 vmadmin vmadmin 4096 Mai 17 11:12 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:12 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:12 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 17 11:11 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 17 11:11 symlink.txt -> original.txt
+
+Spalte		Bedeutung
+1		Dateityp & Rechte (-rw-r-----, d..., l...)
+2		Link-Zähler: Anzahl Hardlinks auf diesen Inode
+3		Besitzer (User)
+4		Gruppe
+5		Dateigrösse in Bytes
+6–8		Datum & Uhrzeit der letzten Änderung (mtime)
+9		Dateiname (bei Symlink zusätzlich Ziel)
+
+Unterscheide:
+Datei		Inode (implizit)		Rechte		Zeitstempel	
+original.txt	Gleich wie hardlink.txt		rw-r-----	15. Mai, 11:12	
+hardlink.txt	Gleich wie original.txt		rw-r-----	15. Mai, 11:12	
+symlink.txt	Eigener Inode			lrwxrwxrwx	17. Mai, 11:11	
+
+Warum haben manche Dateien denselben Inode?
+original.txt und hardlink.txt haben denselben Inode, da ln einen Hardlink erstellt. Beide zeigen auf denselben Speicherblock und teilen sich Metadaten (Rechte, Zeitstempel, Grösse).
+
+symlink.txt hat einen eigenen Inode, da symbolische Links als eigene Dateien mit einem Pfad als Inhalt behandelt werden.
+
+Erklärung der Befehle: 
+
+echo "Neuer Inhalt" > original.txt
+Ausgabe: Keine
+
+Die Datei original.txt wird neu geschrieben (bzw. überschrieben) mit dem Inhalt „Neuer Inhalt“.
+
+node-Auswirkung:
+
+Inhalt im Inode wird überschrieben.
+Inode-Nummer bleibt gleich, weil nur der Inhalt, nicht die Datei selbst, verändert wird.
+----------------------------------
+cat symlink.txt hardlink.txt
+Ausgabe: 
+Neuer Inhalt
+Neuer Inhalt
+
+symlink.txt verweist auf original.txt → zeigt also den neuen Inhalt.
+
+Inode-Auswirkung:
+
+Alle drei Dateien (original.txt, hardlink.txt, symlink.txt) zeigen effektiv auf denselben Inhalt.
+----------------------------------
+mv original.txt ../original.txt
+
+Augabe: Keine
+
+Die Datei original.txt wird verschoben ins übergeordnete Verzeichnis.
+Das bedeutet: Im aktuellen Verzeichnis wird der Verzeichniseintrag gelöscht, aber der Inode bleibt erhalten.
+
+Inode-Auswirkung:
+
+Der Inode bleibt erhalten, es existiert aber nur noch ein Link darauf (der hardlink.txt).
+
+Der symbolische Link wird ungültig, da er einen Pfad verfolgt, der nicht mehr existiert.
+----------------------------------
+cat symlink.txt hardlink.txt 2>&1
+
+Ausgabe: 
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+cat symlink.txt schlägt fehl, da symlink.txt auf original.txt verweist, diese aber nicht mehr im aktuellen Verzeichnis liegt.
+
+Inode-Auswirkung:
+
+Keine Änderung am Inode selbst – nur der symbolische Link ist gebrochen.
+
+Das zeigt den entscheidenden Unterschied:
+Symbolische Links → Pfadabhängig
+Harte Links → Inode-abhängig (robuster)
+
+Fehler die auftreten könnte: 
+Symbolische Links brechen leicht, wenn der Zielpfad gelöscht, verschoben oder umbenannt wird.
+Harte Links funktionieren nicht über verschiedene Dateisysteme hinweg.
+Nach mv muss bedacht werden, ob ein Symlink relativ oder absolut war – das beeinflusst, ob er noch gültig ist.
+
+
+
