@@ -1,0 +1,5 @@
+Nach dem Anhängen von Text sieht man, dass sich die Dateigrösse erhöht hat. Die Inode-Nummer ist gleich geblieben, weil es sich um dieselbe Datei handelt. Auch der Zeitstempel für Zugriff und Änderung wurde aktualisiert. Ansonsten bleiben Rechte und Hardlink-Anzahl gleich.
+
+Die Inode-Nummer identifiziert den Inhalt der Datei im Dateisystem, nicht den Namen. Der Dateiname ist nur ein Verweis auf diese Inode. Wenn zwei Dateien dieselbe Inode haben, zeigen sie auf denselben Inhalt – wie bei einem Hardlink. Änderungen an einer Datei wirken sich auf beide aus.
+
+Würde man statt eines Hardlinks einen symbolischen Link verwenden, hätte dieser eine eigene Inode und würde nur den Pfad zur Originaldatei enthalten. Beim Löschen der Originaldatei würde der Symlink ins Leere zeigen, während ein Hardlink weiterhin funktioniert. Auch Metadaten wie Grösse und Zeitstempel sind beim Symlink unabhängig.

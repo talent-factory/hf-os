@@ -1,0 +1,31 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse:         96 Bytes
+Inode-Nummer:        533512
+Anzahl Hardlinks:    1
+Zugriffsrechte:      664
+Letzter Zugriff:     2025-05-17 12:06:37
+Letzte Änderung:     2025-05-17 12:06:37
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigrösse:         147 Bytes
+Inode-Nummer:        533512
+Anzahl Hardlinks:    1
+Zugriffsrechte:      664
+Letzter Zugriff:     2025-05-17 12:06:37
+Letzte Änderung:     2025-05-17 12:06:37
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigrösse:         147 Bytes
+Inode-Nummer:        533512
+Anzahl Hardlinks:    2
+Zugriffsrechte:      664
+Letzter Zugriff:     2025-05-17 12:06:37
+Letzte Änderung:     2025-05-17 12:06:37
+
