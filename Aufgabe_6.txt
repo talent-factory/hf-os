@@ -1,0 +1,69 @@
+Beschreibung der Programmausgabe und Änderungen an den Metadaten
+Nach der Ausführung zeigt das Programm die Metadaten einer Datei vor und nach dem Anhängen von Text sowie die Metadaten eines erstellten Hardlinks. Typischerweise sieht man folgende Änderungen:
+
+- Nach dem Anhängen von Text:
+
+-- Dateigrösse: Erhöht sich durch den zusätzlichen Text (um ca. 83 Bytes für die zwei hinzugefügten Zeilen)
+-- Letzte Änderung (st_mtime): Aktualisiert auf den Zeitpunkt des Anhängens
+-- Letzter Zugriff (st_atime): Kann sich ebenfalls aktualisieren, abhängig von der Dateisystemkonfiguration
+-- Anzahl der Hardlinks: Bleibt unverändert (1)
+-- Inode-Nummer: Bleibt unverändert (die physische Speicherstelle der Datei ändert sich nicht)
+-- Zugriffsrechte: Bleiben unverändert
+
+- Nach dem Erstellen des Hardlinks:
+
+-- Anzahl der Hardlinks: Erhöht sich auf 2 (sowohl in der Originaldatei als auch im Hardlink)
+-- Inode-Nummer: Identisch bei beiden Dateien (sie teilen sich dieselbe physische Speicherstelle)
+-- Alle anderen Metadaten: Identisch bei beiden Dateien, da sie tatsächlich auf dieselbe Datei verweisen
+
+
+Unterschied zwischen Inode-Nummer und Dateinamen
+Eine Inode (Index Node) ist eine Datenstruktur im Unix-Dateisystem, die alle Metadaten einer Datei speichert, ausser ihrem Namen und tatsächlichen Inhalt. Die Inode enthält:
+
+- Datei-Typ und -Berechtigungen
+- Besitzer und Gruppe
+- Grösse und Zeitstempel
+- Speicherblöcke, in denen der Inhalt gespeichert ist
+
+Der Dateiname ist nur ein Verweis (Eintrag im Verzeichnis) auf eine Inode-Nummer. Das Dateisystem verwendet den Namen, um die entsprechende Inode zu finden.
+
+Wenn zwei Dateien die gleiche Inode-Nummer haben:
+
+- Sie sind tatsächlich dieselbe Datei
+- Sie teilen sich exakt denselben Inhalt und dieselben Metadaten
+- Änderungen an einer Datei werden in der anderen sofort sichtbar
+- Sie sind durch einen Hardlink verbunden (verschiedene Namen, die auf dieselbe Inode verweisen)
+
+Die Datei wird erst gelöscht, wenn alle Hardlinks entfernt werden (wenn die Anzahl der Hardlinks auf 0 sinkt)
+
+Unterschied zwischen Hardlink und symbolischem Link (Symlink)
+Hardlinks:
+
+- Verweisen direkt auf die Inode der Originaldatei
+- Haben die gleiche Inode-Nummer wie die Originaldatei
+- Erhöhen den Hardlink-Zähler in der Inode
+- Enthalten keine eigenen Daten ausser dem Verweis auf die Inode
+- Funktionieren auch wenn die "Originaldatei" gelöscht wird (da es tatsächlich dieselbe Datei ist)
+- Können nicht auf Verzeichnisse oder Dateien auf anderen Dateisystemen verweisen
+
+Symlinks (symbolische Links):
+
+- Sind eigenständige Dateien mit eigenen Inodes und Metadaten
+- Enthalten nur den Pfad zur Zieldatei als Text (wie ein Verweis oder eine Verknüpfung)
+- Haben eine unterschiedliche Inode-Nummer als die Originaldatei
+- Haben eine sehr kleine Dateigrösse (nur der Pfad zur Zieldatei)
+- Erhöhen den Hardlink-Zähler der Originaldatei nicht
+- Werden zu "dangling links" (unbrauchbaren Verweisen), wenn die Originaldatei gelöscht wird
+- Können auf Verzeichnisse und Dateien auf anderen Dateisystemen verweisen
+
+Verhalten beim Löschen der Originaldatei:
+
+- Bei einem Hardlink: Die Datei bleibt zugänglich, da sie erst gelöscht wird, wenn alle Hardlinks entfernt sind
+- Bei einem Symlink: Der Link wird unbrauchbar, da er auf einen nicht mehr existierenden Pfad verweist
+
+Wenn wir im Programm statt link() die Funktion symlink() verwendet hätten, würden wir folgende Unterschiede beobachten:
+
+- Der Symlink hätte eine eigene Inode-Nummer
+- Die Anzahl der Hardlinks der Originaldatei würde bei 1 bleiben
+- Die Metadaten des Symlinks (Grösse, Zeitstempel) wären unterschiedlich zur Originaldatei
+- Nach dem Löschen der Originaldatei würde ein Zugriff auf den Symlink fehlschlagen

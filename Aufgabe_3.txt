@@ -19,9 +19,9 @@ Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden
 --> symlink.txt: Dies ist der Name des neuen symbolischen Links. Ein symbolischer Link ist eine separate Datei, die den Pfadnamen der Zieldatei enthält. Wenn auf einen symbolischen Link zugegriffen wird, folgt das Dateisystem dem Pfad und findet die Zieldatei. Symbolische Links können Plattengrenzen überschreiten, d.h. sie können auf Dateien in anderen Dateisystemen (Partitionen oder sogar entfernten Systemen) verweisen.
 
 4. ln original.txt hardlink.txt
---> ln: Dieser Befehl erstellt standardmäßig einen harten Link.
+--> ln: Dieser Befehl erstellt standardmässig einen harten Link.
 --> original.txt: Dies ist die bestehende Datei, auf die der neue harte Link verweisen soll.
---> hardlink.txt: Dies ist der Name des neuen harten Links. Ein harter Link erstellt einen neuen Verzeichniseintrag, der auf dieselbe i-Node wie die ursprüngliche Datei verweist,,. Die i-Node ist eine Datenstruktur im Dateisystem, die Informationen über die Datei speichert (Eigentümer, Berechtigungen, Größe, Adressen der Datenblöcke), aber nicht ihren Namen,. Da beide Namen (original.txt und hardlink.txt) auf dieselbe i-Node zeigen, sind sie im Wesentlichen gleichwertige Namen für dieselbe Datei. Die i-Node enthält einen Zähler, der angibt, wie viele harte Links auf sie zeigen.
+--> hardlink.txt: Dies ist der Name des neuen harten Links. Ein harter Link erstellt einen neuen Verzeichniseintrag, der auf dieselbe i-Node wie die ursprüngliche Datei verweist,,. Die i-Node ist eine Datenstruktur im Dateisystem, die Informationen über die Datei speichert (Eigentümer, Berechtigungen, Grösse, Adressen der Datenblöcke), aber nicht ihren Namen,. Da beide Namen (original.txt und hardlink.txt) auf dieselbe i-Node zeigen, sind sie im Wesentlichen gleichwertige Namen für dieselbe Datei. Die i-Node enthält einen Zähler, der angibt, wie viele harte Links auf sie zeigen.
 
 5. chmod 640 original.txt
 --> chmod: Dieser Befehl ändert die Zugriffsrechte (Berechtigungen) einer Datei.
@@ -33,14 +33,14 @@ Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden
 --> original.txt: Dies ist die Datei, deren Berechtigungen geändert werden. Da hardlink.txt auf dieselbe i-Node zeigt, werden die Berechtigungen auch für den Zugriff über hardlink.txt gelten. symlink.txt ist eine separate Datei; ihre eigenen Berechtigungen (die sich auf den Link selbst beziehen) sind davon unberührt, aber die Berechtigungen der Zieldatei (original.txt) bestimmen, wer letztendlich über den Link auf den Inhalt zugreifen darf.
 
 6. touch -d "2 days ago" original.txt
---> touch: Dieser Befehl aktualisiert die Zeitstempel einer Datei, standardmäßig die Zugriffs- und Modifikationszeit. Wenn die Datei nicht existiert, wird sie standardmäßig erstellt (dies ist hier nicht der Fall) (MS-DOS get_file_date ist relevant für das Konzept, auch wenn es nicht touch direkt beschreibt).
+--> touch: Dieser Befehl aktualisiert die Zeitstempel einer Datei, standardmässig die Zugriffs- und Modifikationszeit. Wenn die Datei nicht existiert, wird sie standardmässig erstellt (dies ist hier nicht der Fall) (MS-DOS get_file_date ist relevant für das Konzept, auch wenn es nicht touch direkt beschreibt).
 --> -d "2 days ago": Die Option -d erlaubt die Angabe eines benutzerdefinierten Datums und einer Uhrzeit. "2 days ago" setzt den Zeitstempel auf den Zeitpunkt vor zwei Tagen. (Die genaue Syntax und die Wirkung auf Zugriffs-, Modifikations- und Änderungszeiten hängen vom System ab, aber die Modifikationszeit wird typischerweise geändert).
 --> original.txt: Dies ist die Datei, deren Zeitstempel geändert werden. Da hardlink.txt dieselbe i-Node verwendet, wird sein Modifikationszeitstempel ebenfalls auf den neuen Wert gesetzt, da dieser in der i-Node gespeichert ist. Der Zeitstempel von symlink.txt (als separater Datei) wird dadurch nicht geändert; er behält den Zeitstempel seiner eigenen Erstellung (oder letzter Änderung als Linkdatei).
 
 7. ls -la
 --> ls: Listet die Inhalte eines Verzeichnisses auf.
 --> -l: Verwendet das lange Format und zeigt detaillierte Informationen für jeden Eintrag an.
---> -a: Listet alle Einträge auf, einschließlich der versteckten, die mit einem Punkt (.) beginnen. 
+--> -a: Listet alle Einträge auf, einschliesslich der versteckten, die mit einem Punkt (.) beginnen. 
 --> Dieser Befehl zeigt eine detaillierte Liste aller Dateien und Verzeichnisse im aktuellen Arbeitsverzeichnis.
 
 
@@ -109,7 +109,7 @@ Als letzte Befehle geben wir noch folgende Zeilen ein:
     Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
     
     echo "Neuer Inhalt" > original.txt	
-    - Inode bleibt gleich, aber Größe und Zeitstempel ändern sich	
+    - Inode bleibt gleich, aber Grösse und Zeitstempel ändern sich	
     - Keine Auswirkung
     cat symlink.txt hardlink.txt
     - Keine Änderung	

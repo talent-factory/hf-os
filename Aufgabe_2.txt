@@ -1,16 +1,16 @@
 2. Speicherfragmentierung und Lösungsansätze | 5P | 5'
 
 Fragmentierung bezeichnet generell die Verschwendung von Speicherplatz. Es gibt zwei Haupttypen:
-1.Interne Fragmentierung: Diese tritt auf, wenn Speicher in festen Blöcken oder Einheiten zugewiesen wird, aber der zugewiesene Block größer ist als der tatsächlich benötigte Speicherplatz. Der ungenutzte Speicher befindet sich innerhalb des zugewiesenen Blocks und kann von anderen Prozessen oder Daten nicht verwendet werden.
+1.Interne Fragmentierung: Diese tritt auf, wenn Speicher in festen Blöcken oder Einheiten zugewiesen wird, aber der zugewiesene Block grösser ist als der tatsächlich benötigte Speicherplatz. Der ungenutzte Speicher befindet sich innerhalb des zugewiesenen Blocks und kann von anderen Prozessen oder Daten nicht verwendet werden.
 
-Warum sie auftritt: Sie entsteht typischerweise in Systemen, die Speicher in festen Größen verwalten, wie z. B. bei der Seitenersetzung (Paging). Hier wird Speicher in Seiten fester Größe allokiert. Wenn ein Programm oder ein Segment nicht exakt eine ganze Anzahl von Seiten füllt, bleibt der Rest der letzten Seite leer und ist verschwendet. Im Durchschnitt wird die Hälfte der letzten Seite leer sein. Auch im Buddy-System kann interne Fragmentierung auftreten, da Speicheranfragen oft auf die nächste Potenz von 2 aufgerundet werden müssen, was ungenutzten Raum innerhalb des allokierten Blocks verschwendet.
+Warum sie auftritt: Sie entsteht typischerweise in Systemen, die Speicher in festen Grössen verwalten, wie z. B. bei der Seitenersetzung (Paging). Hier wird Speicher in Seiten fester Grösse allokiert. Wenn ein Programm oder ein Segment nicht exakt eine ganze Anzahl von Seiten füllt, bleibt der Rest der letzten Seite leer und ist verschwendet. Im Durchschnitt wird die Hälfte der letzten Seite leer sein. Auch im Buddy-System kann interne Fragmentierung auftreten, da Speicheranfragen oft auf die nächste Potenz von 2 aufgerundet werden müssen, was ungenutzten Raum innerhalb des allokierten Blocks verschwendet.
 
 Wo sie auftritt: Primär in Paging-Systemen.
 2. Externe Fragmentierung: Diese tritt auf, wenn freier Speicherplatz in viele kleine, nicht zusammenhängende Lücken (Löcher) zwischen den zugewiesenen Speicherblöcken zerfällt. Die Gesamtmenge des freien Speichers mag ausreichend sein, um eine neue Speicheranfrage zu erfüllen, aber da er nicht in einem kontinuierlichen Block verfügbar ist, kann die Anfrage nicht erfüllt werden. Der ungenutzte Speicher befindet sich zwischen den zugewiesenen Blöcken.
 
-Warum sie auftritt: Sie entsteht typischerweise in Systemen, die Speicher in variablen Größen verwalten. Wenn Segmente unterschiedlicher Größe geladen und wieder ausgelagert werden, entstehen Lücken in der physischen Erinnerung. Dieses Phänomen wird auch als "Schachbrettmusterung" (checkerboarding) bezeichnet. Kontinuierliche Allokation von Dateien auf der Festplatte kann ebenfalls zu externer Plattenfragmentierung führen.
+Warum sie auftritt: Sie entsteht typischerweise in Systemen, die Speicher in variablen Grössen verwalten. Wenn Segmente unterschiedlicher Grösse geladen und wieder ausgelagert werden, entstehen Lücken in der physischen Erinnerung. Dieses Phänomen wird auch als "Schachbrettmusterung" (checkerboarding) bezeichnet. Kontinuierliche Allokation von Dateien auf der Festplatte kann ebenfalls zu externer Plattenfragmentierung führen.
 
 Wo sie auftritt: Primär in Systemen, die reine Segmentierung verwenden.
 
-Behebung: Externe Fragmentierung kann durch Speicherverdichtung (compaction) beseitigt werden, bei der die belegten Segmente im Speicher verschoben werden, um die Lücken zu einem einzigen großen Block zusammenzufügen.
+Behebung: Externe Fragmentierung kann durch Speicherverdichtung (compaction) beseitigt werden, bei der die belegten Segmente im Speicher verschoben werden, um die Lücken zu einem einzigen grossen Block zusammenzufügen.
 In Systemen, die sowohl Segmentierung als auch Paging verwenden (wie z. B. MULTICS), können beide Arten von Fragmentierung auftreten.
