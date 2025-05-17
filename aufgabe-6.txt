@@ -1,0 +1,63 @@
+1.Die Ausgabe des Programms zeigt die Metadaten der Datei testdatei.txt zu drei Zeitpunkten:
+
+Nach dem Erstellen und ersten Schreiben
+Nach dem Anhängen von Text
+Für den erstellten Hardlink
+
+Genauer Output:
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 533688
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 775 (oktal)
+Letzter Zugriff: 2025-05-17 12:00:54
+Letzte Änderung: 2025-05-17 12:01:11
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 137 Bytes
+Inode-Nummer: 533688
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 775 (oktal)
+Letzter Zugriff: 2025-05-17 12:00:54
+Letzte Änderung: 2025-05-17 12:01:11
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 137 Bytes
+Inode-Nummer: 533688
+Anzahl der Hardlinks: 2
+Zugriffsrechte: 775 (oktal)
+Letzter Zugriff: 2025-05-17 12:00:54
+Letzte Änderung: 2025-05-17 12:01:11
+
+
+2.Was bedeutet es, wenn zwei Dateien dieselbe Inode-Nummer haben?
+Sie sind Hardlinks zur gleichen Datei.
+
+Beide Dateinamen zeigen auf denselben Inode.
+
+Sie teilen sich:
+Den gleichen Inhalt
+Alle Metadaten
+Die gleiche Dateigröße
+
+Änderungen über einen Namen (z. B. Anhängen von Text) wirken sich sofort auf den anderen aus.
+
+Was sie nicht sind:
+Es sind keine Kopien – sie belegen nicht doppelten Speicherplatz.
+Wenn ein Name gelöscht wird, bleibt die Datei erhalten, solange mindestens ein Hardlink existiert.
+
+3.Hadlink vs. Symlink:
+Ein Symlink ist wie eine Wegbeschreibung, während ein Hardlink wie ein zweiter Türschlüssel ist.
+Wenn die Originaldatei gelöscht wird:
+
+Hardlink bleibt funktional – die Datei lebt weiter.
+Symlink bricht ab – er verweist auf einen nicht mehr existierenden Pfad.
+
+Die Wahl hängt also davon ab, ob eine echte inhaltliche Verbindung (Hardlink) oder eine logische Verknüpfung (Symlink) gewünscht ist.
