@@ -10,18 +10,15 @@
 void print_file_metadata(const char* filename) {
     struct stat file_info;
 
-    // stat aufrufen
     if (stat(filename, &file_info) != 0) {
         perror("stat");
         return;
     }
 
-    // Zeitformat vorbereiten
     char atime[30], mtime[30];
     strftime(atime, sizeof(atime), "%Y-%m-%d %H:%M:%S", localtime(&file_info.st_atime));
     strftime(mtime, sizeof(mtime), "%Y-%m-%d %H:%M:%S", localtime(&file_info.st_mtime));
 
-    // Ausgabe
     printf("Metadaten für Datei: %s\n", filename);
     printf("------------------------\n");
     printf("Dateigröße:      %ld Bytes\n", file_info.st_size);
@@ -55,7 +52,6 @@ int main() {
         return 1;
     }
 
-    // Zusatzinhalt anhängen
     fprintf(file, "Zusätzlicher Inhalt zur Demonstration von Metadaten.\n");
     fclose(file);
 

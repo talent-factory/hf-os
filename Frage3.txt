@@ -1,12 +1,12 @@
 Dateisystembefehle und Konzepte – Zusammenfassung
-**Befehle und Konzepte:**
-•	mkdir -p test/subdir && cd test – Erstellt Verzeichnisstruktur. Navigiert in 'test'. Konzept: Verzeichnisstruktur.
-•	echo "Inhalt-$(date +%s)" > original.txt – Erstellt Datei mit Zeitstempel. Konzept: Schreiben, mtime.
-•	ln -s original.txt symlink.txt – Erstellt symbolischen Link. Konzept: Pfadbasierte Verlinkung.
-•	ln original.txt hardlink.txt – Erstellt harten Link. Konzept: Inode-Sharing.
-•	chmod 640 original.txt – Setzt Rechte (rw-r-----). Konzept: Zugriffskontrolle.
-•	touch -d "2 days ago" original.txt – Ändert mtime. Konzept: Zeitstempelmanipulation.
-•	ls -la – Zeigt Dateiinformationen. Konzept: Inodes, Rechte, Links, Größe, Zeit.
+Befehle und Konzepte:
+	mkdir -p test/subdir && cd test – Erstellt Verzeichnisstruktur. Navigiert in 'test'. Konzept: Verzeichnisstruktur.
+	echo "Inhalt-$(date +%s)" > original.txt – Erstellt Datei mit Zeitstempel. Konzept: Schreiben, mtime.
+	ln -s original.txt symlink.txt – Erstellt symbolischen Link. Konzept: Pfadbasierte Verlinkung.
+	ln original.txt hardlink.txt – Erstellt harten Link. Konzept: Inode-Sharing.
+	chmod 640 original.txt – Setzt Rechte (rw-r-----). Konzept: Zugriffskontrolle.
+	touch -d "2 days ago" original.txt – Ändert mtime. Konzept: Zeitstempelmanipulation.
+	ls -la – Zeigt Dateiinformationen. Konzept: Inodes, Rechte, Links, Größe, Zeit.
 
 ➜  LB2 git:(hfi24a/lukas-wenger) ✗ ls -la
 insgesamt 92
@@ -26,13 +26,82 @@ Analyse von 'ls -la':
 - symlink.txt: eigene Inode, verweist auf Pfad
 - Unterschied: Symlink kann brechen, Hardlink nicht
 
-Weitere Befehle:
-•	echo "Neuer Inhalt" > original.txt – Überschreibt Inhalt. Hardlink zeigt selben Inhalt, Symlink auch (solange Ziel existiert).
-•	cat symlink.txt hardlink.txt – Gibt 2× 'Neuer Inhalt' aus.
-•	mv original.txt ../original.txt – Verschiebt Datei. Symlink wird ungültig, Hardlink bleibt.
-•	cat symlink.txt hardlink.txt 2>&1 – symlink.txt: Fehler, hardlink.txt: Ausgabe ok.
-Symlink vs. Hardlinks
-- Symlink verweist auf Pfad, bricht bei Verschiebung.
-- Hardlink bleibt gültig, da Inode geteilt wird.
-- Hardlinks funktionieren nicht über Dateisysteme.
-- Symlinks funktionieren, da nur Pfad gespeichert wird.
+echo "Neuer Inhalt" > original.txt
+Was wird ausgegeben und warum?
+Keine Ausgabe – echo schreibt „Neuer Inhalt“ in die Datei original.txt und überschreibt den alten Inhalt.
+
+Auswirkung auf die Inode-Tabelle:
+Die Inode bleibt gleich, aber die Datenblöcke werden ersetzt. Alle Hardlinks, die auf dieselbe Inode zeigen (z. B. hardlink.txt), zeigen ab sofort den neuen Inhalt.
+
+Unterschied im Linkverhalten:
+Hardlink (hardlink.txt): Zeigt auf dieselbe Inode → zeigt den neuen Inhalt.
+Symlink (symlink.txt): Zeigt auf Pfad original.txt → auch korrekt, solange original.txt existiert.
+
+Mögliche Fehler:
+Keine, solange original.txt existiert und schreibbar ist.
+
+
+cat symlink.txt hardlink.txt
+Was wird ausgegeben und warum?
+Zweimal "Neuer Inhalt" – beide Links (direkt und indirekt) verweisen auf dieselben Daten.
+
+Auswirkung auf die Inode-Tabelle:
+Keine – es werden lediglich Inhalte gelesen.
+
+Unterschied im Linkverhalten:
+Beide funktionieren gleich, da das Ziel von symlink.txt (original.txt) noch existiert.
+
+Mögliche Fehler:
+Keine.
+
+mv original.txt ../original.txt
+Was wird ausgegeben und warum?
+Keine Ausgabe – original.txt wird in das übergeordnete Verzeichnis verschoben.
+
+Auswirkung auf die Inode-Tabelle:
+Die Inode bleibt bestehen, aber der Verzeichniseintrag (Pfad) ändert sich.
+hardlink.txt zeigt weiter auf dieselbe Inode.
+symlink.txt verweist auf original.txt im alten Pfad – der nun nicht mehr existiert.
+
+Unterschied im Linkverhalten:
+
+Hardlink: bleibt gültig, da es direkt auf die Inode zeigt.
+Symlink: wird „broken“, da der Pfad original.txt im aktuellen Verzeichnis nicht mehr existiert.
+
+Mögliche Fehler:
+Symlink wird ungültig → künftiger Zugriff führt zu No such file or directory.
+
+cat symlink.txt hardlink.txt 2>&1
+Was wird ausgegeben und warum?
+
+cat symlink.txt → Fehler: No such file or directory
+
+cat hardlink.txt → Ausgabe: Neuer Inhalt
+
+Auswirkung auf die Inode-Tabelle:
+Keine – symlink.txt verweist auf nicht existierenden Pfad, hardlink.txt bleibt funktionsfähig.
+
+Unterschied im Linkverhalten:
+
+Hardlink: funktioniert problemlos.
+Symlink: verweist ins Leere – fehleranfällig bei Pfadänderungen.
+
+Mögliche Fehler:
+Fehlermeldung beim Symlink-Zugriff.
+
+Bonus-Frage: Unterschiedliche Dateisysteme (Partitionen)
+Verhalten bei Hardlink-Versuch über Dateisystemgrenzen:
+
+ln (Hardlink) würde fehlschlagen mit:
+Invalid cross-device link
+
+Grund: Hardlinks benötigen denselben Inode-Bereich, der nur innerhalb eines Dateisystems eindeutig ist.
+
+Verhalten bei Symlink über Partitionen:
+
+Symlink funktioniert, da er nur den Pfad speichert. Das Ziel kann auch auf einer anderen Partition liegen.
+
+Fazit:
+
+Hardlinks = nur lokal im selben Dateisystem
+Symlinks = flexibel, auch über Dateisysteme hinweg – aber anfällig bei Pfadänderung oder Zielverlust.

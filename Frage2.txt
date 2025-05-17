@@ -1,11 +1,22 @@
 Unterschied zwischen interner und externer Fragmentierung:
-	• Interne Fragmentierung entsteht, wenn ein Speicherblock größer ist als der tatsächlich benötigte Speicher, z. B. wenn ein Prozess 18 KB benötigt, aber nur ein 20 KB-Block verfügbar ist – die verbleibenden 2 KB werden verschwendet.
-	• Externe Fragmentierung tritt auf, wenn der freie Speicher zwar insgesamt ausreichend ist, aber in kleine, nicht zusammenhängende Teile aufgeteilt ist – z. B. fünf freie Blöcke à 4 KB, aber ein Prozess braucht 16 KB am Stück.
-Zwei Strategien zur Reduktion/Vermeidung:
-	• Paging:
-		○ Vorteil: Vermeidet externe Fragmentierung durch feste Blockgrößen (Seiten).
-		○ Nachteil: Kann interne Fragmentierung verursachen und benötigt Verwaltung durch Seitentabellen.
-	• Compaction (Speicherverdichtung):
-		○ Vorteil: Reduziert externe Fragmentierung durch Verschieben von Prozessen, um zusammenhängenden Speicher zu schaffen.
-		○ Nachteil: Sehr aufwendig in Bezug auf CPU-Leistung und Zeit.
-Diese Mechanismen helfen, Speicher effizienter zu nutzen, erfordern aber einen Trade-off zwischen Leistung, Komplexität und Overhead.
+
+In modernen Betriebssystemen ist eine effiziente Nutzung des Hauptspeichers zentral. Dabei werden zwei Arten der Fragmentierung unterschieden:
+Interne Fragmentierung tritt auf, wenn einem Prozess ein größerer Speicherblock zugewiesen wird als tatsächlich benötigt. Der ungenutzte Rest innerhalb des Blocks geht verloren – typische Ursache ist die Arbeit mit festen Blockgrößen (z. B. bei Paging).
+Externe Fragmentierung hingegen bedeutet, dass zwar insgesamt genügend freier Speicher vorhanden ist, dieser jedoch in kleine, nicht zusammenhängende Stücke zerfällt, sodass kein ausreichend großer zusammenhängender Block mehr verfügbar ist. Dies ist insbesondere bei variabler Speicherzuteilung problematisch.
+Beispiel 1: Ein Prozess benötigt 18 KB, erhält aber eine Seite von 20 KB (z. B. vier Seiten à 4 KB + 1 ungenutzte Seite). Die nicht vollständig genutzte letzte Seite ist intern fragmentiert.
+Beispiel 2: In Dateisystemen mit Blockgrößen von 8 KB belegt eine 1-KB-Datei ebenfalls 8 KB – 7 KB sind intern fragmentiert.
+
+Strategien zur Reduktion von Fragmentierung:
+
+Paging (Seitentechnik):
+Tanenbaum betont die Rolle des virtuellen Speichers mit Paging als effektive Strategie gegen externe Fragmentierung. Der Speicher wird in gleich große Seiten (z. B. 4 KB) unterteilt, sodass Prozesse beliebig platziert werden können, ohne zusammenhängende Speicherbereiche zu benötigen.
+→ Vorteil: Vermeidet externe Fragmentierung vollständig.
+→ Nachteil: Führt potenziell zu interner Fragmentierung, da Prozesse selten genau Vielfache der Seitengröße belegen. Zusätzlich entsteht Verwaltungsaufwand durch Seitentabellen.
+
+Compaction (Speicherverdichtung):
+Eine weitere Methode, ist die Speicherverdichtung. Dabei werden belegte Speicherbereiche verschoben, um größere freie Blöcke zu schaffen.
+→ Vorteil: Externe Fragmentierung wird verringert, Prozesse erhalten zusammenhängenden Speicher.
+→ Nachteil: Hoher Rechenaufwand und zeitintensiv, da alle betroffenen Adressen angepasst werden müssen – daher selten in Echtzeitbetriebssystemen verwendet.
+
+Fazit:
+Beide Ansätze spiegeln laut Tanenbaum typische Kompromisse im Design moderner Betriebssysteme wider: Effizienz versus Komplexität und Leistung. Die Wahl der Technik hängt vom Systemziel und der typischen Anwendungslast ab.
