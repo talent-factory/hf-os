@@ -1,0 +1,37 @@
+Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffeb232cbf0
+Heap-Variable: 0x61dc815f82a0
+Statische Variable: 0x61dc80a1f010
+
+Wachstumsrichtungen:
+Stack wächst nach unten
+
+
+Die Ausgabe zeigt, dass die drei Variablen in klar voneinander getrennten Speicherbereichen liegen:
+Die Stack-Variable hat eine hohe Adresse im Bereich 0x7ff.. (normal).
+Die Heap-Variable liegt im Bereich 0x61dc. Normal für dynamische allokationen.
+Die statische Variable ist ebenfalls bei 0x61dc. Jedoch deutlich weiter entfernt vom Heap, was für statisch reservierten Speicher (Data-Segment) normal ist.
+
+---------------------------
+
+Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+
+Statische Variablen werden im Data-Segment gespeichert, das beim Start des Programms festgelegt wird.
+Heap-Variablen befinden sich im Heap, einem Bereich für dynamisch zur Laufzeit allokierten Speicher. Dieser wächst nach oben.
+Stack-Variablen liegen im Stack, einem Bereich für Funktionsaufrufe und lokale Variablen. Der Stack wächst nach unten.
+
+----------------------------------
+
+
+Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+Bei vielen Leaks kann es zu einem Memory Exhaustion kommen – das Programm oder sogar das System wird langsamer oder stürzt ab.
+
+Das Betriebssystem selbst erkennt Leaks nicht automatisch zur Laufzeit, aber es kann Tools wie Valgrind oder ASA verwendet werden, um Leaks zu erkennen.
+
+
+

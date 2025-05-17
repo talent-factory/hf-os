@@ -1,0 +1,137 @@
+mkdir -p test/subdir && cd test
+
+Erstellt der unterordner "subdir", falls "test" nicht vorhanden ist diesen auch ( da -p für parent verwendet wurde)
+Wechselt in der ordner (change dir) "test"
+
+-> Dies interagiert mit dem FS so, dass es einen (oder 2) ordner erstellt und in diese wechselt.
+----------------------------------
+
+echo "Inhalt-$(date +%s)" > original.txt
+
+Gibt mit echo das Wort "Inhalt-" und dann das aktuelle Datum welches mit %s zu sekunden since epoch formatiert wurde.
+Dieser string wird dass in das file original.txt weitergeleitet und der aktuelle Inhalt überschrieben. (Da nicht >> für append verwendet wurde). Das file wird erstellt falls es nicht existiert.
+
+date --help 
+%s   Sekunden seit der „Epoche“ (1970-01-01 00:00 UTC)
+
+----------------------------------
+
+ln -s original.txt symlink.txt
+
+Erstellt einen symlink/soft-link des files original.txt zu symlinkt.txt. Also wie unter Windows eine Verknüpfung.
+Das ist keine kopie, sondern nur ein Verweis auf das originale Dokument.
+
+----------------------------------
+
+ln original.txt hardlink.txt
+
+Erstellt einen Hardlink des files original.txt zu hardlink.txt
+
+----------------------------------
+
+chmod 640 original.txt
+
+Verändert die Dateiberechtigung von original.txt zu rw-r-----.
+Also owner: read,write - group: read - other - nichts
+
+----------------------------------
+
+touch -d "2 days ago" original.txt
+
+Verändert des timestamp des files original.txt auf vor 2 Tagen.
+
+----------------------------------
+
+ls -la
+
+Listet alle files im aktuellen Ordner.
+ls --long --all
+
+
+---------------------------------------
+
+test git:(hfi2024-a/ivan-schaller) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:23 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:22 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:23 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:23 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:22 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:23 symlink.txt -> original.txt
+
+
+---------------------------------der
+
+
+Erkläre die Bedeutung jeder Spalte in der Ausgabe
+Jede Spalte ist wie folgt aufgebat:
+drwxrwxr-x -> Die Berechtigung des Pfades. Wenn es mit "d" beginnt, ist es ein Ordner. Mit "l" ein Symlink, sonst ein File.
+X -> Die Anzahl inodes in benutzung/referenz
+vmadmin -> der Owner des Pfades
+vmadmin -> die Gruppe des Pfades
+4096 -> die File grösse in bytes
+xxx -> der Zeitstempel von "last modified"
+xxx-> Der filename und wenn "-->" vorhanden ist das Link ziel.
+
+
+"." bedeutet der aktuelle Pfad.
+".." bedeutet der Parent pfad.
+
+
+Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+
+Der Hardlink ist gleich gross, da es eine referenz auf Block ebene ist (inode).
+Das original file und der hardlink haben das gleiche datum, da dieser bei der originaldatei geändert wurde, und so auch auf der block referenz.
+Der symlink hat das "normale" datum da diese nicht angepasst wurde und wie schon erwähnt nur eine referenz zum file ist.
+
+Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+
+
+
+
+
+Erkläre für jeden Befehl:
+Was wird ausgegeben und warum?
+
+echo "Neuer Inhalt" > original.txt
+
+schreibt den String in das file und überschreibt den aktuellen inhalt.
+------------------------
+
+cat symlink.txt hardlink.txt
+
+gibt den inhalt von den beiden dateien via stdout in der konsole aus.
+------------------------------------
+
+mv original.txt ../original.txt
+
+verschiebt das file original.txt zum parent folder.
+-----------------------------------
+
+cat symlink.txt hardlink.txt 2>&1
+
+gibt den inhalt von den beiden dateien via stdout&stderr in der konsole aus.
+2>&1 heisst dass der output von 2(stderr) weitergeleiter wird zu 1(stdout)
+------------------------------
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+Diese haben sich nicht verändert.
+
+
+Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+Der symlink hat kein gültiges Ziel mehr, also ist er invalid. Der Hardlink bleibt wie schon oben erwähnt noch valide.
+
+
+Welche Fehler könnten auftreten und warum?
+
+
+Bonus-Frage:
+
+Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+
+Hardlinks funktionieren nicht über Dateisystem-Grenzen hinweg.
+Symlinks funktionieren, da sie nur einen Pfad speichern, kein Inode.
+
+
+
+

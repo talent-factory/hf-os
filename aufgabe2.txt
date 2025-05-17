@@ -1,0 +1,40 @@
+2. Speicherfragmentierung und Lösungsansätze | 5P | 5'
+
+Speicherfragmentierung ist ein häufiges Problem in Betriebssystemen.
+
+    Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+
+    Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+
+-------------------------------------------------------
+
+
+Externe Fragmentierung:
+Ist ungenutzter Speicherplat zwischen bereits zugewiesenen Speicherblöcken.
+
+Beispiel:
+WEnn z.B. der Speicher drei freie Blöcke hat: 10 MB, 20 MB und 15 MB. Ein neues Programm benötigt jedoch 30 MB zusammenhängenden. Obwohl insgesamt 45 MB freier Speicher (10 + 20 + 15) vorhanden sind, kann das Programm nicht geladen werden, da kein einzelner freier Block gross genug ist oder die freien Blöcke nicht direkt aneinandergrenzen, um 30 MB am Stück bereitzustellen.
+
+
+
+Interne Fragmentierung:
+Das tritt auf, wenn Speicher in festen Blöcken oder Partitionen zugewiesen wird und die zugewiesene Speichermenge grösser ist als die tatsächlich benötigte Menge.
+
+Beispiel:
+Wenn z.b ein Betriebssystem Speicher in festen Blöcken von jeweils 4 KB zuweist. Ein Programm benutzt aber nur 3 KB Speicher. Das Betriebssystem weist trotzdem einen ganzen 4-KB-Block zu. Die ungenutzten 1 KB innerhalb dieses 4-KB-Blocks sind interne Fragmentierung.
+
+
+
+Stragegien zur Vermeidung von Fragmentation:
+
+Paging: Ermöglicht die Speicherung von Prozess-Segmenten in nicht zusammenhängenden Speicherseiten.
+
+Vorteile: Keine externe Fragmentierung, Effiziente Speichernutzung
+Nachteile: Overhead durch Seitentabellen, interne Fragmentierung
+
+
+Speicherverdichtung: Verschiebt belegte Speicherblöcke um alle freien Speicherbereiche zu einem grossen zusammenhängenden Block zusammenzuführen.
+
+Vorteile: Sehr Speichereffizient, Keine interne Fragmentierung
+Nachteile: Sehr rechenintensiv, sehr Zeitintensiv
+
