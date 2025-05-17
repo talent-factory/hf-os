@@ -1,0 +1,27 @@
+1.
+Nach dem Oeffnen der Datei im Append Modus (a) wurden folgende Aenderungen sichtbar:
+- Datei grösse hat sich erhöht
+- Inode bleibt gleich
+- Zeitstempel (mtime) wurde aktualisiert
+- Anzahl Hardlinks bleibt gleich
+
+2.
+Inode:
+- Identifiziert die Datei im Filesystem eindeutig
+- Enthält alle Metadaten (Rechte, Grösse, timestamps, Link zahl, Datenblöcke etc.)
+- Ist vom Namen der Datei unabhängig
+
+Dateiname:
+- Ist ein Eintrag in einem Directory
+- Mehrere Dateinamen können den selben Inode referenzieren
+
+Wenn zwei Files den gleichen Inode-nummer haben:
+- handelt es sich um hardlinks
+- Aenderungen einer Datei beeinflussen auch die andere (gelicher Inhalten und gleiche Metadaten)
+
+3.
+Im Bezug auf unser Programm würde sich aus Sicht des Benutzers nicht viel ändern. Er erhält 
+die Testdatei und einen Link dazu. Der Simlink hat aber einen anderen Inode und zeigt einfach 
+auf den Pfadnamen der original datei. Wir die Originaldatei gelöscht ist der Symlink also ungültig.
+Dafür könnte ein Benutzer des Programms den Symlink auf eine Separate Festplatte kopieren und der Symlink würde (anders als der hardlink) funktionieren.
+Zudem hat der Symlink eigene Metadaten.
