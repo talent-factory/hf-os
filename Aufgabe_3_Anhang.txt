@@ -1,0 +1,9 @@
+➜  LB2 git:(hfi2024a/noel-ballmer) ls -la
+insgesamt 80
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 17 11:05 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-rw-r-- 1 vmadmin vmadmin  2485 Mai 17 11:04 Aufgabe_2.txt
+-rw-rw-r-- 1 vmadmin vmadmin  2485 Mai 17 11:04 Aufgabe_3.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 17 11:01 .git
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 17 10:50 LB2-FS25.html
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
