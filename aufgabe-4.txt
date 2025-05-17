@@ -1,0 +1,18 @@
+Physische Adressen gesucht zu den Virtuellen Adressen:
+
+12300₁₀
+12300 / 4096 = 3 -> pyhsische Seite 4
+Offset = 12300 - 12288 = 12
+Physische Adresse: 12288 + 12 = 16384
+
+
+16384₁₀
+16384 / 4096 = 4 (Virtuelle Seite) -> Physische Seite 5
+No Offset
+Physische Adresse: 20480
+
+
+32800₁₀
+32800 / 4096 = 8 -> Keine Physische Seite!
+Offset: 32
+Physische Adresse: Page Fault
