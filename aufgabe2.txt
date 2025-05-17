@@ -1,0 +1,13 @@
+# Frage: 
+Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+
+# Antwort:
+Interne Fragmentierung entsteht, wenn einem Prozess ein größerer Speicherblock zugewiesen wird, als er tatsächlich braucht. Der ungenutzte Teil innerhalb dieses Blocks geht verloren. Ein Beispiel wäre, wenn ein Prozess 6 KB Speicher benötigt, aber das System nur 8-KB-Blöcke vergibt – dann bleiben 2 KB ungenutzt. Externe Fragmentierung dagegen tritt auf, wenn genügend freier Speicher vorhanden ist, dieser aber in kleine, nicht zusammenhängende Stücke aufgeteilt ist. Ein Beispiel: Drei freie Speicherbereiche zu je 2 KB können nicht verwendet werden, um einen Prozess mit 6 KB durchgehendem Bedarf zu laden, obwohl insgesamt genug Speicher vorhanden wäre.
+
+----------------------------
+
+# Frage:
+Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+
+# Antwort:
+Eine Methode, um Fragmentierung zu vermeiden, ist Paging. Dabei wird der Speicher in gleich große Seiten unterteilt, und Prozesse bekommen diese Seiten unabhängig vom physikalischen Speicherort zugewiesen. Das vermeidet externe Fragmentierung, kann aber interne verursachen, da die letzte Seite eines Prozesses oft nicht vollständig genutzt wird. Eine zweite Strategie ist die Speicherverdichtung (Compaction). Hierbei werden Prozesse im Arbeitsspeicher verschoben, um zusammenhängenden freien Speicher zu schaffen. Das reduziert externe Fragmentierung effektiv, kostet aber Rechenzeit und kann die Leistung beeinträchtigen, da laufende Prozesse verschoben werden müssen.
