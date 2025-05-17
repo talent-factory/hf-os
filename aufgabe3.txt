@@ -63,3 +63,37 @@ insgesamt 20
 nachdem wir die commands ausgefuert haben sehen wir mit ls -ali den obigen output. die -i option zeigt einfach noch an auf welche inode das file zeigt
 
 hier ist nun klar erkennbar das der hardlink.txt auf die gleiche inode zeigt wie das original.txt. der soft link hingegen hat eine eigene inode.
+
+
+--------------------------------------------------
+
+# command
+echo "Neuer Inhalt" > original.txt
+# erklaerung
+mit diesem command geben wir den string "Neuer Inhalt" im stdout aus und redirecten des stdout in die datei original.txt. da nur ein pfeil verwendet wird uerbschreiben wir den inhal der original.txt mit unserem neuen string
+
+----------------------------------------
+
+# command
+cat symlink.txt hardlink.txt
+# erklaerung
+mit diesem command geben wir den inhalt der datei original.txt aus. beide dateien geben logischerweise den gleichen inhalt aus da sie beide auf die orignal.txt datei verweisen nur auf unterschiedliche arten
+
+-------------------------------------------
+
+# command
+mv original.txt ../original.txt
+# erklaerung
+mit diesem command verschieben wir die datei original.txt in das höher gelegene verzeichnis.
+
+-----------------------------------------
+
+# command
+cat symlink.txt hardlink.txt 2>&1
+# erklaerung
+der cat command ist gleich wie der obige. der unterschied ist 2>&1 hintendran. die 2 steht für den stderr stream und der pfeil > redirected diesen in den stdout (zahl 1 steht für stdout) stream. das & bewirkt dann noch das der stderr nicht den stdout überschreibt sondern das der stderr dem stdout angehängt wird
+
+---------------------
+
+# bonus
+wenn die dateien auf unterschiedlichen filesystemen liegen würden wäre es nicht möglich einen hardlink zu erstellen. da jedes filesystem seine inodes selbst verwaltet ist es nicht möglich das ein hardlink auf eine inode von einem anderen filesystem zeigt. ein soft link geht aber schon da er seine eigene inode hat und nur auf das original.txt file referenziert
