@@ -1,0 +1,45 @@
+2. Speicherfragmentierung und Lösungsansätze
+
+Speicherfragmentierung ist ein häufiges Problem in Betriebssystemen.
+
+Frage:
+- Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. 
+  Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+
+Antwort:
+Interne Fragmentierung entsteht, wenn ein Speicherblock größer ist als das, was ein Programm wirklich braucht. 
+Der restliche Platz im Block bleibt ungenutzt, obwohl er reserviert ist.
+
+Beispiel:
+Ein Programm braucht 30 KB Speicher. Das Betriebssystem kann aber nur Blöcke mit 40 KB vergeben. 
+Die restlichen 10 KB im Block werden nicht verwendet – das ist interne Fragmentierung. Externe Fragmentierung entsteht, 
+wenn im Arbeitsspeicher viele kleine freie Bereiche vorhanden sind, die aber nicht zusammenhängen. 
+Es gibt genug freien Speicher insgesamt, aber kein großer, zusammenhängender Block für ein neues Programm.
+
+Beispiel:
+Mehrere Programme wurden gestartet und wieder beendet. Im Speicher gibt es viele kleine freie Lücken 
+(z. B. 3 KB hier, 5 KB dort), aber kein durchgehender Bereich von z. B. 20 KB. Ein neues Programm, 
+das 20 KB braucht, kann nicht starten, obwohl insgesamt mehr als 20 KB frei sind.
+
+
+
+Frage:
+Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung 
+reduzieren oder vermeiden.Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung 
+von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch
+
+Antwort:
+1. Paging (Seitentechnik):
+Der Speicher wird in kleine, gleich große Seiten aufgeteilt. 
+Programme werden in Seiten geladen, die überall im Speicher liegen können.
+
+Vorteil: Keine externe Fragmentierung.
+Nachteil: Letzte Seite kann teilweise leer sein → interne Fragmentierung. Verwaltung braucht mehr Speicher.
+
+2. Speicherbereinigung (z. B. Defragmentierung):
+Das System verschiebt Speicherblöcke, um freien Platz zusammenzulegen.
+
+Vorteil: Große Programme können wieder starten.
+Nachteil: Verbraucht Rechenzeit und kann das System verlangsamen.
+
+
