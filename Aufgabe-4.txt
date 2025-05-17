@@ -1,14 +1,24 @@
-# 12300₁₀ (0x300C)
-Seite 3, Present = 1, PFN = 111
-Phys. Adresse = 111 × 4096 + 12 = 28692
+# Virtuelle Adresse: 12300₁₀
+	•	12300 ÷ 4096 = 3, Rest 1012
+	•	→ Virtuelle Seite 3, Offset 1012
+	•	Aus der Grafik: Virtuelle Seite 3 → physischer Seitenrahmen 4
+	•	Physische Basisadresse = 4 × 4096 = 16384
+Lösung: Physische Adresse = 16384 + 1012 = 17396
 
+# --------------------------------
 
-# 16384₁₀ (0x4000)
-Seite 4, Present = 0 → Page Fault
+# Virtuelle Adresse: 16384₁₀
+	•	16384 ÷ 4096 = 4, Offset 0
+	•	→ Virtuelle Seite 4, Offset 0
+	•	Aus der Grafik: Seite 4 → Seitenrahmen 0
+	•	Physische Basisadresse = 0 × 4096 = 0
+Lösung: Physische Adresse = 0 + 0 = 0
 
-# 32800₁₀ (0x8020)
-Seite 8, Present = 1, PFN = 100
-Phys. Adresse = 100 × 4096 + 32 = 16416
+# --------------------------------
 
-Begründung:
-Virtuelle Adresse wird in Seite und Offset zerlegt. Die Seitennummer bestimmt den PFN. Ist die Seite nicht vorhanden (Present=0), folgt ein Page Fault.
+# 3. Virtuelle Adresse: 32800₁₀
+	•	32800 ÷ 4096 = 8, Offset 32800 − (8×4096) = 32800 − 32768 = 32
+	•	→ Virtuelle Seite 8, Offset 32
+	•	Aus der Grafik: Seite 8 → Seitenrahmen 6
+	•	Physische Basisadresse = 6 × 4096 = 24576
+Lösung: Physische Adresse = 24576 + 32 = 24608
