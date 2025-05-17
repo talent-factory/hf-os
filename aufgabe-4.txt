@@ -1,0 +1,35 @@
+12300/10
+Physische Seite:
+12300/4096=3, Rest = 12
+-> Physische Seite 3, Offset 12
+
+Page Table:
+Physische Seite 3 -> wird von virtueller Seite 6 benutzt
+
+Virtuelle Adresse:
+6x4096+12=
+24576
+--------------------------------------------------------
+16384/10
+16384/4096=4, Offset = 0
+-> Physische Seite 4, Offset 0
+
+Physische Seite 4 -> virtuelle Seite 5
+
+Virtuelle Adresse:
+5x4096+0=
+20480
+--------------------------------------------------------
+​32800/10
+
+32800/4096=8, Offset = 16
+-> Physische Seite 8, Offset = 16
+
+Physische Seite 8 -> virtuelle Seite 7
+
+Virtuelle Adresse:
+7x4096+16=28672+16= 
+28688
+​
+
+
