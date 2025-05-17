@@ -1,0 +1,31 @@
+Aufgabe5
+--------------------
+
+Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+-------------------------------------------------------------------------------
+
+Die Ausgabe zeigt, dass Stack-, Heap- und statische Variablen in verschiedenen Speicherbereichen liegen. Die Adressen machen deutlich, dass der Stack sich in einem anderen (höeren) Speicherbereich befindet als Heap und statische Daten. Auffällig ist, dass der Stack in diesem Fall nach oben wächst, da er be den beisten system nach unten wächst.
+
+
+
+
+Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+------------------------------------------------------------------------------------
+
+Die Speichertrennung folgt einer festen Struktur im di das betriebsystem vorgibt.
+
+- Statische Variablen befinden sich im Data-Segment und bleiben über die gesamte Laufzeit immer erhalten.
+
+- Heap-Variablen werden dynamisch zur Laufzeit angelegt und auch verwaltet.
+
+- Stack-Variablen sind lokal und werden bei Funktionsaufrufen automatisch angelegt und auch wieder wen nötig entfernt.
+
+Diese Trennung erhöht die Sicherheit, Übersichtlichkeit und Effizienz der Speicherverwaltung im ganzen System hinweg.
+
+
+
+
+Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+-------------------------------------------------------------------------------
+
+Ein Speicherleck entsteht, wenn reservierter Speicher nicht mehr freigegeben wird vom programm. Die Folge ist ein immer mehr wachsender Speicherverbrauch, was langfristig zu Leistungsproblemen oder sogar zum Absturz führen kann wenn nicht mehr genug speicher vorhanden ist. Das Betriebssystem kann Speicher zwar beim Programmende freigeben, aber nicht während der Laufzeit. Tools wie Valgrind helfen beim Aufspüren solcher Lecks – die Verantwortung liegt aber beim Entwickler der software.

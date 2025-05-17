@@ -1,0 +1,44 @@
+Aufgabe6
+----------------------
+
+Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+-----------------------------------------------------------------------------
+
+Nach dem Anhängen von Text an die Datei zeigt das Programm folgende Änderungen:
+
+Dateigrösse steigt von 96 auf 138 Bytes.
+
+Inode-Nummer bleibt gleich daer es handelt sich um dieselbe Datei.
+
+Anzahl der Hardlinks bleibt bei 1, bis ein Hardlink erstellt wird.
+
+Zugriffsrechte bleiben gleich.
+
+Zeitstempel (Zugriff/Änderung) ist gleich 
+Fazit: Nur Grösse und Hardlink-Anzahl ändern sich sichtbar. Die Inode-Nummer bleibt identisch, da es sich um dieselbe Datei handelt.
+
+
+
+
+Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+-------------------------------------------------------------------------------
+
+Der Inode speichert die Metadaten und Speicherorte einer Datei, unabhängig vom Namen. Der Dateiname ist nur ein Verzeichniseintrag, der auf diesen Inode zeigt. Wenn zwei Dateien dieselbe Inode-Nummer haben:
+
+- Sind sie Hardlinks, d. h. mehrere Namen für denselben Inhalt.
+- Änderungen an einer wirken sich auf alle Hardlinks aus.
+
+Die Datei existiert physikalisch so lange, wie mindestens ein Hardlink vorhanden ist.
+Inode = Datei-Identität, Dateiname = Verweis darauf.
+
+
+
+
+Wenn man statt eines Hardlinks einen symbolischen Link (Symlink) erstellt, ändert sich das Verhalten spürbar – vor allem bei den Metadaten und beim Löschen der Originaldatei.
+-----------------------------------------------------------------------------------
+
+Ein Symlink ist eine eigene Datei, die nur den Pfad zur Zieldatei enthält. Er verweist nicht direkt auf den Inode, sondern auf den Dateinamen. Dadurch besitzt der Symlink eigene Metadaten: eine eigene Inode-Numer, eigene Rechte, Grösse (Länge des Pfads) und Zeitstempel. Mit stat() erhält man die Metadaten der Zieldatei, mit lstat() die des Links selbst.
+
+Wird die Originaldatei gelöscht, bleibt der Symlink bestehen, zeigt aber ins Leere – er ist dann ein sogenanter.
+
+Ein Hardlink hingegen verweist direkt auf den Inode. Alle Hardlinks sind gleichwertige Namen derselben Datei. Wir der ursprüngliche Dateiname gelöscht, bleibt die Datei über andere Hardlinks voll zugänglich.

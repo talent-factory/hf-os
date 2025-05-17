@@ -1,0 +1,135 @@
+Aufgabe 3
+------------------------------
+
+
+
+- mkdir -p test/subdir && cd test
+Erstellt das Verzeichnis "test" mit dem Unterverzeichnis "subdir". Der Parameter -p sorgt dafür, dass auch übergeordnete Verzeichnisse erstellt werden, wen dise nicht existiren. mit dem && wird ein anderer befehlau auch gerade ausgeführt in diesem fall Mit cd test der in das Verzeichnis test gewechselt.
+Konzepte: Verzeichnisstruktur, Pfade, Navigation im Dateisystem.
+------
+- echo "Inhalt-$(date +%s)" > original.txt
+Erzeugt di Datei "original.txt" und schreibt den aktuellen UNIX-Zeitstempel als Inhalt hinein. "$(date +%s)" wird von der Shell ersetzt, > leitet den Text in die Datei um und schreibt diese hinein.
+Konzepte: Dateierstellung, Umleitung, Shell-Substitution.
+--------
+- ln -s original.txt symlink.txt
+Erstellt einen symbolishen Link namen "symlink.txt", der auf die Datei "original.txt" verweist. Wenn "original.txt" verschoben oder gelöscht wird, zeigt der Link ins Lere.
+Konzepte: Symbolische Links (Symlinks), Pfadverweise.
+------------
+- ln original.txt hardlink.txt
+Erzeugt einen Hardlink hardlink.txt, der direkt auf denselben speicerzelle wie original.txt zeigt. Beide Namen verweisen auf dieselben Daten. wird z.B: bei Bakupsverwendet rsync...
+Konzepte: Hardlinks, Inodes, Referenzzählung.
+---------
+- chmod 640 original.txt
+Setzt die Zugriffsrechte: Besitzer darf lesen und schreiben, Gruppe darf lesen, andere haben keinen Zugriff.
+Konzepte: Dateiberechtigungen, Zugriffssteuerung.
+------
+- touch -d "2 days ago" original.txt
+Ändert das Änderungsdatum der Datei auf den Zeitpunkt vo zwei Tagen.
+Konzepte: Dateiattribute, Zeitstempel (mtime).
+-------
+- ls -la
+Listet alle Dateien im aktuellen Verzeichnis inklusive versteckter Dateien (. und ..) mit Details wie Rechten, Anzahl Links, Besitzer, Grösse, Änderungszeit und Symlink-Zielen.
+Konzepte: Dateiansicht, Metadaten, Dateitypen, Rechte, Links.
+
+
+
+
+(ls -la, /home/vmadmin/Schreibtisch/LB2/test)
+--------------------------------------------------------
+➜  test git:(hfi2024a/sascha-schmalstieg) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 12:08 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 12:08 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 12:08 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 12:08 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 12:08 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 12:08 symlink.txt -> original.txt
+➜  test git:(hfi2024a/sascha-schmalstieg) ✗ 
+----------
+
+Erkläre die Bedeutung jeder Spalte in der Ausgabe
+-------------------------------------------------
+
+Die Ausgabe des Befehls ls -la zeigt eine detaillierte Liste aller Dateien und Verzeichnisse im aktuellen Arbeitsverzeichnis (/home/vmadmin/Schreibtisch/LB2/test. Jede Zeile enthält wichtige Informationen:
+
+Die erste Spalte zeigt den Dateityp (d, -) und die Berechtigungen. Ein führendes - steht für eine reguläre Datei, d für ein Verzeichnis. Danach folgen die Zugriffsrechte für den Besitzer, die Gruppe und andere Benutzer (---,---,---).
+
+Die zweite Spalte gibt die Anzahl der Hardlinks an.
+
+Die dritte und vierte Spalte zeigen den Besitzer und die Gruppe der Datei.
+
+Die fünfte Spalte gibt die Dateigrösse in Bytes an.
+
+Die nächsten drei Spalten zeigen das Datum und die Uhrzeit der letzten Änderung an (mtime).
+
+Die letzte Spalte ist der Name der Datei oder des Verzeichnisses.
+
+
+Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+------------------------------------------------------------------------
+
+- node
+original.txt und hardlink.txt teilen sich denselben Inode (speicherverweiss), da ein Hardlink ein zweiter Name für dieselbe Datei ist. symlink.txt hat einen eigenen Inode, da es nur ein Verweis (Pfad) auf original.txt ist.
+
+- Berechtigungen:
+original.txt und hardlink.txt haben identische Rechte, z. B. -rw-r-----. symlink.txt hat eigene Rechte (lrwxrwxrwx), die beim Zugriff meist ignoriert werden – entscheidend sind die Rechte der Zieldatei.
+
+- Zeitstempel:
+original.txt und hardlink.txt zeigen denselben Änderungszeitpunkt (mtime). symlink.txt zeigt den Zeitpunkt, an dem der Link erstellt wurde – nicht den der Zieldatei.
+
+
+Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+-------------------------------------------------------------------------
+
+Dateien haben die gleiche Inode-Nummer, wenn sie Hardlinks sind – also unterschiedliche Namen für denselben Inhalt im Dateisystem. Unterschiedliche Inodes bedeuten, dass es sich um eigenständige Dateien handelt, selbst wenn der Inhalt gleich ist. Auch Symlinks haben eigene Inodes, da sie nur Pfadverweise sind.
+
+
+
+
+Was wird ausgegeben und warum?
+---------------------------------
+
+cat symlink.txt hardlink.txt → Beide geben "Neuer Inhalt" aus.
+Symlink verweist auf Pfad, Hardlink auf denselben Inode.
+
+Nach mv original.txt ../original.txt →
+symlink.txt zeigt ins Leere, hardlink.txt bleibt gültig.
+
+cat symlink.txt hardlink.txt 2>&1 →
+Fehlermeldung für symlink.txt, Ausgabe "Neuer Inhalt" von hardlink.txt.
+
+
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+-----------------------------------------------------------
+
+echo: Inhalt wird überschrieben, Inode bleibt gleich.
+
+mv: Inode bleibt, nur Pfadeintrag (Verzeichnis) ändert sich.
+
+Hardlink behält Inode. Symlink ist Pfadverweis, nicht im Inode verbunden.
+
+
+
+Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+-----------------------------------------------------------------------
+
+Symlink: Zeigt auf Pfad -> wird ungültig, wenn Ziel verschoben wird.
+
+Hardlink: Zeigt auf denselben Inode -> bleibt immer gültig, solange der Inode existiert.
+
+Welche Fehler könnten auftreten und warum?
+---------------------------------------------
+
+symlink.txt gibt Fehler, da original.txt nicht mehr im Pfad liegt.Kein Fehler bei hardlink.txt, da der Inode erhalten bleibt. Fehler bei Zugriff nur, wenn keine Rechte vorhanden oder Symlink-Ziel fehlt.
+
+
+
+Bonus Frage: Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+--------------------
+
+Wenn Dateien auf unterschiedlichen Dateisystemen oder Partitionen liegen, wirkt sich das direkt auf das Verhalten von symbolischen und harten Links aus:
+
+Hardlinks funktionieren nur innerhalb desselben Dateisystems, da sie direkt auf den Inode einer Datei verweisen. Da Inodes nur lokal im jeweiligen Dateisystem eindeutig sind, kann kein Hardlink über Dateisystemgrenzen hinweg erstellt werden. Ein Versuch, z. B. ln original.txt /mnt/anderesFS/hardlink.txt auszuführen, führt zu einem Fehler wie „Invalid cross-device link“.
+
+Symbolische Links (Symlinks) hingegen verweisen lediglich auf einen Pfad (Dateinamen), nicht auf den Inode. Daher können Symlinks problemlos über verschiedene Dateisysteme hinweg angelegt werden. So kann ein Symlink etwa auf eine Datei in einer anderen Partition zeigen, solange der Pfad korrekt bleibt.

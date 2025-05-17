@@ -1,0 +1,28 @@
+Aufgabe 4
+------------------------
+
+Anhand vom vorgegebenen Page Table vom Script würden die berechnungen wie folgt asuehen.
+
+
+
+-1. Adresse: 12300
+Virtuelle Seite: 12300/4096 = 3, Offset = 12
+
+Seite 3 -> Rahmen 3 -> 3 × 4096 + 12 = 12300
+
+
+
+-2. Adresse: 16384
+Virtuelle Seite: 16384/4096 = 4, Offset = 0
+
+Seite 4 -> Rahmen 4 -> 4 × 4096 + 0 = 16384
+
+
+
+3. Adresse: 32800
+Virtuelle Seite: 32800/4096 = 8, Offset = 32
+
+Seite 8 → nicht geladen → Seitenfehler
+
+
+Bei der Viruelen adresse 32800 schlägt der zugriff fehl, weil die zugehörige virtuelle Seite 8 laut Seitentabelle nicht im physischen Speicher geladen ist (Eintrag = „X“). Dadurch kann keine physische Adresse berechnet werden – es tritt ein Seitenfehler (Page Fault) auf.

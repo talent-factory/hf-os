@@ -1,0 +1,34 @@
+Augabe 2
+-------------------------
+
+
+
+
+Unterschied zwischen interner und externer Speicherfragmentierung:
+-------------------------------------------------------------------
+
+-Interne Fragmentierung:
+Tritt auf, wenn ein Prozess mehr Speicher erhält, als er eigendlich braucht um zu fuinkionieren das bedeutet das ungenutzter Speicher entstehd der verlohren geht.
+Beispiel: Ein Prozess braucht 6 KB, bekommt aber 8 KB (2 KB ungenutzt) und können nicht von weinem anderen Prozess werwednet werden.
+
+-Externe Fragmentierung:
+Frei gewordene Speicherstücke sind verstreut über den speicher verteilt, ein grosser zusammenhängender Block fehlt.
+Beispiel: Viele kleine freie Blöcke, aber kein zusammenhängender 10-KB-Block für einen neuen Prozess.
+
+
+
+
+Strategien zur Reduktion von Speicherfragmentierung:
+-----------------------------------------------------
+
+-Paging:
+Teilt den Speicher in gleich grosse Seiten (z. B. 4 KB) und verwendet virtuelle Adressen, die über eine Seitentabelle in physische Adressen übersetzt werden. Jeder Prozess erhält einen eigenen virtuellen Adressraum.
+
+Vorteile: Vermeidet externe Fragmentierung, einfache Verwaltung.
+Nachteile: Interne Fragmentierung möglich, zusätzlicher Verwaltungsaufwand (Seitentabelle).
+
+Speicherkompaktierung:
+Verschiebt belegte Blöcke, um freien Speicher zusammenzufassen.
+
+Vorteile: Beseitigt externe Fragmentierung.
+Nachteile: Rechenaufwändig, langsam, stört laufende Prozesse.
