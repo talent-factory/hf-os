@@ -1,0 +1,82 @@
+mkdir -p test/subdir && cd test
+Erstellt das Verzeichnis "test" und darin ein Unterverzeichnis "subdir". Falls "test" schon existiert wird nur "subdir" gemacht. Danach wechselt er in das neue Verzeichnis "test"
+Konzepte: Verzeichnisbaum, relative Pfade, Arbeitsverzeichnis
+
+echo "Inhalt-$(date +%s)" > original.txt
+Gibt den aktuellen Zeitstempel aus und schreibt den text in eine neue Datei "original.txt".
+Konzepte: Dateierstellung, Umleitung
+
+ln -s original.txt symlink.txt
+Erstellt einen symbolischen link namens "symlink.txt" der auf "original.txt" zeigt. symlink.txt enthält nur den Pfad zur Zieldatei und nicht deren inhalt.
+Konzepte: symbolischer Link
+
+ln original.txt hardlink.txt
+Erstellt eien hardlink namens "hardlink.txt" auf denselben Inhalt wie original.txt. Beide Dateien sind gleich und haben den gleichen Inhalt über derselben Inode.
+Konzepte: Hardlink
+
+chmod 640 original.txt
+setzt Berechtiung von original.txt auf rw-r----- also Owner Read+Write Group Read Other kein Zugriff.
+Konzepte:Berechtigungen. Unix-Rechtemodell.
+
+touch -d "2 days ago" original.txt
+Setzt das änderungsdatum der Datei auf vor 2 TAgen. Der Hardlink erhält auch diese änderung. Der Symbolische Link hat immernoch denselben änderungsdatum.
+Konzepte: Metadaten
+
+ls -la
+Listet alle Dateien im aktuellen Verzeichnis auf inklusive versteckter Dateien mit allen Details.
+Konzepte: Dateiansicht
+
+Anhang:
+➜  test git:(hfi2024a/niroj-sivananthan) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:31 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:29 ..
+-rw-r----- 2 vmadmin vmadmin   10 Mai 15 11:31 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   10 Mai 15 11:31 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:29 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:31 symlink.txt -> original.txt
+
+ANALYSIERE DIE AUSGABE IM DETAIL:
+Spalte 1: Dateityp + Berechtigungen unterteilt in OwnerGroupOther r=read,w=write,x=execute. 
+Spalte 2: Anzahl der Hardlinks zu dieser Inode
+Spalte 3: Besitzer
+Spalte 4: Gruppe
+Spalte 5: Dateigrösse in Byte
+Spalte 6: Letzer Änderungspunkt
+Spalte 7: Dateiname
+Spalte 8: Ziel eines Symlinks.
+
+Der Hardlink und original Datei sind eigentlich identisch. Diese verweisen auf denselben Inode. symlink hat immer alle Berechtigungen denn dies wird erst beim Ziel beachtet. der Zeitstempel ist beim Hardlink und Original Datei gleich und auf "Vor 2 Tagen" gesetzt (touch -d "2 da... Befehl) der Symlink war aber von dem befehl nicht betroffen.
+
+Die Inode bei der Hardlink und original Datei sind gleich weil diese sich die gegenseitige Inode teilen. Bei symlink datei gibt es den inode wert 1 weil es seine eigene inode ist.
+
+ALS LETZTE BEFEHLE GEBEN WIR NOCH FOLGENDE ZEILEN EIN:
+ERKLÄRE FÜR JEDEN BEFEHL:
+
+echo "Neuer Inhalt" > original.txt
+Nichts wird ausgegeben die Datei wird überschrieben.
+
+cat symlink.txt hardlink.txt
+Ausgabe:
+➜  test git:(hfi2024a/niroj-sivananthan) ✗ cat symlink.txt hardlink.txt
+Neuer Inhalt
+Neuer Inhalt
+Inode und Verhalten der Links bleibt gleich.
+
+mv original.txt ../original.txt
+Die Datei original.txt wird in das übergeordnete Verzeichnis verschoben. Der Inode bleibt gleich. Für Hardlink.txt ändert sich nichts weil er auf dieselbe inode zeigt. Symlink zeigt jetzt ins Leere weil er noch auf den alten Pfad verweist.
+
+cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+➜  test git:(hfi2024a/niroj-sivananthan) ✗ cat symlink.txt hardlink.txt 2>&1
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+cat symlink.txt schlägt fehl weil original.txt im aktuelen Verzeichnis nicht mehr exisitiert. Hardlink funktioniert wegen derselben inode immernoch. Keine Inode auswirkung. Beim Symlink ist ein Fehler aufgetreten ("... nicht gefunden") weil die original Datei verschoben wurde und der Symlink nur den Pfad zur Datei speichert.
+
+Bonus:
+Da der HArdlink auf dieselbe Inode verweist würde man diesen Link nicht machen können da inodes nur lokal für das Dateisystem ist. Symlinks kann man problemlos immernoch nutzen.
+
+
+
+
