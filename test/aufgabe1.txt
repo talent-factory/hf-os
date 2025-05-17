@@ -7,16 +7,41 @@ mit diesem Befehl erstellt man ein neuen directory mit mkdir, und mit cd wechsel
 -gibt der aktuellen Zeit mit sekunden
 
     ln -s original.txt symlink.txt
--damit erstellt man eine Verknupfung yur Datei original.txt
+-damit erstellt man eine Verknupfung zur Datei original.txt
+-das ist ein symbolisches link
 
     ln original.txt hardlink.txt
 -damit erstellt man einen weiteren Dateinamen der auf denselben Inhlat wie original.txt datei zeigt
+-das ist ein hardlink
 
     chmod 640 original.txt
 -damit aendert man die Berechtigung des file original.txt auf rw- r-- ---
 
     touch -d "2 days ago" original.txt
--touch veraendert die Yeitstaempel
+-touch veraendert die Zeitstaempel
 
     ls -la
 -es zeigt was in der Verzeichniss drin ist und zeigt auch die verstaekte dateien.
+
+
+➜  test git:(hfi2024a/madalina-luca) echo "Neuer Inhalt" > original.txt
+
+mit echo der inhalt von original.txt wird vollstaendig durch den text Neuer Inhalt ersetzt
+
+
+➜  test git:(hfi2024a/madalina-luca) ✗ cat symlink.txt hardlink.txt
+Neuer Inhalt
+Neuer Inhalt
+
+mit cat kann man den Inhalt lesen.
+
+
+➜  test git:(hfi2024a/madalina-luca) ✗ mv original.txt ../original.txt
+mit mv kann man der Verzeichniss verschieben
+
+➜  test git:(hfi2024a/madalina-luca) ✗ cat symlink.txt hardlink.txt 2>&1
+
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+
