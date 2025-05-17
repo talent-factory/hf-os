@@ -1,0 +1,131 @@
+3. Erweiterte Datei Operationen | 10P | 15'
+
+Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden dabei angewendet?
+
+1. mkdir -p test/subdir && cd test
+--> mkdir: Dieser Befehl dient dazu, ein neues Verzeichnis zu erstellen,,,,,. Verzeichnisse sind in den meisten Systemen selbst spezielle Dateien, die typischerweise eine Anzahl von Einträgen enthalten – einen pro Datei oder Unterverzeichnis.
+--> -p test/subdir: Die Option -p bewirkt, dass nicht nur das letzte Verzeichnis (subdir), sondern auch alle übergeordneten Verzeichnisse (test), die noch nicht existieren, erstellt werden. Das Ergebnis ist eine hierarchische Struktur. Ein neu erstelltes Verzeichnis ist zunächst leer, abgesehen von den automatisch erstellten Einträgen.
+--> &&: Dies ist ein logischer Operator in der Shell. Der Befehl nach && (cd test) wird nur ausgeführt, wenn der Befehl vor && (mkdir -p test/subdir) erfolgreich war (d.h. ohne Fehler beendet wurde).
+--> cd test: Dieser Befehl ändert das aktuelle Arbeitsverzeichnis. Nach diesem Befehl ist das Verzeichnis test das "current working directory". Relative Pfadnamen (wie subdir oder Dateinamen innerhalb von test) werden nun relativ zu diesem Verzeichnis interpretiert, während absolute Pfadnamen immer vom Wurzelverzeichnis (/) aus beginnen.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+--> echo "Inhalt-$(date +%s)": Der echo-Befehl gibt die angegebene Zeichenkette auf die Standardausgabe aus. Der Ausdruck $(date +%s) ist eine Befehlssubstitution; die Shell führt den Befehl date +%s aus und ersetzt den Ausdruck durch dessen Ausgabe. date +%s gibt den aktuellen Zeitpunkt als Unix-Timestamp (Anzahl der Sekunden seit dem 1. Januar 1970) zurück. Die auszugebende Zeichenkette wird also "Inhalt-" gefolgt vom aktuellen Timestamp sein.
+--> >: Dies ist der Umleitungsoperator für die Standardausgabe. Die Ausgabe des echo-Befehls wird nicht auf der Konsole angezeigt, sondern in die angegebene Datei (original.txt) geschrieben. Wenn die Datei original.txt bereits existiert, wird ihr Inhalt überschrieben. Wenn sie nicht existiert, wird sie neu erstellt.
+--> original.txt: Dies ist der Name der Datei, in die die Ausgabe umgeleitet wird. Das Dateisystem verwaltet die Dateien als eine Abfolge von Bytes. Das Schreiben von Daten in eine Datei ist eine grundlegende Dateioperation.
+
+3. ln -s original.txt symlink.txt
+--> ln -s: Dieser Befehl erstellt einen symbolischen Link (oft auch "Symlink" oder "Soft Link" genannt).
+--> original.txt: Dies ist das Ziel des Links. Es ist der Name der Datei, auf die der symbolische Link verweisen soll.
+--> symlink.txt: Dies ist der Name des neuen symbolischen Links. Ein symbolischer Link ist eine separate Datei, die den Pfadnamen der Zieldatei enthält. Wenn auf einen symbolischen Link zugegriffen wird, folgt das Dateisystem dem Pfad und findet die Zieldatei. Symbolische Links können Plattengrenzen überschreiten, d.h. sie können auf Dateien in anderen Dateisystemen (Partitionen oder sogar entfernten Systemen) verweisen.
+
+4. ln original.txt hardlink.txt
+--> ln: Dieser Befehl erstellt standardmäßig einen harten Link.
+--> original.txt: Dies ist die bestehende Datei, auf die der neue harte Link verweisen soll.
+--> hardlink.txt: Dies ist der Name des neuen harten Links. Ein harter Link erstellt einen neuen Verzeichniseintrag, der auf dieselbe i-Node wie die ursprüngliche Datei verweist,,. Die i-Node ist eine Datenstruktur im Dateisystem, die Informationen über die Datei speichert (Eigentümer, Berechtigungen, Größe, Adressen der Datenblöcke), aber nicht ihren Namen,. Da beide Namen (original.txt und hardlink.txt) auf dieselbe i-Node zeigen, sind sie im Wesentlichen gleichwertige Namen für dieselbe Datei. Die i-Node enthält einen Zähler, der angibt, wie viele harte Links auf sie zeigen.
+
+5. chmod 640 original.txt
+--> chmod: Dieser Befehl ändert die Zugriffsrechte (Berechtigungen) einer Datei.
+--> 640: Dies ist die oktale Darstellung der Berechtigungen. Die Ziffern stehen für Eigentümer, Gruppe und Andere. Jede Ziffer ist die Summe von:
+640 bedeutet:
+-> Eigentümer (6): Lese- (4) + Schreibrecht (2) = rw-
+-> Gruppe (4): Leserecht (4) = r--
+-> Andere (0): Keine Rechte = ---
+--> original.txt: Dies ist die Datei, deren Berechtigungen geändert werden. Da hardlink.txt auf dieselbe i-Node zeigt, werden die Berechtigungen auch für den Zugriff über hardlink.txt gelten. symlink.txt ist eine separate Datei; ihre eigenen Berechtigungen (die sich auf den Link selbst beziehen) sind davon unberührt, aber die Berechtigungen der Zieldatei (original.txt) bestimmen, wer letztendlich über den Link auf den Inhalt zugreifen darf.
+
+6. touch -d "2 days ago" original.txt
+--> touch: Dieser Befehl aktualisiert die Zeitstempel einer Datei, standardmäßig die Zugriffs- und Modifikationszeit. Wenn die Datei nicht existiert, wird sie standardmäßig erstellt (dies ist hier nicht der Fall) (MS-DOS get_file_date ist relevant für das Konzept, auch wenn es nicht touch direkt beschreibt).
+--> -d "2 days ago": Die Option -d erlaubt die Angabe eines benutzerdefinierten Datums und einer Uhrzeit. "2 days ago" setzt den Zeitstempel auf den Zeitpunkt vor zwei Tagen. (Die genaue Syntax und die Wirkung auf Zugriffs-, Modifikations- und Änderungszeiten hängen vom System ab, aber die Modifikationszeit wird typischerweise geändert).
+--> original.txt: Dies ist die Datei, deren Zeitstempel geändert werden. Da hardlink.txt dieselbe i-Node verwendet, wird sein Modifikationszeitstempel ebenfalls auf den neuen Wert gesetzt, da dieser in der i-Node gespeichert ist. Der Zeitstempel von symlink.txt (als separater Datei) wird dadurch nicht geändert; er behält den Zeitstempel seiner eigenen Erstellung (oder letzter Änderung als Linkdatei).
+
+7. ls -la
+--> ls: Listet die Inhalte eines Verzeichnisses auf.
+--> -l: Verwendet das lange Format und zeigt detaillierte Informationen für jeden Eintrag an.
+--> -a: Listet alle Einträge auf, einschließlich der versteckten, die mit einem Punkt (.) beginnen. 
+--> Dieser Befehl zeigt eine detaillierte Liste aller Dateien und Verzeichnisse im aktuellen Arbeitsverzeichnis.
+
+
+Kopiere die Ausgabe des letzten Befehles als Anhang zu der Lösung.
+➜  LB2 git:(hfi2024a/noel-ballmer) ls -la
+insgesamt 80
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 17 11:05 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-rw-r-- 1 vmadmin vmadmin  2485 Mai 17 11:04 Aufgabe_2.txt
+-rw-rw-r-- 1 vmadmin vmadmin  2485 Mai 17 11:04 Aufgabe_3.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 17 11:01 .git
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 17 10:50 LB2-FS25.html
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+
+
+
+Analysiere die Ausgabe im Detail:
+
+    Erkläre die Bedeutung jeder Spalte in der Ausgabe
+    drwxr-... -> dies ist die Berechtigung von dem File (Siehe Punkt 5 oben).
+    "3" -> Hardlink-Anzahl
+    "vmadmin" -> Besitzer
+    "vmadmin" -> Gruppe
+    "4096" -> Dateigrösse
+    "Mai 17..." -> Datum/Zeitstempel
+    "Aufgabe_2..." -> Dateibezeichnung
+
+    Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+    - Auf der Readme-datei hat die Gruppe keine Schreiberechtigung.
+    - Zeitstempel ist nicht identisch 
+    
+    Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+    - Dateien mit gleichem Inode sind Hardlinks.
+    - Normale Dateien haben unterschiedliche Inodes, da jede Datei separat gespeichert wird.
+    - Der Inode enthält Metadaten wie Berechtigungen, Eigentümer, Zeitstempel usw. Der Name ist nicht im Inode gespeichert – sondern im Verzeichniseintrag.
+    
+
+
+Als letzte Befehle geben wir noch folgende Zeilen ein:
+
+    echo "Neuer Inhalt" > original.txt
+
+    cat symlink.txt hardlink.txt
+
+    mv original.txt ../original.txt
+
+    cat symlink.txt hardlink.txt 2>&1
+
+    Erkläre für jeden Befehl:
+    -echo "Neuer Inhalt" > original.txt
+    	Schreibt den Text "Neuer Inhalt" in die Datei original.txt.
+    -cat symlink.txt hardlink.txt
+	Zeigt den Inhalt der Dateien symlink.txt und hardlink.txt an.
+    -mv original.txt ../original.txt
+	Verschiebt die Datei original.txt ein Verzeichnis nach oben.
+    -cat symlink.txt hardlink.txt 2>&1
+	Versucht erneut, den Inhalt beider Dateien anzuzeigen
+    
+    Was wird ausgegeben und warum?
+    - der neue Inhalt
+    - der Inhalt aus der Datei "symlink.txt und hardlink.txt"
+    - nichts
+    - Inhalt der beiden Dateien
+
+    Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+    Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+    
+    echo "Neuer Inhalt" > original.txt	
+    - Inode bleibt gleich, aber Größe und Zeitstempel ändern sich	
+    - Keine Auswirkung
+    cat symlink.txt hardlink.txt
+    - Keine Änderung	
+    - Keine Auswirkung
+    mv original.txt ../original.txt	
+    - Inode bleibt gleich, nur Pfad ändert sich	Symlink wird ungültig
+    - Hardlink bleibt gültig
+    cat symlink.txt hardlink.txt 2>&1	
+    - Keine Änderung	
+    - Symlink verursacht Fehler, Hardlink funktioniert
+
+    Welche Fehler könnten auftreten und warum?
+    - keine Schreibrechte
+    - nicht exisiterende Dateien
+    - nicht exisiterendes Zielverzeichnis
+    
+Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+- Wäre nicht möglich.
+- Hardlinks funktionieren nur innerhalb eines Dateisystems, weil sie direkt auf Inodes zeigen, die nur innerhalb einer Partition eindeutig sind.
