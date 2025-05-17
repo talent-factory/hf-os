@@ -1,0 +1,37 @@
+Ausgabe:
+➜  LB2 git:(hfi2024a/niroj-sivananthan) touch aufgabe-5.c
+➜  LB2 git:(hfi2024a/niroj-sivananthan) ✗ gcc -o aufgabe-5 aufgabe-5.c 
+➜  LB2 git:(hfi2024a/niroj-sivananthan) ✗ ./aufgabe-5 
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7fff965fb820
+Heap-Variable: 0x60153e88e2a0
+Statische Variable: 0x60153d05f010
+
+Adressdifferenzen:
+Stack - Heap: 35091356505472 Bytes
+Stack - Static: 35091381864464 Bytes
+Heap - Static: 25358992 Bytes
+
+Wachstumsrichtungen:
+Adresse von local1: 0x7fff965fb7e8
+Adresse von local2: 0x7fff965fb7ec
+Stack wächst nach oben (aufsteigend)
+
+BESCHREIBUNG AUSGABE
+Das Programm gibt die ADressen von Drei verschiedenen Variablentypen aus:
+Die Stack variable liegt ganz oben im Speicher.
+Die HEap variable liegt irgendwo im mittleren Bereich.
+Die Statische Variable befindet sich am Anfang ds Speichers also eher Unten.
+
+WARUM DIE ADRESSEN DER VERSCHIEDENEN VARIABLENTYPEN (STACK, HEAP, STATISCH) IN UNTERSCHIEDLICHEN SPEICHERBEREICHEN LIEGEN.
+Wegen der Segmentierung des Speichers durch das Betriebssystem:
+Statische Variablen: werden beim Programmstart im .data-Segment im unteren Adressbereich reserviert.
+Heap-Variablen: dynamisch zur Laufzeit über malloc() im Heap-Bereich.
+Stack-Variablen: automatisch bei Funktionsaufrufen erzeugt und im Stack gespeichert, der sich von oben nach unten ausbreitet.
+
+AUSWIRKUNG VOM SPEICHERLECK:
+Speicher wird dauerhaft reserviert, aber nicht mehr verwendet. Das führt zu Ressourcenverschwendung
+Bei wiederholtem Auftreten kann das zu einem Memory Exhaustion führen. DAs Programm oder System wird instabil oder stürzt ab.
+
+
