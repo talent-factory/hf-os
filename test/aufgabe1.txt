@@ -1,4 +1,4 @@
-
+3. Erweiterte Datei Operationen | 10P | 15'
 
     mkdir -p test/subdir && cd test
 mit diesem Befehl erstellt man ein neuen directory mit mkdir, und mit cd wechselt man zu den neuen ordner: test
