@@ -1,0 +1,211 @@
+mkdir -p test/subdir && cd test
+
+    mkdir -p test/subdir:
+
+        Erstellt ein neues Verzeichnis namens test und darin ein Unterverzeichnis subdir.
+
+        -p sorgt dafür, dass übergeordnete Verzeichnisse automatisch mit erstellt werden.
+
+        Konzepte: Verzeichnisse sind spezielle Dateien, die Dateinamen auf Inodes abbilden.
+
+    cd test:
+
+        Wechselt in das neu erstellte Verzeichnis test.
+
+        Konzepte: Verzeichnisnavigation basiert auf dem aktuellen Arbeitsverzeichnis.
+
+echo "Inhalt-$(date +%s)" > original.txt
+
+    Erstellt eine Datei original.txt (oder überschreibt sie) mit folgendem Inhalt:
+
+    Inhalt-<UNIX-Timestamp>
+
+    Beispiel: Inhalt-1715945627
+
+    $(date +%s) gibt die aktuelle Zeit in Sekunden seit dem 1.1.1970 (Unix-Epoche) zurück.
+
+    > schreibt diesen Inhalt in die Datei.
+
+    Konzepte:
+
+        Dateierstellung und -schreiben
+
+        Daten werden in Blöcken gespeichert; Datei-Metadaten werden im Inode abgelegt.
+
+ ln -s original.txt symlink.txt
+
+    Erstellt einen symbolischen Link (symlink.txt) auf original.txt.
+
+    Der Symlink enthält lediglich einen Pfad (z. B. "original.txt"), nicht den Inhalt oder Inode.
+
+    Wenn original.txt gelöscht wird, ist der Symlink „kaputt“ (dangling).
+
+    Konzepte:
+
+        Symlinks sind eigene Dateien mit separatem Inode.
+
+        Ihr Inhalt ist der Pfad zur Zieldatei.
+
+ln original.txt hardlink.txt
+
+    Erstellt einen Hardlink mit Namen hardlink.txt, der exakt auf denselben Inode wie original.txt verweist.
+
+    Beide Namen zeigen auf denselben Inhalt, dieselben Metadaten, dieselben Datenblöcke.
+
+    Unterschied zu Symlink: Hardlinks funktionieren unabhängig vom Pfad der Originaldatei.
+
+    Konzepte:
+
+        Inode-Sharing: Beide Dateinamen zeigen auf denselben Inode.
+
+        Der Inode-Zähler (Link Count) wird um 1 erhöht.
+
+chmod 640 original.txt
+
+    Setzt die Berechtigungen von original.txt (und damit auch von hardlink.txt!) auf:
+
+        Besitzer: lesen + schreiben (6)
+
+        Gruppe: nur lesen (4)
+
+        Andere: kein Zugriff (0)
+
+    Symlinks übernehmen nicht die Rechte der Zieldatei – Zugriffsprüfung erfolgt auf das Ziel.
+
+    Konzepte:
+
+        Unix-Dateirechte (Permissions)
+
+        Teil des Inode-Metadaten
+
+        chmod ändert mode-Bits im Inode.
+
+touch -d "2 days ago" original.txt
+
+    Ändert den Änderungszeitstempel (mtime) von original.txt auf „vor 2 Tagen“.
+
+    Gilt auch für hardlink.txt, da sie denselben Inode teilen.
+
+    symlink.txt bleibt unberührt – es zeigt nur auf das Ziel.
+
+    Konzepte:
+
+        Datei-Metadaten: Zeitstempel wie mtime, atime, ctime
+
+        Diese befinden sich ebenfalls im Inode.
+
+ls -la
+
+    Zeigt alle Dateien inklusive versteckter Dateien in Langformat an:
+
+        Rechte (-rw-r-----)
+
+        Anzahl der Hardlinks
+
+        Eigentümer und Gruppe
+
+        Dateigröße in Bytes
+
+        Zeitstempel (mtime)
+
+        Dateiname (ggf. mit -> bei Symlinks)
+
+
+
+
+➜  test ls -la
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 17 11:23 .
+drwxr-x--- 22 vmadmin vmadmin 4096 Mai 17 11:23 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:23 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:23 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 17 11:22 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 17 11:23 symlink.txt -> original.txt
+
+Bedeutung der Spalten:
+1. Spalte: Dateityp und Berechtigungen. d steht für directory, rwx steht für Read, Write und Executable. Die ersten 3 rwx stehen für den Besitzer, die zweiten für die Gruppe und die letzten für alle Anderen.
+
+
+2. Spalte: steht für den Linkcount
+
+3. Spalte: Benutzer und Gruppe welche die Datei gehört
+
+4. Spalte: Grösse der Datei in Bytes
+
+5. Spalte: Zeitstempel, wann wurde die Datei das letzte mal editiert.
+
+6. Spalte Dateiname
+
+original.txt und hardlink.txt sind Hardlinks – sie zeigen auf denselben Inode, sind inhaltlich und metadatenmäßig identisch.
+
+symlink.txt ist ein symbolischer Link. Er verweist nicht direkt auf denselben Inode, sondern enthält den Pfad zur Zieldatei als Dateninhalt.
+
+Warum haben manche Dateien denselben Inode, andere nicht?
+Hardlinks sind weitere Namen für die selbe Datei, daher haben sie die selbe Inode.
+Löscht mann die Original Datei löscht man auch den Hardlink.
+
+Symlinks speichern nur den Pfad zur Datei, daher haben sie eine eigene Inode.
+Löscht man die Original Datei zeigt der symlink ins Leere.
+
+
+
+    echo "Neuer Inhalt" > original.txt
+
+Was wird ausgegeben:
+Es wird keine Ausgabe erzeugt. Der Befehl überschreibt die Datei original.txt mit dem Text "Neuer Inhalt".
+
+Auswirkungen auf die Inode-Tabelle:
+Der Inode von original.txt bleibt gleich. Es werden nur die Datenblöcke im Inode überschrieben. Da hardlink.txt denselben Inode verwendet, wird auch deren Inhalt automatisch aktualisiert. Der symbolische Link symlink.txt verweist weiterhin auf den Pfad original.txt.
+
+Unterschied zwischen Symlink und Hardlink:
+Hardlink (hardlink.txt) zeigt direkt auf den Inode, daher wird der Inhalt übernommen. Symlink (symlink.txt) zeigt auf den Pfad original.txt, der weiterhin existiert und daher ebenfalls zum neuen Inhalt führt.
+
+Fehler:
+Keine Fehler, alle Links funktionieren zu diesem Zeitpunkt korrekt.
+
+    cat symlink.txt hardlink.txt
+
+Was wird ausgegeben:
+Neuer Inhalt
+Neuer Inhalt
+
+Auswirkungen auf die Inode-Tabelle:
+Keine. Es erfolgt nur ein Lesezugriff.
+
+Unterschied zwischen Symlink und Hardlink:
+symlink.txt wird über den Pfad original.txt aufgelöst. hardlink.txt verweist direkt auf denselben Inode. Beide liefern denselben Inhalt.
+
+Fehler:
+Keine. Beide Dateien sind vorhanden und lesbar.
+
+    mv original.txt ../original.txt
+
+Was wird ausgegeben:
+Keine Ausgabe.
+
+Auswirkungen auf die Inode-Tabelle:
+Der Inode bleibt erhalten, da nur der Verzeichniseintrag verschoben wird. Die Datei original.txt wird im aktuellen Verzeichnis gelöscht und im übergeordneten Verzeichnis neu eingetragen. Der Link-Count des Inodes verringert sich auf 1, weil der Verweis original.txt im aktuellen Verzeichnis entfernt wurde. hardlink.txt bleibt bestehen und verweist weiterhin auf denselben Inode. symlink.txt verweist auf den nicht mehr existierenden Pfad original.txt im aktuellen Verzeichnis.
+
+Unterschied zwischen Symlink und Hardlink:
+Hardlink funktioniert weiterhin, da er direkt auf den Inode verweist. Symlink ist nun ungültig, da der Pfad original.txt nicht mehr existiert.
+
+Fehler:
+symlink.txt verweist auf einen nicht existierenden Pfad und ist damit ein sogenannter "dangling symlink".
+
+    cat symlink.txt hardlink.txt 2>&1
+
+Was wird ausgegeben:
+cat: symlink.txt: No such file or directory
+Neuer Inhalt
+
+Auswirkungen auf die Inode-Tabelle:
+Keine. Nur Lesezugriff.
+
+Unterschied zwischen Symlink und Hardlink:
+Hardlink funktioniert weiterhin, da er unabhängig vom Dateinamen auf den Inode zeigt. Symlink funktioniert nicht, da der Pfad original.txt im aktuellen Verzeichnis nicht mehr existiert.
+
+Fehler:
+Beim Zugriff auf symlink.txt tritt ein Fehler auf, weil das Ziel nicht mehr existiert. Der Zugriff auf hardlink.txt ist erfolgreich.
+
+
+
