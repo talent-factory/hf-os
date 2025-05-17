@@ -1,5 +1,35 @@
 5.1. Speichervisualisierung und Adressraumanalyse
 
+Ausgabe vom Code:
+
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7ffde8864a00
+Heap-Variable: 0x58d81294e2a0
+Statische Variable: 0x58d811a27010
+
+Adressdifferenzen:
+Stack zu Heap: 43043456640864 Bytes
+Stack zu Statisch: 43043472529904 Bytes
+Heap zu Statisch: 15889040 Bytes
+
+Wachstumsrichtungen:
+Stack-Variable 1: 0x7ffde88649c8
+Stack-Variable 2: 0x7ffde88649cc
+Der Stack wächst nach oben (von niedrigen zu hohen Adressen)
+
+Erzeuge absichtlich Speicherlecks:
+Speicherleck 0 erzeugt an Adresse: 0x58d81294e6d0
+Speicherleck 1 erzeugt an Adresse: 0x58d81294f6e0
+Speicherleck 2 erzeugt an Adresse: 0x58d8129506f0
+Speicherleck 3 erzeugt an Adresse: 0x58d812951700
+Speicherleck 4 erzeugt an Adresse: 0x58d812952710
+
+---------------------------------------------------------------------------------------------------------------
+
+Fragen & Antworten:
+
+
 1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
 Die Ausgabe zeigt deutlich die Speicherorganisation in deinem Linux-Betriebssystem:
 
@@ -10,21 +40,25 @@ Statische Variable: 0x56ca67177010 (niedrigere Adresse als Heap)
 
 
 Adressdifferenzen:
-Die riesige Differenz zwischen Stack und anderen Bereichen (45+ Milliarden Bytes) zeigt, dass der Stack komplett getrennt vom Rest des Speicherbereichs liegt.
-Die Differenz zwischen Heap und statischem Bereich beträgt ~32 MB, was einen typischen Abstand dieser Segmente darstellt.
-
+Die riesige Differenz zwischen Stack und anderen Bereichen (45+ Milliarden Bytes) zeigt, 
+dass der Stack komplett getrennt vom Rest des Speicherbereichs liegt. Die Differenz zwischen Heap und 
+statischem Bereich beträgt ~32 MB, was einen typischen Abstand dieser Segmente darstellt.
 
 Wachstumsrichtungen:
-Entgegen der üblichen Erwartung zeigt das Programm, dass der Stack auf diesem System nach oben wächst (von niedrigen zu hohen Adressen). Dies ist interessant, da klassische x86-Architekturen normalerweise einen nach unten wachsenden Stack haben. Möglicherweise handelt es sich um einen Compiler-Optimierungseffekt bei lokalen Variablen oder eine architekturspezifische Eigenschaft.
-
+Entgegen der üblichen Erwartung zeigt das Programm, dass der Stack auf diesem System nach oben wächst 
+(von niedrigen zu hohen Adressen). Dies ist interessant, da klassische x86-Architekturen normalerweise einen nach 
+unten wachsenden Stack haben. Möglicherweise handelt es sich um einen Compiler-Optimierungseffekt bei 
+lokalen Variablen oder eine architekturspezifische Eigenschaft.
 
 Heap-Allokationen:
-Die fünf absichtlich erzeugten Speicherlecks zeigen eine kontinuierliche Adresszunahme (jeweils um 4112 Bytes), was bestätigt, dass der Heap nach oben wächst.
+Die fünf absichtlich erzeugten Speicherlecks zeigen eine kontinuierliche Adresszunahme (jeweils um 4112 Bytes), 
+was bestätigt, dass der Heap nach oben wächst.
 
+--------------------------------------------------
 
-
-2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
-Die verschiedenen Variablentypen befinden sich aus folgenden Gründen in unterschiedlichen Speicherbereichen:
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) 
+in unterschiedlichen Speicherbereichen liegen. Die verschiedenen Variablentypen befinden sich 
+aus folgenden Gründen in unterschiedlichen Speicherbereichen:
 
 Statische Variablen (0x56ca67177010):
 Werden im Datensegment des Programms gespeichert
@@ -33,13 +67,11 @@ Werden beim Programmstart initialisiert
 Der Speicherplatz wird schon beim Kompilieren/Linken festgelegt
 Liegen in niedrigeren Adressbereichen nahe dem Code-Segment
 
-
 Heap-Variablen (0x56ca690b42a0):
 Werden dynamisch zur Laufzeit mit malloc() allokiert
 Haben eine flexible Lebensdauer, die durch free() beendet werden kann
 Der Heap wächst nach Bedarf und muss effizient fragmentierten Speicher verwalten
 Liegen in mittleren Adressbereichen mit Platz zum Wachsen
-
 
 Stack-Variablen (0x7ffc03929540):
 Automatische Lebensdauer, gebunden an den Funktionsaufruf
@@ -47,16 +79,17 @@ Schnelle Allokation und Deallokation durch einfaches Verschieben eines Stack-Poi
 Unterstützt die Verwaltung von Funktionsaufrufen und deren lokalen Variablen
 Liegt in sehr hohen Adressbereichen, weit entfernt von anderen Segmenten
 
-
-
 Diese Trennung bietet mehrere Vorteile:
 Unterschiedliche Optimierungsmöglichkeiten für jeden Bereich
 Schutz vor Überschreibungen zwischen verschiedenen Speicherarten
 Effizienzsteigerung durch passende Zugriffsmuster
 Unterstützung verschiedener Lebensdauerkonzepte in der Programmierung
 
-3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
-Auswirkungen des Speicherlecks:
+
+------------------------------------------------
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? 
+Wie könnte ein Betriebssystem mit solchen Situationen umgehen? Auswirkungen des Speicherlecks:
 
 Nicht freigegebener Speicher bleibt über die Programmausführung hinaus belegt
 Bei längerer Laufzeit oder häufigeren Allokationen würde sich der verfügbare Speicher kontinuierlich verringern
@@ -65,7 +98,6 @@ Bei umfangreichen oder langlebigen Anwendungen kann dies zu Speichererschöpfung
 Systemressourcen werden ineffizient genutzt und verschwendet
 
 Massnahmen des Betriebssystems zur Bewältigung:
-
 Prozessbeendigung als Grundschutz:
 Bei Programmende gibt das Betriebssystem automatisch allen vom Prozess belegten Speicher frei
 Dies ist die grundlegendste Schutzmaßnahme gegen dauerhafte Speicherverluste

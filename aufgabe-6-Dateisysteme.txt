@@ -1,5 +1,42 @@
 6.1. Dateioperationen und Metadatenanalyse
 
+Ausgabe vom Code:
+
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546234
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:20:52
+Letzte Änderung: 2025-05-17 12:20:52
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 225 Bytes
+Inode-Nummer: 546234
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:20:52
+Letzte Änderung: 2025-05-17 12:20:52
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 225 Bytes
+Inode-Nummer: 546234
+Anzahl der Hardlinks: 2
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 2025-05-17 12:20:52
+Letzte Änderung: 2025-05-17 12:20:52
+
+----------------------------------------------------------------------------------------------------------------------
+
+Fragen & Antworten:
+
 1. Ausgabebeschreibung und Metadatenänderungen:
 Nach dem Anhängen von Text ändert sich die Dateigrösse von 96 auf 225 Bytes. 
 Die Inode-Nummer (546235) und Zugriffsrechte (664) bleiben unverändert. 
