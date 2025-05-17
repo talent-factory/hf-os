@@ -1,0 +1,24 @@
+Aufgabe 4: Logische- und Physische Adressen
+
+
+a) Virtuelle Adresse: 12300₁₀
+
+Berechnung der Seitennummer: 12300 ÷ 4096 = 3
+Offset innerhalb der Seite: 12300 mod 4096 = 12
+Virtuelle Seite 3 (Bereich 20KB-24KB) wird laut Page Table auf physische Seite 4 (16KB-20KB) abgebildet
+Physische Adresse = (4 × 4096) + 12 = 16384 + 12 = 16396₁₀
+
+b) Virtuelle Adresse: 16384₁₀
+
+Berechnung der Seitennummer: 16384 ÷ 4096 = 4
+Offset innerhalb der Seite: 16384 mod 4096 = 0
+Virtuelle Seite 4 (Bereich 16KB-20KB) wird laut Page Table auf physische Seite 3 (12KB-16KB) abgebildet
+Physische Adresse = (3 × 4096) + 0 = 12288₁₀
+
+c) Virtuelle Adresse: 32800₁₀
+
+Berechnung der Seitennummer: 32800 ÷ 4096 = 8
+Offset innerhalb der Seite: 32800 mod 4096 = 32
+Virtuelle Seite 8 (Bereich 32KB-36KB) ist mit "X" markiert
+Dies bedeutet: Page nicht im Hauptspeicher vorhanden → Page Fault
+Eine physische Adresse kann nicht berechnet werden
