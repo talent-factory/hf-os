@@ -1,0 +1,22 @@
+Unterschied zwischen interner und externer Fragmentierung
+
+Interne Fragmentierung entsteht, wenn einem Programm mehr Speicher zugewiesen wird, als es wirklich braucht. Der übrige Speicher innerhalb des Blocks wird nicht genutzt.
+Beispiel: Wenn ein Programm 800 Bytes braucht, aber ein Block mit 1024 Bytes reserviert wird, bleiben 224 Bytes ungenutzt.
+
+Externe Fragmentierung passiert, wenn durch häufiges Reservieren und Freigeben viele kleine freie Speicherbereiche entstehen, die aber nicht zusammenhängen. Es ist dann schwierig, einen grossen zusammenhängenden Block zu finden.
+Beispiel: Im Beispiel fragmentierung_demo() im Dokument wird jeder zweite Block freigegeben. Danach kann ein grosser Block nicht mehr reserviert werden, obwohl insgesamt genug Speicher vorhanden wäre.
+
+Zwei Strategien zur Vermeidung von Fragmentierung
+
+1. Strategien wie Best Fit oder First Fit
+Dabei sucht das System nach einem möglichst passenden freien Block, in den der Speicherwunsch hineinpasst.
+Vorteil: Effiziente Nutzung des Speichers.
+Nachteil: Es können viele kleine ungenutzte Reste entstehen, die später nicht mehr verwendet werden können.
+
+2. Defragmentierung
+Belegte Speicherblöcke werden im Speicher zusammengerückt, um grössere freie Bereiche zu schaffen.
+Vorteil: Es entstehen wieder grosse, zusammenhängende Speicherbereiche.
+Nachteil: Das Verschieben von Speicher braucht Zeit und kann laufende Programme verlangsamen.
+
+Fazit:
+Best Fit und ähnliche Methoden sind schneller, aber können Speicher mit vielen kleinen Lücken hinterlassen. Defragmentierung ist gründlicher, aber langsamer und aufwendiger. Beide Ansätze haben je nach Situation ihre Vor- und Nachteile.
