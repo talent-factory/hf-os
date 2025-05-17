@@ -1,0 +1,61 @@
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7fffd2518e40
+Heap-Variable: 0x57ad1d79e2a0
+Statische Variable: 0x57ad1c046010
+
+Adressdifferenzen:
+Stack zu Heap: 44335686462368 Bytes
+Stack zu Statisch: 44335710940720 Bytes
+Heap zu Statisch: 24478352 Bytes
+
+Wachstumsrichtungen:
+Stack-Wachstumsrichtung: nach oben (von niedrigeren zu höheren Adressen)
+Heap-Wachstumsrichtung: typischerweise nach oben (von niedrigeren zu höheren Adressen)
+
+Demonstriere Speicherleck durch wiederholte Allokation ohne Freigabe:
+Speicherleck #1: 0x57ad1d79e6d0 (4096 Bytes)
+Speicherleck #2: 0x57ad1d79f6e0 (4096 Bytes)
+Speicherleck #3: 0x57ad1d7a06f0 (4096 Bytes)
+Speicherleck #4: 0x57ad1d7a1700 (4096 Bytes)
+Speicherleck #5: 0x57ad1d7a2710 (4096 Bytes)
+
+1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Die Ausgabe zeigt auf, dass Stack, Heap und statische Variablen in unterschiedlichen Speicherbereichen liegen:
+
+Stack-Adressen (0x7fffd2518e40) sind im virtuellen Adressraum angesiedelt
+Heap-Adressen (0x57ad1d79e2a0) liegen im mittleren Bereich
+Statische Variablen (0x57ad1c046010) befinden sich oftmals nahe am Programmcode
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+1. Statische Variablen (Data-Segment):
+
+Werden zur Kompilierzeit festgelegt
+Existieren während der gesamten Programmlaufzeit
+Liegen nahe am Programmcode (Text-Segment), da sie beim Laden des Programms bereits bekannt sind
+Werden in den Bereichen .data (initialisierte Daten) oder .bss (nicht-initialisierte Daten) gespeichert
+
+
+2. Heap-Speicher:
+
+Wird dynamisch zur Laufzeit mit malloc() angefordert
+Wächst typischerweise von niedrigeren zu höheren Adressen
+Wird für Daten mit unbekannter Größe oder Lebensdauer verwendet
+Erfordert explizite Verwaltung durch den Programmierer (allokieren/freigeben)
+Liegt im mittleren Bereich des virtuellen Adressraums, damit er wachsen kann
+
+
+3. Stack-Speicher:
+
+Automatisch verwaltet für lokale Variablen und Funktionsaufrufe
+Wächst typischerweise von höheren zu niedrigeren Adressen (wie im Programm bestätigt)
+Speicherort für Funktionsparameter, Rücksprungadressen und lokale Variablen
+Wird bei Funktionseintritt allokiert und beim Verlassen automatisch freigegeben
+Befindet sich am oberen Ende des virtuellen Adressraums
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+Bei jedem Durchlauf werden 4kB an Speicher reserviert/belegt, aber nicht wieder frei gegeben. Der immer knapper werdende Speicherplatz führt dazu, dass die Adressen ansteigen und damit auch der Heap.
+Ein Betriebssystem kann mittels Speicherbereinigung nach jedem Progarmmende dieses Speicherleck umgehen.
