@@ -1,0 +1,15 @@
+1. Es werden Speicheradressen der drei Haupttypen der Variablen ausgegeben:
+- Stack Variable (0x7ffe02d2e0d0)
+- Heap Variable (0x5cb113b932a0)
+- Statische Variable (0x5cb111c3f010)
+
+Diese liegen jeweils weit voneinander entfernt. Auch wird gezeigt, dass der Stack zu höheren Adressen wächst.
+Zugleich passiert ein Speicherleck, indem der Speicher wiederholt den Speicher belegt aber nicht freigegeben wird. Dies führt dann zur fortlaufender Belegung neuer Speicheradressen.
+
+2. Der Grund warum die drei Variablentypen in unterschiedlichen Speicherbereichen liegen ist, dass jeder Bereich eine andere Lebensdauer und Verwaltung hat.
+Beispiel: Der Stack für automatische, kurzlebige Variablen
+Der Heap für dynamisch verwalteten speicher
+Der Statische Bereich für globale und während der Programmlaufzeit existierende Variablen.
+
+3. Das Speicherleck führt zu einer loopenden Belegung vom Heap-Speicher. Dieser wird, wie vorhin erwähnt, nicht freigegeben und es kann nach einer Zeit zu Speicherknappheit und Systeminstabilität führen.
+Im "Notfall" kann ein System die Prozesse begrenzen oder Prozesse mildern, welche mehr Speicher benötigen.
