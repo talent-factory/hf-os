@@ -1,0 +1,35 @@
+Ausgabe: 
+Speicheradressanalyse:
+---------------------
+Stack-Variable:     0x7ffdcb583350
+Heap-Variable:      0x60e20a2222a0
+Statische Variable: 0x60e2090a5010
+
+Adressdifferenzen:
+Stack - Heap:       34204066123952 Bytes
+Stack - Statisch:   34204084462400 Bytes
+Heap - Statisch:    18338448 Bytes
+
+Wachstumsrichtungen:
+Stack wächst nach oben (höhere Adressen)
+
+1. 
+Die Ausgabe zeigt, dass verschiedene Variablentypen (Stack, Heap, statisch) in getrennten Speicherbereichen liegen.
+Der Stack liegt im oberen Adressbereich und wächst in diesem Fall nach oben (höhere Adressen).
+Der Heap befindet sich im mittleren Bereich.
+Statische Variablen liegen nochmals an einem anderen Ort, meist im Data- oder BSS-Segment.
+
+Das spiegelt die segmentierte Speicherorganisation moderner Betriebssysteme wider, bei der unterschiedliche Speicherarten klar getrennt verwaltet werden.
+----------------------------------------------
+2.
+Die Ausgabe zeigt, dass verschiedene Variablentypen (Stack, Heap, statisch) in getrennten Speicherbereichen liegen.
+Der Stack liegt im oberen Adressbereich und wächst in diesem Fall nach oben (höhere Adressen).
+Der Heap befindet sich im mittleren Bereich.
+Statische Variablen liegen nochmals an einem anderen Ort, meist im Data- oder BSS-Segment.
+Das spiegelt die segmentierte Speicherorganisation moderner Betriebssysteme wider, bei der unterschiedliche Speicherarten klar getrennt verwaltet werden.
+----------------------------------------------
+Das Programm reserviert mehrfach Speicher mit malloc(), gibt diesen aber nicht frei (free() fehlt). Dadurch entsteht ein Speicherleck belegter Speicher, der nicht mehr genutzt wird.
+Mögliche Auswirkungen:
+Erhöhter Speicherverbrauch über die Zeit, besonders kritisch bei lang laufenden Programmen oder vielen Lecks.
+Bei vielen Lecks kann es zu Speichermangel oder sogar Programmabstürzen kommen.
+Moderne Betriebssysteme können beim Programmende zwar den gesamten belegten Speicher freigeben, aber während der Laufzeit bleibt der verlorene Speicher dem Prozess erhalten. Tools wie Valgrind helfen beim Aufdecken solcher Lecks.
