@@ -112,7 +112,7 @@ ls -la
 
 
 
-
+Ausgabe:
 ➜  test ls -la
 insgesamt 20
 drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 17 11:23 .
@@ -124,7 +124,6 @@ lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 17 11:23 symlink.txt -> original.txt
 
 Bedeutung der Spalten:
 1. Spalte: Dateityp und Berechtigungen. d steht für directory, rwx steht für Read, Write und Executable. Die ersten 3 rwx stehen für den Besitzer, die zweiten für die Gruppe und die letzten für alle Anderen.
-
 
 2. Spalte: steht für den Linkcount
 
@@ -149,7 +148,7 @@ Löscht man die Original Datei zeigt der symlink ins Leere.
 
 
 
-    echo "Neuer Inhalt" > original.txt
+echo "Neuer Inhalt" > original.txt
 
 Was wird ausgegeben:
 Es wird keine Ausgabe erzeugt. Der Befehl überschreibt die Datei original.txt mit dem Text "Neuer Inhalt".
@@ -163,7 +162,7 @@ Hardlink (hardlink.txt) zeigt direkt auf den Inode, daher wird der Inhalt übern
 Fehler:
 Keine Fehler, alle Links funktionieren zu diesem Zeitpunkt korrekt.
 
-    cat symlink.txt hardlink.txt
+cat symlink.txt hardlink.txt
 
 Was wird ausgegeben:
 Neuer Inhalt
@@ -178,7 +177,7 @@ symlink.txt wird über den Pfad original.txt aufgelöst. hardlink.txt verweist d
 Fehler:
 Keine. Beide Dateien sind vorhanden und lesbar.
 
-    mv original.txt ../original.txt
+mv original.txt ../original.txt
 
 Was wird ausgegeben:
 Keine Ausgabe.
@@ -192,7 +191,7 @@ Hardlink funktioniert weiterhin, da er direkt auf den Inode verweist. Symlink is
 Fehler:
 symlink.txt verweist auf einen nicht existierenden Pfad und ist damit ein sogenannter "dangling symlink".
 
-    cat symlink.txt hardlink.txt 2>&1
+cat symlink.txt hardlink.txt 2>&1
 
 Was wird ausgegeben:
 cat: symlink.txt: No such file or directory
@@ -208,4 +207,37 @@ Fehler:
 Beim Zugriff auf symlink.txt tritt ein Fehler auf, weil das Ziel nicht mehr existiert. Der Zugriff auf hardlink.txt ist erfolgreich.
 
 
+Bonusfrage:
 
+Wenn die beteiligten Dateien (z. B. original.txt, symlink.txt, hardlink.txt) auf unterschiedlichen Dateisystemen oder Partitionen liegen würden, ergeben sich folgende Änderungen im Verhalten:
+
+Hardlinks funktionieren nicht über Dateisystemgrenzen hinweg.
+Der Befehl ln original.txt /anderes_fs/hardlink.txt würde fehlschlagen.
+
+Fehlermeldung: ln: failed to create hard link: Invalid cross-device link
+
+Grund: Hardlinks verweisen direkt auf Inodes, und Inodes sind nur innerhalb eines Dateisystems eindeutig. Ein Hardlink kann nur innerhalb desselben Dateisystems erstellt werden.
+
+Symbolische Links funktionieren auch über Dateisystemgrenzen hinweg.
+
+Der Befehl ln -s /anderes_fs/original.txt symlink.txt funktioniert problemlos.
+
+Der Symlink enthält lediglich einen Pfad (String) zum Ziel.
+
+Es spielt keine Rolle, ob der Pfad sich in einem anderen Dateisystem befindet.
+
+Der Befehl mv zwischen Dateisystemen verhält sich wie eine Kombination aus cp und rm.
+
+Beispiel: mv original.txt /anderes_fs/original.txt
+
+Es wird eine Kopie der Datei im Zielsystem erstellt und das Original gelöscht.
+
+Der Inode der Datei ändert sich, da jede Datei im neuen Dateisystem einen neuen Inode erhält.
+
+Bereits bestehende Hardlinks im Quellsystem zeigen weiterhin auf den alten Inode, nicht auf die neue Datei.
+
+Auswirkungen auf Symlinks nach dem Verschieben:
+
+Ein symbolischer Link, der auf die alte Position zeigt, ist nach dem Verschieben des Originals möglicherweise ungültig.
+
+Beispiel: cat symlink.txt liefert einen Fehler, wenn das Ziel (original.txt) nicht mehr existiert oder verschoben wurde.
