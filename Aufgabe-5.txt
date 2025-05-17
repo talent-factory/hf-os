@@ -1,0 +1,41 @@
+# Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+Die Ausgabe „Stack wächst nach oben“ zeigt, dass bei deinem System lokale Variablen mit steigenden Adressen im Stack abgelegt werden – eine eher ungewöhnliche, aber mögliche Speicherorganisation.
+Die Adressdifferenz im Heap: -32 bedeutet, dass der zweite malloc()-Block unterhalb des ersten im Speicher liegt. Das deutet darauf hin, dass der Heap in deinem System nach unten wächst, also zu niedrigeren Adressen.
+
+# Was sagt das über die Speicherorganisation aus?
+
+Dein Betriebssystem oder deine Architektur verwendet ein nicht-standardmäßiges Layout, bei dem:
+	•	der Stack nach oben wächst (zu höheren Adressen),
+	•	der Heap nach unten wächst (zu niedrigeren Adressen).
+
+Dies unterscheidet sich vom üblichen Verhalten (Stack ↓, Heap ↑), ist aber technisch gültig und hängt von der Prozessorarchitektur und Betriebssystemkonfiguration ab.
+
+# --------------------------------
+
+# Warum liegen Stack-, Heap- und statische Variablen in getrennten Speicherbereichen?
+
+Jeder Bereich hat unterschiedliche Anforderungen:
+Stack: automatische, kurzlebige Variablen mit schnellem Zugriff (Funktionsein-/-ausstieg).
+Heap: dynamisch verwalteter Speicher mit flexibler Lebensdauer.
+Statische Daten: fix im Speicher, bekannt zur Kompilierzeit.
+
+Durch die Trennung kann das Betriebssystem:
+Speicher effizient verwalten. 
+Überläufe und Kollisionen verhindern. 
+Schutzmechanismen wie Zugriffskontrollen einsetzen.
+
+# --------------------------------
+
+#Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+Auswirkungen des Speicherlecks
+
+Das absichtlich nicht freigegebene malloc(100) führt zu einem Speicherleck, da der zugewiesene Speicher nicht zurückgegeben wird. Bei wiederholtem Auftreten kann dies zu:
+	•	steigendem RAM-Verbrauch,
+	•	langsamerem System,
+	•	im Extremfall zu einem Absturz durch Speichermangel führen.
+
+Wie geht das Betriebssystem damit um?
+	•	Nach Beenden des Prozesses gibt das Betriebssystem den belegten Speicher normalerweise automatisch frei.
+	•	Während der Laufzeit erkennt es das Leck nicht automatisch – dafür braucht es Tools wie valgrind oder AddressSanitizer.
+	•	Bei sicherheitskritischen Systemen werden Überwachungsmechanismen eingesetzt, um Ressourcenlecks frühzeitig zu erkennen und zu begrenzen.

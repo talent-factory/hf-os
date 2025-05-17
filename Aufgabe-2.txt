@@ -1,0 +1,35 @@
+# Interne Speicherfragmentierung
+Interne Speicherfragmentierung tritt auf, wenn einem Prozess ein fester Speicherblock zugewiesen wird, dieser aber nicht vollständig genutzt wird. Der ungenutzte Rest im Block bleibt intern fragmentiert.
+
+# Beispiel 
+Ein System verwendet feste Speicherblöcke von 8 KB. Ein Prozess benötigt nur 6 KB, bekommt aber 8 KB zugewiesen. Die verbleibenden 2 KB im Block sind ungenutzt.
+
+# --------------------------------
+
+# Externe Speicherfragmentierung
+Externe Speicherfragmentierung entsteht, wenn durch das Anlegen und Freigeben von Speicher kleine, verteilte freie Bereiche entstehen, die zusammen zwar genug Platz für einen neuen Prozess bieten würden, aber nicht am Stück.
+#Beispiel
+In einem System mit variabler Speicherzuweisung entstehen nach und nach Lücken von 3 KB, 5 KB und 4 KB. Ein neuer Prozess benötigt 10 KB, kann aber nicht geladen werden, weil kein zusammenhängender Block dieser Größe verfügbar ist.
+
+
+# --------------------------------
+
+# Zwei verschiedene Strategien
+# Strategie 1: Paging
+Der Speicher wird in gleich große Seiten unterteilt. Prozesse erhalten nur die benötigten Seiten, die nicht zusammenhängend sein müssen.
+
+# Vorteile
+Vermeidet externe Fragmentierung, einfache Zuweisung.
+
+# Nachteile
+Interne Fragmentierung in der letzten Seite möglich, hoher Verwaltungsaufwand (Seitentabellen, TLB).
+
+# Puddy-System
+Eine zweite Strategie ist das Buddy-System. Hier wird der Speicher in Blöcke der Größe 2ⁿ aufgeteilt. Bei Bedarf wird ein Block geteilt oder zwei benachbarte (“Buddies”) wieder zusammengeführt.
+
+# Vorteil
+Dynamisch und effizient in der Speicherverwaltung, mit schneller Allokation.
+
+# Nachteil
+Es kann zu interner Fragmentierung durch Rundung auf Zweierpotenzen kommen, und das Zusammenführen erfordert Verwaltungslogik, was die Komplexität erhöht.
+

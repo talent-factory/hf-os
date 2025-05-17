@@ -1,0 +1,23 @@
+# Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+Die Ausgabe zeigt, dass sich nach dem Anhängen von Text an testdatei.txt die Dateigröße von 96 auf 142 Bytes erhöht hat – dies ist die direkte Folge der hinzugefügten Zeichen. Alle anderen Metadaten wie Inode-Nummer, Zugriffsrechte und Zeitstempel bleiben unverändert, obwohl man normalerweise eine Aktualisierung der Zugriffs- und Änderungszeit erwarten würde. Dass dies hier nicht geschieht, liegt vermutlich an einem aktivierten Filesystem-Cache oder Zeitauflösungsgrenze (z. B. nur sekundengenau erfasst).
+Beim Erstellen des Hardlinks bleibt die Inode-Nummer identisch, was korrekt ist, da beide Namen nun dieselbe Datei referenzieren. Die Anzahl der Hardlinks steigt entsprechend von 1 auf 2. Inhalt, Größe und Metadaten sind bei beiden Namen identisch, da sie denselben Inode teilen.
+
+# --------------------------------
+# Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+# Unterschied
+Die Inode-Nummer ist ein eindeutiger Bezeichner für eine Datei im Dateisystem und enthält alle Metadaten wie Dateigröße, Rechte, Zeitstempel und Speicherort – nicht aber den Namen. Der Dateiname ist nur ein Verzeichniseintrag, der auf die Inode verweist.
+
+# Bedeutung wenn zwei Dateien die gleiche Indoe-Nummer haben
+Wenn zwei Dateien die gleiche Inode-Nummer haben, handelt es sich um Hardlinks. Sie zeigen auf denselben Inode, teilen sich also Inhalt und Metadaten. Änderungen an einer Datei wirken sich automatisch auf die andere aus.
+
+
+# --------------------------------
+# Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+# Veränderung
+Ein symbolischer Link (Symlink) ist eine separate Datei, die lediglich den Pfad zur Zieldatei speichert. Im Gegensatz zum Hardlink hat ein Symlink eine eigene Inode-Nummer und eigene Metadaten (Größe, Zugriffsrechte, Zeitstempel).
+
+# Unterschied
+Wird die Originaldatei gelöscht, bleibt der Symlink bestehen, zeigt aber ins Leere – er wird „gebrochen“ und ist nicht mehr nutzbar. Ein Hardlink hingegen verweist direkt auf den Inode der Datei; wird die Originaldatei gelöscht, bleibt der Inhalt erhalten, solange mindestens ein Hardlink existiert.
+

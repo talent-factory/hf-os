@@ -1,0 +1,110 @@
+# Ausgabe von ls -la
+➜  test ls -la
+insgesamt 20
+drwxrwxr-x  3 vmadmin vmadmin 4096 Mai 17 11:13 .
+drwxr-x--- 23 vmadmin vmadmin 4096 Mai 17 11:14 ..
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:13 hardlink.txt
+-rw-r-----  2 vmadmin vmadmin   18 Mai 15 11:13 original.txt
+drwxrwxr-x  2 vmadmin vmadmin 4096 Mai 17 11:13 subdir
+lrwxrwxrwx  1 vmadmin vmadmin   12 Mai 17 11:13 symlink.txt -> original.txt
+
+# --------------------------------
+
+# Erklärung und Bedeutung jeder Spalte
+
+# Erstellt ein Verzeichnis 'test' mit Unterverzeichnis 'subdir' und wechselt hinein
+mkdir -p test/subdir && cd test
+
+# Erstellt eine Datei mit Zeitstempel im Namen als Inhalt
+echo "Inhalt-$(date +%s)" > original.txt
+
+# Erstellt einen symbolischen Link auf original.txt
+ln -s original.txt symlink.txt
+
+# Erstellt einen Hardlink auf original.txt
+ln original.txt hardlink.txt
+
+# Setzt die Zugriffsrechte: rw-r----- (User: lesen/schreiben, Gruppe: lesen)
+chmod 640 original.txt
+
+# Setzt den Zeitstempel der Datei auf "vor 2 Tagen"
+touch -d "2 days ago" original.txt
+
+# Zeigt alle Dateien mit Details an:
+ls -la
+
+# --------------------------------
+
+# Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+
+Inode
+original.txt und hardlink.txt teilen sich denselben Inode, da ein Hardlink direkt auf denselben Dateieintrag im Dateisystem verweist.
+symlink.txt hat einen eigenen Inode, da es eine separate Datei ist, die lediglich den Pfad zur Zieldatei speichert.
+
+Berechtigungen
+Original.txt und hardlink.txt haben identische Berechtigungen, da sie dieselbe Datei sind.
+symlink.txt zeigt beim ls -l eigene Berechtigungen, aber in der Praxis gelten die Rechte der Zieldatei beim Zugriff – Symlinks haben keine „echten“ Rechte auf den Inhalt.
+
+Zeitstempel
+original.txt und hardlink.txt zeigen identische Zeitstempel (z. B. „vor 2 Tagen“), da sie dieselben Metadaten teilen.
+symlink.txt hat einen eigenen Zeitstempel, der den Zeitpunkt der Link-Erstellung widerspiegelt, nicht den der Zieldatei.
+
+# --------------------------------
+
+# Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+Dateien mit gleicher Inode-Nummer sind Hardlinks, die exakt dieselbe Datei im Dateisystem repräsentieren.
+Dateien mit unterschiedlicher Inode-Nummer, wie Symlinks, sind eigenständige Dateien mit eigenem Pfad und Metadaten.
+
+# --------------------------------
+
+# Erkläre für jeden Befehl: 
+
+# Überschreibt den Inhalt von original.txt mit "Neuer Inhalt"
+echo "Neuer Inhalt" > original.txt
+
+# Gibt den Inhalt von symlink.txt und hardlink.txt aus
+# Beide zeigen noch auf die originale Datei (bzw. den Inode)
+cat symlink.txt hardlink.txt
+
+# Verschiebt original.txt eine Ebene höher (nach ../)
+# symlink zeigt nun ins Leere (Broken Link), hardlink bleibt gültig
+mv original.txt ../original.txt
+
+# Versucht erneut, den Inhalt von symlink.txt und hardlink.txt anzuzeigen
+# symlink gibt einen Fehler, hardlink funktioniert noch
+cat symlink.txt hardlink.txt 2>&1
+
+# --------------------------------
+
+# Was wird ausgegeben und warum?
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+# Grund
+Grund: Der symbolische Link verweist weiterhin auf original.txt im aktuellen Verzeichnis – diese Datei existiert dort aber nicht mehr (sie wurde verschoben). Der Symlink ist nun gebrochen.
+
+# --------------------------------
+
+#Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+# Bei: echo "Neuer Inhalt" > original.txt
+Der Inhalt des Inodes von original.txt (und damit auch von hardlink.txt, da gleicher Inode) wird überschrieben.
+Inode bleibt unverändert, nur die Dateidaten ändern sich.
+
+# Bei:  mv original.txt ../original.txt
+Der Verzeichniseintrag im aktuellen Verzeichnis wird gelöscht, ein neuer Eintrag im übergeordneten Verzeichnis (..) zeigt nun auf denselben Inode.
+Die Inode-Nummer bleibt gleich, nur der Pfad (Verzeichniseintrag) ändert sich.
+
+# --------------------------------
+
+# Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+Symbolische Links verweisen nur auf Pfade und brechen, wenn die Zieldatei verschoben wird. Harte Links zeigen direkt auf den Inode und bleiben auch nach dem Verschieben der Datei gültig. Sie sind daher robuster und pfadunabhängig.
+
+# --------------------------------
+
+# Welche Fehler könnten auftreten und warum?
+In diesem Szenario kann symlink.txt beim Zugriff einen Fehler auslösen, da der symbolische Link auf einen nicht mehr existierenden Pfad zeigt. Zudem überschreibt echo den Inhalt der Datei, was sich auch auf hardlink.txt auswirkt, da beide denselben Inode nutzen. Wird kein gültiger Pfad zum Inode erhalten, geht die Datei trotz weiterem Speicherverbrauch verloren. Auch kann es zu Verwirrung kommen, da Hardlinks unter verschiedenen Namen identisch wirken.
+
+# Bonus Frage: Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+Harte Links funktionieren nur innerhalb desselben Dateisystems, da sie direkt auf Inodes verweisen. Auf unterschiedlichen Partitionen würde ihr Erstellen mit einem Fehler scheitern. Symbolische Links dagegen funktionieren auch über Dateisystemgrenzen hinweg, da sie nur Pfade speichern – bleiben aber anfällig für Pfadänderungen.
+
+
+
+
