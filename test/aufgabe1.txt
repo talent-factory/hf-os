@@ -1,0 +1,22 @@
+
+
+    mkdir -p test/subdir && cd test
+mit diesem Befehl erstellt man ein neuen directory mit mkdir, und mit cd wechselt man zu den neuen ordner: test
+
+    echo "Inhalt-$(date +%s)" > original.txt
+-gibt der aktuellen Zeit mit sekunden
+
+    ln -s original.txt symlink.txt
+-damit erstellt man eine Verknupfung yur Datei original.txt
+
+    ln original.txt hardlink.txt
+-damit erstellt man einen weiteren Dateinamen der auf denselben Inhlat wie original.txt datei zeigt
+
+    chmod 640 original.txt
+-damit aendert man die Berechtigung des file original.txt auf rw- r-- ---
+
+    touch -d "2 days ago" original.txt
+-touch veraendert die Yeitstaempel
+
+    ls -la
+-es zeigt was in der Verzeichniss drin ist und zeigt auch die verstaekte dateien.
