@@ -1,0 +1,65 @@
+# command
+mkdir -p test/subdir && cd test
+# erklaerung
+der command erstellt das verzeichnis subdir unter dem directory test. das -p flag wird angegeben damit das directory test ebenfalls erstellt wird sollte es noch nicht existieren. sofern der mkdir befehl mit exit code 0 also successfull exited wird im anschluss der command cd test ausgeführt womit wir unser working directory in den neuen ordner test wechseln. beim && handelt es sich um eine and condition welche nur ausgeführt wird wenn der vorherige command erfolgreich war.
+
+-------------------------
+
+# command
+echo "Inhalt-$(date +%s)" > original.txt
+# erklaerung
+hierbei wird der string Inhalt-Datum via echo in den stdout geschrieben. der stdout wird dann aber redirected in die datei original.txt. Im echo string findet eine command substituion statt wobei als allererstes der date command in dem bracket $() ausgeführt wird womit dann das aktuelle datum im string drin steht
+
+---------------------------
+
+# command
+ln -s original.txt symlink.txt
+# erklaerung
+erstellt einen soft symlink mit dem namen symlink.txt welcher auf die datei original.txt zeigt. die -s bestimmt das es sich um einen soft und nicht hard link handelt
+
+-------------------------------
+
+# command
+ln original.txt hardlink.txt
+# erklaerung
+erstellt einen hardlink mit dem namen hardlink.txt welcher auf die datei original.txt zeigt. Der hardlink zeigt auf die gleiche inode wie das originale file
+
+-------------------------------
+
+# command
+chmod 640 original.txt
+# erklaerung
+wendet die octal permissions von 0640 (das erste null am anfang ist optional) an auf das file original.txt. bei 0640 handelt es sich um rw-r----- berechtigungen also für den owner read/write und für die gruppe des files read und für alle anderen user keine berechtigung auf das file
+
+-------------------------------------
+
+# command
+touch -d "2 days ago" original.txt
+# erklaerung
+mit touch wird ein file erstellt. die -d option macht es möglich direkt ein datum anzugeben welches dann verwendet wird alsctime also als zeitpunkt wo das file zuletzt modifiziert wurde
+
+--------------------------------------
+
+# command
+ls -la
+# erklaerung
+listet das aktuelle working directory verzeichnis auf. die -l option sagt das es im listenformat ausgegeben wird und -a zeigt versteckte dateien an
+
+---------------------------------------------
+
+# ausgabe am schluss
+➜  test git:(hfi2024a/joel-brunner) ✗ ls -ali
+insgesamt 20
+546341 drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:19 .
+546053 drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:18 ..
+546343 -rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:19 hardlink.txt
+546343 -rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:19 original.txt
+546342 drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:18 subdir
+546344 lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:19 symlink.txt -> original.txt
+
+
+# erklaerung
+
+nachdem wir die commands ausgefuert haben sehen wir mit ls -ali den obigen output. die -i option zeigt einfach noch an auf welche inode das file zeigt
+
+hier ist nun klar erkennbar das der hardlink.txt auf die gleiche inode zeigt wie das original.txt. der soft link hingegen hat eine eigene inode.
