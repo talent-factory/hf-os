@@ -1,0 +1,10 @@
+Die physische Adresse 12300 liegt im Seitenrahmen 3 mit Offset 12. 
+Da virtuelle Seite 6 auf physische Seite 3 abgebildet wird, 
+ergibt sich die virtuelle Adresse 20496. 
+
+
+Die Adresse 16384 befindet sich in Seitenrahmen 4 mit Offset 0; virtuelle Seite 1 zeigt auf diesen Rahmen, 
+also ergibt sich die virtuelle Adresse 4096. 
+
+
+Die Adresse 32800 ist zu viel. Das Max wäre 32768

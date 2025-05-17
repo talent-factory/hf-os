@@ -1,0 +1,20 @@
+Frage 1
+Nach dem Anhängen von Text an die Datei testdatei.txt hat sich die Dateigröße von 96 auf 150 Bytes erhöht, w
+ährend Inode-Nummer, Rechte und Zeitstempel gleich geblieben sind. Die Anzahl der Hardlinks stieg auf 2, 
+nachdem ein Hardlink erstellt wurde, da beide Dateinamen nun denselben Inode teilen. 
+Da kein erneuter Zugriff nach dem Anhängen erfolgte, blieb auch der Zugriffszeitpunkt unverändert.
+
+
+Frage 2
+Die Inode-Nummer ist ein eindeutiger Bezeichner für eine Datei im Dateisystem, der Informationen wie Größe, 
+Rechte und Zeitstempel enthält – jedoch nicht den Namen. Der Dateiname ist lediglich ein Verweis im Verzeichnis, 
+der auf einen bestimmten Inode zeigt. Wenn zwei Dateien die gleiche Inode-Nummer haben, handelt es sich um Hardlinks, 
+die denselben Dateiinhalt gemeinsam nutzen.
+
+
+Frage 3
+Ein symbolischer Link verweist nur auf den Pfad der Zieldatei, nicht direkt auf deren Inode. 
+In den Metadaten des Symlinks steht seine eigene Inode-Nummer, Dateigröße und eigene Zeitstempel. 
+Wird die Originaldatei gelöscht, zeigt der Symlink ins Leere und kann nicht mehr auf den Inhalt zugreifen, 
+während ein Hardlink weiterhin funktioniert, da er direkt mit dem Inode verbunden ist.
+

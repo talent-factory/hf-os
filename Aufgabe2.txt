@@ -1,0 +1,19 @@
+Punkt 1
+
+Interne Fragmentierung entsteht, wenn Speicherblöcke einem Prozess zugewiesen werden, 
+dieser aber nicht den ganzen Block nutzt. Der ungenutzte Speicher innerhalb des Blocks geht dabei verloren. 
+Ein typisches Beispiel ist eine Speicherverwaltung mit festen Blockgrößen, bei der ein Prozess nur 18 KB benötigt, 
+aber ein 20 KB-Block zugewiesen wird. Externe Fragmentierung tritt auf, 
+wenn durch viele Speicheranforderungen und -freigaben kleine, unzusammenhängende Lücken im RAM entstehen, 
+die für größere Prozesse unbrauchbar sind. In der Praxis sieht man das etwa bei älteren 
+Betriebssystemen mit variabler Partitionszuweisung.
+
+
+Punkt 2
+Eine Möglichkeit zur Reduktion von Speicherfragmentierung ist das Paging. 
+Dabei wird der Speicher in gleich große Seiten unterteilt, wodurch interne Fragmentierung verringert wird. 
+Ein Vorteil ist die einfache Verwaltung und gute Ausnutzung des physischen Speichers. 
+Nachteilig sind jedoch erhöhter Verwaltungsaufwand durch Seitentabellen und mögliche Leistungseinbußen durch häufige 
+Speicherzugriffe. Eine andere Strategie ist das Segmentieren mit dynamischer Allokation. 
+Hierbei können Prozesse unterschiedlich große Speicherbereiche anfordern, was Flexibilität bietet. 
+Jedoch entsteht dabei eher externe Fragmentierung, und es sind komplexe Verwaltungsmechanismen nötig.

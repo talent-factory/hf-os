@@ -1,0 +1,125 @@
+Punkt 1
+
+mkdir -p test/subdir && cd test
+Der Befehl erstellt zunächst mit mkdir -p test/subdir das Verzeichnis test samt Unterverzeichnis subdir, 
+wobei -p sicherstellt, dass auch alle übergeordneten Verzeichnisse angelegt werden. 
+Anschließend wechselt cd test in das neu erstellte Verzeichnis. 
+Dabei werden Konzepte wie die hierarchische Struktur des Dateisystems, 
+das Anlegen von Verzeichniseinträgen sowie die Pfadauflösung durch das Betriebssystem angewendet.
+
+echo "Inhalt-$(date +%s)" > original.txt
+Der Befehl schreibt den Text „Inhalt-“ gefolgt von der aktuellen Zeit in Sekunden seit dem 1. Januar 1970 
+in die Datei original.txt. Dabei erzeugt date +%s einen Zeitstempel, 
+der durch "$(...)" in den String eingefügt wird. echo gibt diesen zusammengesetzten Text aus 
+und das >-Zeichen leitet ihn als Inhalt in die Datei um – vorhandener Inhalt wird dabei überschrieben. 
+Dieser Vorgang nutzt das Konzept der Standardausgabe und der Umleitung im Dateisystem.
+
+
+ln -s original.txt symlink.txt
+Der Befehl erstellt mit ln -s original.txt symlink.txt einen symbolischen Link namens symlink.txt, 
+der auf die Datei original.txt zeigt. Dabei wird kein eigener Dateikörper kopiert, 
+sondern nur ein Verweis im Dateisystem angelegt. Das Dateisystem speichert also lediglich den Pfad zur Zieldatei. 
+Symbolische Links sind flexibel, funktionieren auch über Dateisystemgrenzen hinweg, können aber ins Leere zeigen, 
+wenn das Ziel gelöscht oder verschoben wird.
+
+
+ln original.txt hardlink.txt
+Der Befehl ln original.txt hardlink.txt erstellt einen Hardlink mit dem Namen hardlink.txt, 
+der direkt auf denselben Inode wie original.txt verweist. 
+Beide Dateinamen zeigen somit auf denselben physischen Speicherbereich auf der Festplatte. 
+Änderungen am Inhalt betreffen daher beide Namen gleichermaßen. 
+Im Gegensatz zu symbolischen Links funktioniert ein Hardlink nur innerhalb desselben Dateisystems.
+
+
+chmod 640 original.txt
+Der Befehl chmod 640 original.txt setzt die Zugriffsrechte der Datei original.txt auf „640“. 
+Das bedeutet: der Eigentümer darf lesen und schreiben (6), die Gruppe darf nur lesen (4) und alle anderen haben keinen 
+Zugriff (0). Dieses Rechtekonzept basiert auf dem klassischen Unix-Dateimodell mit 
+Benutzer-, Gruppen- und Welt-Rechten. Der Befehl steuert damit, 
+wer welche Aktionen (lesen, schreiben, ausführen) auf eine Datei im Dateisystem ausführen darf.
+
+
+touch -d "2 days ago" original.txt
+Im Dateisystem legen Rechte fest, wer eine Datei lesen, schreiben oder ausführen darf. 
+Sie gelten für Besitzer, Gruppe und andere. 
+Der Befehl chmod setzt diese Rechte, z. B. erlaubt 640 dem Besitzer Lesen und Schreiben, 
+der Gruppe nur Lesen und allen anderen keinen Zugriff.
+
+
+ls -la
+Der Befehl ls -la listet alle Dateien und Verzeichnisse im aktuellen Verzeichnis ausführlich auf, 
+auch versteckte (die mit Punkt beginnen). 
+Dabei zeigt er Details wie Rechte, Anzahl der Links, Besitzer, Gruppe, Größe und Änderungsdatum jeder Datei.
+
+
+
+
+Punkt 2
+s -la                            
+insgesamt 96
+drwxr-xr-x 4 vmadmin vmadmin  4096 Mai 17 11:24 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-rw-r-- 1 vmadmin vmadmin  1356 Mai 17 11:11 Aufgabe2.txt
+-rw-rw-r-- 1 vmadmin vmadmin  3007 Mai 17 11:24 Aufgabe3
+-rw-rw-r-- 1 vmadmin vmadmin    40 Mai 17 11:14 Aufgabe3.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 17 11:11 .git
+-rw-r----- 2 vmadmin vmadmin    18 Mai 15 11:22 hardlink.txt
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 17 11:06 LB2-FS25.html
+-rw-r----- 2 vmadmin vmadmin    18 Mai 15 11:22 original.txt
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+lrwxrwxrwx 1 vmadmin vmadmin    12 Mai 17 11:18 symlink.txt -> original.txt
+drwxrwxr-x 3 vmadmin vmadmin  4096 Mai 17 11:14 test
+
+
+
+Punkt 3
+Die Ausgabe von ls -la zeigt jede Datei mit ihren Details. 
+Die erste Spalte gibt den Dateityp und die Zugriffsrechte an, 
+gefolgt von der Anzahl der Links, dem Besitzer, der Gruppe, der Dateigröße, 
+dem Zeitstempel der letzten Änderung und dem Namen. 
+Unterschiede zwischen den Dateien erkennt man z. B. bei symlink.txt, 
+das als symbolischer Link mit eigenen Rechten erscheint, sowie bei hardlink.txt und original.txt, 
+die identische Inode-Nummern und Inhalte haben, da es sich um Hardlinks handelt. 
+Andere Dateien haben eigene Inodes, da sie unabhängig gespeichert sind.
+
+
+Punkt4
+echo "Neuer Inhalt" > original.txt
+Der Befehl überschreibt den Inhalt von original.txt mit „Neuer Inhalt“. Die Inode bleibt gleich, 
+daher zeigen Hardlinks wie hardlink.txt weiterhin auf denselben Inhalt. Symbolische Links wie symlink.txt 
+verweisen nur auf den Pfad. Bei Löschung der Zieldatei zeigt ein Symlink ins Leere.
+
+
+cat symlink.txt hardlink.txt
+Der Befehl cat symlink.txt hardlink.txt gibt den Inhalt beider Dateien aus. 
+Da beide auf original.txt verweisen – der eine symbolisch, 
+der andere als Hardlink – erscheint der Inhalt zweimal. Wird original.txt gelöscht, 
+funktioniert der Symlink nicht mehr, der Hardlink bleibt jedoch gültig.
+
+
+mv original.txt ../original.txt
+Der Befehl mv original.txt ../original.txt verschiebt die Datei original.txt in das übergeordnete Verzeichnis. 
+Der Inhalt und die Inode bleiben erhalten, daher funktioniert der Hardlink weiterhin. 
+Der symbolische Link zeigt jedoch ins Leere, da der Pfad original.txt im aktuellen Verzeichnis fehlt.
+
+
+cat symlink.txt hardlink.txt 2>&1
+Der Befehl cat symlink.txt hardlink.txt 2>&1 gibt den Inhalt beider Dateien aus und leitet auch Fehlermeldungen 
+ins Terminal. Da symlink.txt nach dem Verschieben von original.txt ins Leere zeigt, erscheint eine Fehlermeldung. 
+hardlink.txt zeigt weiterhin den korrekten Inhalt.
+
+
+Bonus:
+Hardlinks funktionieren nur innerhalb desselben Dateisystems. 
+Auf unterschiedlichen Partitionen würde ln original.txt hardlink.txt fehlschlagen. 
+Symbolische Links hingegen sind dateisystemübergreifend möglich, da sie nur Pfadverweise speichern.
+
+
+
+
+
+
+
+
+
+
