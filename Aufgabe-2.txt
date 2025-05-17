@@ -1,0 +1,11 @@
+Interne Fragmentierung:
+Bei einer internen Fragmentierung wird einem Prozess mehr Speicher zugewiesen, als er tatsächlich benötigt. Der überschüssige Speicher innerhalb des zugewiesenen Blocks bleibt ungenutzt.
+Beispiel:
+Ein Betriebssystem verwendet eine Speicherverwaltung mit fester Blockgröße von 4 KB. Wenn ein Programm nur 2,5 KB Speicher anfordert, wird ihm trotzdem ein vollständiger 4 KB Block zugewiesen. Die verbleibenden 1,5 KB im Block sind intern fragmentiert und können von keinem anderen Prozess genutzt werden, obwohl sie ungenutzt bleiben.
+
+Externe Fragmentierung:
+Externe Fragmentierung entsteht, wenn freier Speicher in mehreren kleinen, nicht zusammenhängenden Blöcken über den Speicherbereich verteilt ist. Obwohl genügend Speicher frei ist, ist es möglich, dass keiner der freien Blöcke groß genug ist, um eine neue Anforderung zu erfüllen.
+Beispiel:
+Nach längerer Betriebszeit eines Computers wurden Programme geladen und beendet. Im Speicher befinden sich nun viele der oben angesprochenen freien Blöcke: 3 KB, 2 KB und 1 KB, die zwischen diversen Prozessen verteilt sind. Wenn nun ein neues Programm 4 KB zusammenhängenden Speicher benötigt, kann dies nicht erfüllt werden, obwohl insgesamt 6 KB freier Speicher verfügbar sind. Der freie Speicher ist extern fragmentiert und kann ohne Defragmentierung nicht effizient genutzt werden.
+
+Wie Sie sehen, führen beide Fragmentierungsmethoden zu ineffizienter Speichernutzung.
