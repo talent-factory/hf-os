@@ -1,0 +1,20 @@
+Virtuelle Adresse: 12300
+→ Binär:     0011 0000 0001 0100
+→ Seite:     3
+→ Offset:    0000 0001 0100 = 20
+→ Frame:     100 (aus Seitentabelle) = 4
+→ Physische Adresse: (4 × 4096) + 20 = 16404
+
+Virtuelle Adresse: 16384
+→ Binär:     0100 0000 0000 0000
+→ Seite:     4
+→ Offset:    0000 0000 0000 = 0
+→ Frame:     nicht vorhanden in Seitentabelle
+→ Physische Adresse: ungültig
+
+Virtuelle Adresse: 32800
+→ Binär:     1000 0000 0010 0000
+→ Seite:     8
+→ Offset:    0000 0010 0000 = 32
+→ Frame:     nicht vorhanden in Seitentabelle
+→ Physische Adresse: ungültig
