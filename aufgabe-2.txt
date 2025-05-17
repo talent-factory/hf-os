@@ -1,0 +1,24 @@
+Interne Fragmentierung tritt auf, wenn ein Prozess mehr Speicher erhält, als er tatsächlich benötigt. Der ungenutzte Speicher innerhalb des zugewiesenen Blocks wird „verschwendet“.
+Beispiel: Ein Programm benötigt 15KB, aber das Betriebssystem weist ihm aus einen 20KB-Block zu. Die 2KB Differenz werden intern fragmentiert.
+
+
+Externe Fragmentierung tritt auf, wenn der freie Speicher in viele kleine, nicht zusammenhängende Bereiche aufgeteilt ist, sodass grössere Prozesse keinen ausreichend grossen zusammenhängenden Speicherblöcke mehr finden können – obwohl insgesamt genug freier Speicher vorhanden ist.
+Beispiel: Ein Computer hat drei freie Blöcke mit jeweils 50 KB, aber ein Prozess benötigt 120 KB am Stück. Obwohl insgesamt 150 KB frei sind, kann der Prozess nicht geladen werden.
+
+
+Eine strategien zur Vermeidung oder Reduktion von Fragmentiertung ist Paging. 
+Paging ist eine Technik zur Speicherverwaltung, bei der Prozesse in kleine, gleich grosse Teile (Pages) aufgeteilt werden. Diese Pages können beliebig im RAM gespeichert werden, wodurch externe Fragmentierung vermieden wird.
+
+Vorteil: vermeidet externe Fragmentierung komplett.
+
+Nachteil: Verwaltung der Seitentabellen verbraucht zusätzliche Speicher.
+
+
+zweite Strategien ist Defragmentierung im RAM.
+Das Betriebssystem verschiebt Prozesse im Speicher, um freie Blöcke zusammenzulegen und grössere zusammenhängende Bereiche zu schaffen.
+
+Vorteil: Verringert externe Fragmentierung.
+
+Nachteil: Höher rechenaufwand, da Prozesse im RAM verschoben werden müssen.
+
+Als hilfemittel wurde KI angewendet.

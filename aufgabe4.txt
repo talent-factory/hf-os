@@ -1,0 +1,46 @@
+Um die physischen Adressen zu den gegebenen virtuellen Adressen zu berechnen, analysieren wir das Bild. Es stellt die Seitentabelle (Page Table) dar 0 eine Zuordnung zwischen virtuellen Seiten und physischen Seitenrahmen.
+
+Gegeben:
+Seitengrösse: 4 KB = 4096 Bytes
+
+Virtuelle Adresse = Virtuelle Seiten-Nr. + Offset
+
+ 
+1. Virtuelle Adresse: 12300
+Virtuelle Seite = 12300 ÷ 4096 = 3, Rest = 12
+→ Offset = 12300 - 3×4096 = 12300 - 12288 = 12
+
+Laut Bild: Virtuelle Seite 3 → physischer Seitenrahmen 3
+
+Physische Adresse = 3 × 4096 + 12 = 12288 + 12 = **12300**
+
+Antwort: 12300
+(Da Seite 3 auf physisch 3 gemappt ist, bleibt Adresse gleich)
+
+2. Virtuelle Adresse: 16384
+Virtuelle Seite = 16384 ÷ 4096 = 4, Offset = 0
+
+Laut Bild: Virtuelle Seite 4 → physischer Seitenrahmen 4
+
+Physische Adresse = 4 × 4096 + 0 = 16384
+
+Antwort: 16384
+
+3. Virtuelle Adresse: 32800
+Virtuelle Seite = 32800 ÷ 4096 ≈ 8.007 → Seite = 8, Offset = 32800 - 8×4096 = 32800 - 32768 = 32
+
+Laut Bild: Virtuelle Seite 8 → physischer Seitenrahmen 6
+
+Physische Adresse = 6 × 4096 + 32 = 24576 + 32 = **24608**
+Antwort: 24608
+
+
+zusammengefasst:
+| Virtuelle Adresse | Virtuelle Seite | Offset | Physischer Rahmen | Physische Adresse |
+| ----------------- | --------------- | ------ | ----------------- | ----------------- |
+| 12300             | 3               | 12     | 3                 | 12300             |
+| 16384             | 4               | 0      | 4                 | 16384             |
+| 32800             | 8               | 32     | 6                 | 24608             |
+
+
+Als Hilfemittel wurde KI benutzt

@@ -1,0 +1,202 @@
+Teil 1: Erklärung der Befehle
+1. mkdir -p test/subdir && cd test
+mkdir -p: Erstellt das Verzeichnis test und darin subdir, auch wenn test noch nicht existiert.
+
+&& cd test: Wechselt in das neu erstellte Verzeichnis test, nur wenn der erste Befehl erfolgreich war.
+
+Konzept: Verzeichnisstruktur, relative Pfade, logische UND-Verknüpfung (&&).
+
+Ausgabe:
+
+➜  LB2 git:(hfi2024a/kavindu-JasinPathiranage) ✗ mkdir -p test/subdir && cd test
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 4.0K
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+$(date +%s): Gibt den aktuellen Zeitstempel in Sekunden aus.
+
+echo ... > original.txt: Schreibt die Zeichenkette in die Datei original.txt. Existiert sie bereits, wird sie überschrieben.
+
+Konzept: Datei-Erstellung und -Schreiben, Standardausgabe-Umleitung (>).
+
+Ausgabe:
+
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ echo "Inhalt-$(date +%s)" > original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 8.0K
+-rw-rw-r-- 1 vmadmin vmadmin   18 Mai 17 11:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+
+
+3. ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link namens symlink.txt, der auf original.txt verweist.
+
+Konzept: Symbolische Links (Softlinks) speichern den Pfad zur Zieldatei.
+
+Ausgabe:
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ln -s original.txt symlink.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 8.0K
+-rw-rw-r-- 1 vmadmin vmadmin   18 Mai 17 11:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+
+4. ln original.txt hardlink.txt
+Erstellt einen harten Link namens hardlink.txt, der denselben Inode wie original.txt verwendet.
+
+Konzept: Harte Links zeigen direkt auf denselben Inode, daher ist es technisch dieselbe Datei mit zwei Namen.
+
+Ausgabe:
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ln original.txt hardlink.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 12K
+-rw-rw-r-- 2 vmadmin vmadmin   18 Mai 17 11:27 hardlink.txt
+-rw-rw-r-- 2 vmadmin vmadmin   18 Mai 17 11:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+5. chmod 640 original.txt
+Ändert die Dateiberechtigungen:
+
+6 = rw- für Besitzer,
+
+4 = r-- für Gruppe,
+
+0 = --- für andere.
+
+Konzept: UNIX-Dateiberechtigungen.
+
+Ausgabe:
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ chmod 640 original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 12K
+-rw-r----- 2 vmadmin vmadmin   18 Mai 17 11:27 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 17 11:27 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+6. touch -d "2 days ago" original.txt
+Ändert den Zeitstempel (Modification Time) von original.txt auf vor 2 Tagen.
+
+Konzept: Metadaten (Zeitstempel) einer Datei.
+
+
+Ausgabe:
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ touch -d "2 days ago" original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ll
+insgesamt 4.0K
+-rw-r----- 2 vmadmin vmadmin    0 Mai 15 11:31 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin    0 Mai 15 11:31 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4.0K Mai 17 11:25 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+
+7. ls -la
+Zeigt alle Dateien (inkl. versteckte) detailliert an.
+
+Konzept: Dateiattribute, Inodes, Rechte, Links.
+
+
+Ausgabe:
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ ls -la
+insgesamt 12
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:28 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:25 ..
+-rw-r----- 2 vmadmin vmadmin    0 Mai 15 11:31 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin    0 Mai 15 11:31 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:25 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:28 symlink.txt -> original.txt
+➜  test git:(hfi2024a/kavindu-JasinPathiranage) ✗ 
+
+
+
+
+1. -/l	Dateityp: -=Datei, l=Link
+2. rw-r-----	Zugriffsrechte (Besitzer, Gruppe, Andere)
+3. 2	Anzahl der Links (nur für harte Links)
+4. user	Besitzer der Datei
+5. group	Gruppe der Datei
+6. 20	Dateigröße in Bytes
+7–9. May 15 10:00	Letzter Änderungszeitpunkt
+10. Dateiname	Name der Datei
+
+
+
+Unterschiede:
+Datei	Inode	Typ	Rechte	Zeitstempel
+original.txt	12345	reguläre Datei	rw-r-----	vor 2 Tagen
+hardlink.txt	12345	reguläre Datei	rw-r-----	vor 2 Tagen
+symlink.txt	67890	symbolischer Link	lrwxrwxrwx	Erstellungszeitpunkt
+
+Gleicher Inode: original.txt & hardlink.txt – sie zeigen auf denselben Datenblock.
+
+Unterschiedlicher Inode: symlink.txt – zeigt nur auf Pfadname, eigene Metadaten.
+
+
+
+
+
+
+echo "Neuer Inhalt" > original.txt
+Überschreibt den Inhalt in dem Inode, auf den original.txt (und hardlink.txt) zeigt.
+
+Auswirkung:
+
+hardlink.txt zeigt denselben neuen Inhalt.
+
+symlink.txt zeigt auf dieselbe Datei – Inhalt ebenfalls sichtbar.
+
+Zeitstempel wird aktualisiert (außer mit touch wieder verändert).
+
+cat symlink.txt hardlink.txt
+Gibt den neuen Inhalt zweimal aus:
+
+nginx
+Copy
+Edit
+Neuer Inhalt
+Neuer Inhalt
+mv original.txt ../original.txt
+Verschiebt den Dateinamen original.txt in das übergeordnete Verzeichnis.
+
+Der Inode bleibt erhalten, nur der Pfad ändert sich.
+
+cat symlink.txt hardlink.txt 2>&1
+hardlink.txt: Zeigt weiter korrekt den Inhalt an.
+
+symlink.txt: Fehler, da symlink.txt auf original.txt im alten Pfad verweist, das nun nicht mehr existiert:
+
+yaml
+Copy
+Edit
+cat: symlink.txt: No such file or directory
+Neuer Inhalt
+Unterschiede symbolischer vs. harter Link:
+Merkmal	Symbolischer Link	Harte Link
+Verweist auf	Pfad (Dateiname)	Inode (Dateidaten direkt)
+Bricht bei mv	Ja (wenn Pfad sich ändert)	Nein (bleibt funktionsfähig)
+Inode-Nummer	Eigener Inode	Gleiche Inode wie Ziel
+
+
+
+Bonus: Unterschiedliche Dateisysteme
+Harte Links können nicht über verschiedene Partitionen erstellt werden – sie brauchen denselben Inode-Bereich.
+
+Symbolische Links funktionieren überall, da sie nur einen Pfad speichern – auch über Dateisystemgrenzen hinweg.
+
+
+
+Als Hilfemittel wurde KI benutzt.
