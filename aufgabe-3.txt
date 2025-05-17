@@ -1,0 +1,146 @@
+1. mkdir -p test/subdir && cd test
+Erklärung:
+mkdir -p test/subdir: Erstellt das Verzeichnis test und darin das Unterverzeichnis subdir.
+-p: Sorgt dafür, dass alle übergeordneten Verzeichnisse mit erstellt werden, falls sie noch nicht existieren.
+&&: Führt den nächsten Befehl (cd test) nur dann aus, wenn der vorherige (mkdir) erfolgreich war.
+cd test: Wechselt in das neu erstellte Verzeichnis test.
+
+Konzepte:
+Verzeichnisstruktur: Unix-Dateisystem ist baumartig organisiert.
+
+Befehlsverkettung (&&): Nur bei Erfolg des vorherigen Befehls fortfahren.
+
+2. echo "Inhalt-$(date +%s)" > original.txt
+Erklärung:
+date +%s: Gibt die aktuelle Zeit als Unix-Timestamp (Sekunden seit 1970-01-01) aus.
+"Inhalt-$(...)”: Erzeugt einen String mit dem aktuellen Zeitstempel.
+echo ... > original.txt: Schreibt diesen Text in die Datei original.txt. Falls die Datei nicht existiert, wird sie erstellt. Existiert sie bereits, wird sie überschrieben.
+
+Konzepte:
+Standardausgabeumlenkung (>): Ausgabe von echo wird in eine Datei geschrieben.
+Dateierstellung: Eine neue Datei wird erzeugt, wenn sie nicht existiert.
+Kommandoausführung in $(): Ermöglicht das Einbetten von Befehlen.
+
+3. ln -s original.txt symlink.txt
+Erklärung:
+Erstellt einen symbolischen Link (Symlink) namens symlink.txt, der auf original.txt verweist.
+
+Konzepte:
+Symbolischer Link:
+Ist eine Art Verknüpfung oder Alias.
+Speichert den Pfadnamen der Zieldatei.
+
+Wenn das Ziel gelöscht wird, wird der Link "dangling" (nicht mehr gültig).
+
+4. ln original.txt hardlink.txt
+Erklärung:
+Erstellt einen Hardlink namens hardlink.txt, der auf dieselben Daten wie original.txt verweist.
+
+Konzepte:
+Hardlink:
+
+Beide Namen (original.txt und hardlink.txt) zeigen auf denselben Inode.
+Die Datei existiert weiter, solange mindestens ein Hardlink (Name) vorhanden ist.
+Änderungen an einer Datei sind über alle Hardlinks sichtbar.
+Hardlinks können nur im gleichen Dateisystem erstellt werden.
+
+5. chmod 640 original.txt
+Erklärung:
+Ändert die Dateiberechtigungen von original.txt auf rw-r-----.
+
+Konzepte:
+Dateirechte (Permissions):
+6 (rw-) für den Besitzer → Lesen + Schreiben.
+4 (r--) für die Gruppe → Nur Lesen.
+0 (---) für alle anderen → Kein Zugriff.
+chmod: Ändert die Zugriffsrechte über einen Oktalwert.
+
+6. touch -d "2 days ago" original.txt
+Erklärung:
+Ändert den Zeitstempel (Änderungs- und Zugriffszeit) von original.txt auf „vor zwei Tagen“.
+
+Konzepte:
+Zeitstempel:
+Jede Datei hat Metadaten: Zugriffszeit (atime), Änderungszeit (mtime), Statusänderungszeit (ctime).
+
+-d "2 days ago": Nutzt touch, um einen manuell definierten Zeitpunkt zu setzen.
+
+7. ls -la
+Erklärung:
+ls: Listet Dateien auf.
+-l: Lange Formatansicht (zeigt Rechte, Besitzer, Größe, Zeitstempel).
+-a: Zeigt alle Dateien, inkl. versteckter Dateien (beginnen mit .).
+
+Konzepte:
+Dateiattribute anzeigen: z. B. Rechte, Anzahl Hardlinks, Symlink-Ziele.
+
+Zeigt bei symbolischen Links z. B.:
+symlink.txt -> original.txt
+
+Zeigt bei Hardlinks keine Unterscheidung (da gleiche Datei), aber beide haben dieselbe Inode-Nummer.
+
+Ausgabe ls-la:
+
+➜  test git:(hfi2024a/Fabian-Grisolia) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 12:19 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 12:18 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 12:19 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 12:19 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 12:18 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 12:19 symlink.txt -> original.txt
+➜  test git:(hfi2024a/Fabian-Grisolia) ✗
+
+
+Analyse derAusgabe:
+
+Bedeutung der spalten:
+| Spalte         | Bedeutung                                                                                       |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| `-rw-r-----`   | **Dateityp und Berechtigungen**: `-` = reguläre Datei, dann Rechte für Besitzer, Gruppe, andere |
+| `2`            | **Anzahl der Hardlinks** zu dieser Datei (wie viele Dateinamen zeigen auf denselben Inode)      |
+| `vmadmin`      | **Besitzer** der Datei                                                                          |
+| `vmadmin`      | **Gruppe**, der die Datei zugeordnet ist                                                        |
+| `18`           | **Dateigröße** in Byte                                                                          |
+| `Mai 15 12:19` | **Letzter Änderungszeitpunkt** (mtime)                                                          |
+| `original.txt` | **Dateiname**                                                                                   |
+
+Unteschiede:
+Unterschiede zwischen original.txt, hardlink.txt und symlink.txt
+a) Inode (indirekt sichtbar durch Link-Zahl und Verhalten)
+original.txt und hardlink.txt:
+Haben denselben Inode, was du an der gleichen Anzahl der Links (2) und identischen Größe/Zeit/Berechtigungen erkennst.
+
+symlink.txt:
+Hat einen eigenen Inode, da es sich um eine symbolische Verknüpfung handelt.
+
+b) Berechtigungen
+original.txt und hardlink.txt:
+-rw-r----- → Besitzer darf lesen/schreiben, Gruppe darf lesen, andere nichts.
+→ Die Rechte sind am Inhalt gebunden, nicht am Dateinamen.
+
+symlink.txt:
+lrwxrwxrwx → l für Symlink, alle dürfen lesen, schreiben und ausführen – aber:
+Diese Rechte gelten für den Link selbst, nicht für das Ziel (original.txt)!
+
+c) Zeitstempel (mtime)
+original.txt und hardlink.txt:
+Mai 15 12:19 → Ergebnis von touch -d "2 days ago".
+
+symlink.txt:
+Mai 17 12:19 → Zeitpunkt der Link-Erstellung.
+Der Symlink hat eigene Zeitstempel, unabhängig vom Ziel.
+
+
+
+Warum haben bestimmte Dateien dieselbe Inode-Nummer und andere nicht?
+Gleicher Inode bei:
+original.txt und hardlink.txt
+→ Weil Hardlinks denselben Inode verwenden. Es sind zwei Namen für dieselbe Datei auf der Festplatte. Änderungen an einer der beiden wirken sich immer auf den gleichen Speicherbereich aus.
+
+Unterschiedlicher Inode bei:
+symlink.txt
+→ Ein Symlink ist eine eigenständige Datei, die nur den Pfad zur Zieldatei speichert.
+Er zeigt auf einen anderen Inode, ist aber nicht derselbe.
+
+
