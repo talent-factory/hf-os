@@ -42,5 +42,5 @@ mit mv kann man der Verzeichniss verschieben
 
 cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
 Neuer Inhalt
-
+- das heisst das die Datei verschoben oder geloescht wurde, daher bekommt man auch die Meldung von oben. 
 

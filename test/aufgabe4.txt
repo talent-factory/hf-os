@@ -1,0 +1,12 @@
+
+
+Anhand dieser Page Table sind die folgenden physischen Adressen zu den virtuellen Adressen gesucht:
+
+    12300₁₀
+
+    16384₁₀
+
+    32800₁₀
+
+
+
