@@ -1,0 +1,22 @@
+1. Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung.
+ Geben Sie für beide Arten jeweils ein
+
+Unterschied zwischen interner und externer Speicherfragmentierung
+Beim Verwalten von Speicher im Computer treten zwei Arten von Fragmentierung auf: interne und externe Fragmentierung.
+Interne Fragmentierung entsteht, wenn einem Programm mehr Speicher zugeteilt wird, als es tatsächlich benötigt. 
+Das führt dazu, dass ein Teil des zugewiesenen Speichers ungenutzt bleibt und somit verschwendet wird.
+Ein typisches Beispiel ist die Zuweisung von Speicherblöcken in festen Größen, etwa 4 Kilobyte (KB).
+Wenn ein Programm nur 3 KB braucht, aber ein kompletter 4-KB-Block zugewiesen bekommt, bleiben 1 KB im Block leer, obwohl er belegt ist.
+Externe Fragmentierung hingegen passiert, wenn insgesamt genug freier Speicher vorhanden ist, dieser aber in viele kleine, nicht zusammenhängende Bereiche aufgeteilt ist. 
+Dadurch steht kein ausreichend großer zusammenhängender Speicherbereich für neue Programme oder Daten zur Verfügung. Ein Beispiel dafür ist ein Server, der über längere Zeit viele Programme startet und beendet. Dabei verteilt sich der freie Speicher in kleine Stücke, sodass es schwierig wird, größere Speicheranforderungen zu erfüllen, obwohl insgesamt genug Speicher frei ist.
+
+
+
+2. Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+
+Moderne Betriebssysteme verwenden verschiedene Strategien, um Speicherfragmentierung zu reduzieren oder zu vermeiden. Zwei wichtige Methoden sind das Paging und die Segmentierung.
+
+Beim Paging wird der Speicher in kleine, gleich große Blöcke aufgeteilt, sogenannte Seiten. Sowohl der virtuelle als auch der physische Speicher bestehen aus diesen Seiten. Programme erhalten Seiten zugewiesen, die an beliebigen Stellen im physischen Speicher liegen können, wodurch keine zusammenhängenden Bereiche erforderlich sind. Dadurch wird externe Fragmentierung effektiv verhindert. Das Paging ermöglicht eine einfache Verwaltung des Speichers und unterstützt moderne Techniken wie virtuellen Speicher und Swapping. Allerdings kann es zu interner Fragmentierung kommen, wenn beispielsweise der letzte Teil einer Seite nicht vollständig genutzt wird. Zudem benötigt das Betriebssystem zusätzlichen Speicher und Rechenleistung zur Verwaltung der Seitentabellen, und bei Seitenfehlern kann die Leistung beeinträchtigt werden.
+
+Die zweite Methode, die Segmentierung, teilt den Speicher in logisch zusammenhängende Abschnitte, sogenannte Segmente, wie Code, Daten oder Stack. Die Segmente haben unterschiedliche Größen und werden zusammenhängend im Speicher abgelegt. Das Betriebssystem versucht, die Segmente so zu platzieren, dass die Fragmentierung möglichst gering bleibt, häufig mithilfe von Algorithmen wie First Fit oder Best Fit. Segmentierung bildet die logische Struktur eines Programms gut ab und ermöglicht eine effiziente Nutzung des Speichers, da keine festen Blockgrößen vorgegeben sind. Außerdem lassen sich auf Segmentebene Zugriffsrechte vergeben, was die Sicherheit verbessert. Allerdings ist Segmentierung anfällig für externe Fragmentierung, da unterschiedlich große Segmente im Speicher verteilt sind. Außerdem ist die Speicherverwaltung komplexer, und es ist oft notwendig, den freien Speicher durch Kompaktierung zusammenzuführen, was zusätzlichen Zeitaufwand bedeutet.
+
