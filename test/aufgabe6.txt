@@ -1,0 +1,47 @@
+➜  test git:(hfi2024a/madalina-luca) nano dateisystemeubung.c
+➜  test git:(hfi2024a/madalina-luca) ✗ gcc dateisystemeubung.c -o dateisystemeubung   
+➜  test git:(hfi2024a/madalina-luca) ✗ ./dateisystemeubung 
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße:           96 Bytes
+Inode-Nummer:         546313
+Anzahl Hardlinks:     1
+Zugriffsrechte:       664 (Oktal)
+Letzter Zugriff:      2025-05-17 11:40:24
+Letzte Änderung:      2025-05-17 11:40:24
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße:           147 Bytes
+Inode-Nummer:         546313
+Anzahl Hardlinks:     1
+Zugriffsrechte:       664 (Oktal)
+Letzter Zugriff:      2025-05-17 11:40:24
+Letzte Änderung:      2025-05-17 11:40:24
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße:           147 Bytes
+Inode-Nummer:         546313
+Anzahl Hardlinks:     2
+Zugriffsrechte:       664 (Oktal)
+Letzter Zugriff:      2025-05-17 11:40:24
+Letzte Änderung:      2025-05-17 11:40:24
+
+
+Aufgaben nach der Ausfuehrung:
+1. Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+Die Ausgabe des Programms zeigt die Metadaten vor und nach Aenderunge, sowie die hardlinks die erstellt wurden.
+Es zeogt noch die Dateigroesse, letzte Aenderungszeiten, zugriffrechte und das Inode Nummer.
+
+2. Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+Dateiname ist eine lesbare Zeichenkette, die im Verzeichniss gespeichert ist. Er ist wie ein alias fur ein datei. Und Inode-Nummer ist eine eindeutige Nummer, die eine tatsechsliches Datei representiert und alle Metadaten wie Besitzer, Rechte, Speicherort, Grosse usw.
+
+3. Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Original
+Ein symbolischer Link (Symlink) ist eine spezielle Datei, die einen Pfadnamen zu einer anderen Datei enthält. Es ist also eine Art Verweis oder Shortcut. Symlink hat eine eigene Inode und eigene Metadaten (Größe, Rechte etc.), da es eine separate Datei ist.Hardlink teilt sich die Inode mit der Originaldatei. 
+Beim loeschen: Wird die Originaldatei gelöscht, zeigt der Symlink ins Leere (wird "broken" oder ungültig). Hardlinks verhindern das Löschen der Datei, solange noch mindestens ein Hardlink existiert, denn die Datei wird nur gelöscht, wenn der letzte Hardlink entfernt wird. 
+Metadaten: simlink speichert nur den Pfad und hat eigene Zugriff Rechte. Hardlink zeigt direkt auf dieselben Metadaten und denselben Inhalt. 
