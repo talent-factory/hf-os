@@ -1,0 +1,41 @@
+Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+
+Interne Speicherfragmentierung tritt auf wenn einem Prozess mehr speicher gegeben wird als er benötigt. Der nicht genutzte teil wird dann verschwendet.
+Externe Speicherfragmentierung gibt dynamisch speicher. Mit der Zeit entstehen aber kleine Lücken zwischen den Belegten Bereichen.
+
+Ein Beispiel zur Internen Speicherfragmentierung:
+Ein Prozess braucht 6KB Speicher. Das System vergibt Blöcke welche 4KB gross sind. Der Prozess erhält 2 Blöcke also insgesamt 8KB. Das heisst 2KB wird intern verschwendet.
+
+Ein Beispiel zur Externen SPeicherfragmentierung:
+Ich habe 100MB Arbeitsspeicher. Es starten mehrere Programme und belegen Speicher. Sagen wir mal 4 Programme starten und verwenden 10MB - 20MB - 15MB - 30MB RAM.
+Nun beende ich Programm 2 (20MB) und 4(30MB), Nun will ich ein Programm starten welches 40MB RAM braucht aber das geht nicht. Obwohl ich 50MB freigemacht habe kann ich das Programm nicht starten weil der Speicher nicht zusammenhängend ist.
+
+
+
+
+Erläutern Sie zwei verschiedene Strategien, mit denen moderne Betriebssysteme Speicherfragmentierung reduzieren oder vermeiden. Bewerten Sie die Vor- und Nachteile dieser Strategien unter Berücksichtigung von Faktoren wie Leistung, Komplexität und Ressourcenverbrauch.
+
+Paging und Swapping.
+Paging teilt den Virtuellen Speicher in gleich Grosse "Seiten" und weist diese beliebigen freien Seitenrahmen im Physischen Speicher zu. Das Heisst Prozesse sehen einen zusammengehängten Speicher obwohl es physisch verteilt ist.
+Vorteile wären:
+- Die Externe Speicherfragmentierung kann nun vollständig vermieden werden.
+- Virtueller Speicher wirkt lückenlos
+- einfaches speicherhandling mit der Seitentabelle.
+
+Nachteile von Paging wären zmb:
+- Es besteht immernoch eine Interne Speicherfragmentierung bei den Seiten.
+- Verwaltungsaufwand durch Seitentabellen (Paging muss schnell sein)
+- Die Speicherverwaltung verbraucht auch Speicher
+
+Swapping lagert inaktive Speicherbereiche aus dem RAM in die Festplatte aus und holt sie wieder wenn sie gebraucht wird. Damit kann man RAM frei machen.
+
+Vorteile davon wären:
+- MAn kann prozesse auch mit Knappem Speicher starten.
+- mann kann indirekte speicherfragmentierung verringern indem Prozesse freigegeben werden.
+- Unterstützt Paging
+
+Nachteile wären:
+- Sehr Langsam da die Festplatte genutzt werden muss.
+- Die Leistung kann immer wieder abnehmen.
+- Es löst nicht die Fragmentierung sondern es umgeht diese eher.
+
