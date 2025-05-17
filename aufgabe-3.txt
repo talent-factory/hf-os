@@ -2,7 +2,7 @@ mkdir -p test/subdir && cd test
 
     mkdir -p test/subdir:
 
-        Erstellt ein neues Verzeichnis namens test und darin ein Unterverzeichnis subdir.
+       mkdir:  Erstellt ein neues Verzeichnis namens test und darin ein Unterverzeichnis subdir.
 
         -p sorgt dafür, dass übergeordnete Verzeichnisse automatisch mit erstellt werden.
 
@@ -24,7 +24,7 @@ echo "Inhalt-$(date +%s)" > original.txt
 
     $(date +%s) gibt die aktuelle Zeit in Sekunden seit dem 1.1.1970 (Unix-Epoche) zurück.
 
-    > schreibt diesen Inhalt in die Datei.
+    > schreibt diesen Inhalt in die Datei original.txt
 
     Konzepte:
 

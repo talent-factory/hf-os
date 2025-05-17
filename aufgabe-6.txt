@@ -1,0 +1,145 @@
+  LB2 git:(hfi2024a/lukas-neuenschwander) ✗ ./aufgabe6 
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546513
+Anzahl der Hardlinks: 1
+Zugriffsrechte (octal): 664
+Letzter Zugriff: 2025-05-17 11:47:23
+Letzte Änderung: 2025-05-17 11:47:23
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 146 Bytes
+Inode-Nummer: 546513
+Anzahl der Hardlinks: 1
+Zugriffsrechte (octal): 664
+Letzter Zugriff: 2025-05-17 11:47:23
+Letzte Änderung: 2025-05-17 11:47:23
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 146 Bytes
+Inode-Nummer: 546513
+Anzahl der Hardlinks: 2
+Zugriffsrechte (octal): 664
+Letzter Zugriff: 2025-05-17 11:47:23
+Letzte Änderung: 2025-05-17 11:47:23
+
+
+Beschreibung der Programmausgabe und beobachtete Metadatenänderungen
+
+Vor der Änderung:
+
+    Datei testdatei.txt hat eine Größe von 96 Bytes
+
+    Inode-Nummer: 546513
+
+    Anzahl Hardlinks: 1
+
+    Zugriffsrechte: 664 (rw-rw-r--)
+
+    Zeitstempel (atime und mtime): identisch (z. B. 11:47:23)
+
+Nach dem Anhängen von Text:
+
+    Datei hat nun 146 Bytes (50 Byte mehr)
+
+    Inode-Nummer bleibt gleich
+
+    Hardlinks: weiterhin 1
+
+    Zugriffsrechte und Zeitstempel scheinen gleich (vermutlich durch Caching, Schreibpufferung oder sofortigen Zugriff wiederhergestellt)
+
+Nach dem Erstellen des Hardlinks:
+
+    Datei testdatei_hardlink.txt hat:
+
+        gleiche Inode-Nummer wie testdatei.txt
+
+        Dateigröße: 146 Bytes
+
+        Zugriffsrechte, Zeitstempel identisch
+
+        Anzahl der Hardlinks: 2 (beide Namen zeigen auf denselben Inode)
+
+Fazit:
+
+    Die Datei wurde erfolgreich verändert (größer).
+
+    Nach dem Anhängen bleibt der Inode gleich.
+
+    Durch den Hardlink steigt der Link-Zähler von 1 auf 2.
+
+2. Unterschied zwischen Inode-Nummer und Dateiname
+
+Inode-Nummer:
+
+    Eine eindeutige Kennung innerhalb eines Dateisystems, die auf die Datei-Metadaten und Datenblöcke zeigt.
+
+    Jede Datei hat genau einen Inode (außer bei Hardlinks – siehe unten).
+
+    Im Inode sind gespeichert:
+
+        Dateigröße
+
+        Zeitstempel (atime, mtime, ctime)
+
+        Rechte, Besitzer
+
+        Verweise auf die physischen Datenblöcke
+
+Dateiname:
+
+    Ein Eintrag in einem Verzeichnis, der auf einen Inode verweist.
+
+    Mehrere Dateinamen (Hardlinks) können auf denselben Inode zeigen.
+
+Wenn zwei Dateien die gleiche Inode-Nummer haben:
+
+    Sie sind Hardlinks zur selben Datei.
+
+    Es handelt sich nicht um zwei verschiedene Dateien, sondern zwei Namen für denselben Inhalt.
+
+    Änderungen an einer wirken sich sofort auf die andere aus.
+
+    Der Inhalt bleibt erhalten, bis alle Links gelöscht sind.
+
+3. Unterschiede beim Verwenden eines symbolischen Links (Symlink)
+
+Hardlink:
+
+    Verweist direkt auf denselben Inode wie das Original.
+
+    Teilt sich Metadaten und Inhalt mit dem Original.
+
+    Wird die Originaldatei gelöscht, bleibt der Inhalt über den Hardlink erhalten.
+
+    Änderungen an einer Datei wirken sich auf alle Hardlinks aus.
+
+Symbolischer Link (Symlink):
+
+    Eine eigenständige Datei mit eigenem Inode.
+
+    Enthält lediglich einen Pfad (Zeichenkette) zum Ziel.
+
+    Der Symlink verweist nicht auf den Inode, sondern auf den Dateinamen.
+
+Metadaten bei einem Symlink:
+
+    Eigene Inode-Nummer
+
+    Dateigröße = Länge des Pfads
+
+    stat() auf den Symlink liefert Metadaten der Ziel-Datei
+    lstat() liefert Metadaten des Links selbst
+
+Verhalten beim Löschen der Originaldatei:
+
+    Hardlink: Daten bleiben erhalten, solange mindestens ein Hardlink existiert.
+
+    Symlink: Der Link wird ungültig (dangling), weil der Pfad nicht mehr auf eine existierende Datei zeigt.
