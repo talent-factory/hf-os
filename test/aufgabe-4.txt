@@ -1,0 +1,20 @@
+1. Adresse: (12300..)
+Virtuelle Seite 3 laut Tabelle also physische Seite 6
+Physischer Bereich: 6 × 4096 = 24576
+
+2. Adresse: 16384
+Seitenummer: 16384 / 4096 = 4
+Offset: 16384 % 4096 = 0
+
+Virtuelle Seite 4 also physische Seite 4
+Physischer Bereich: 4 × 4096 = 16384
+
+Physische Adresse: 16384 + 0 = 16384
+
+3. Adresse:  32800
+Seitenummerist  32800 / 4096 = 8
+Offset: 32800 % 4096 = 32800 - 32768 = 32
+
+Virtuelle Seite ist also die physische seite 5
+Physischer Bereich: 5 × 4096 = 20480
+Physische Adresse: 20480 + 32 = 20512
