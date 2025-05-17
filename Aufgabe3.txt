@@ -69,3 +69,21 @@ Der Grund warum original.txt und hardlink.txt die gleiche Inode Nummer haben ist
 Generell liegt es immer daran, dass die eine Datei ein Hardlink ist und die andere ein Softlink und daher eine eigene Datei.
 
 
+
+
+echo "Neuer Inhalt" > original.txt
+original.txt wird pberschrieben. Hard- und Softlink zeigen nun den neuen Inhalt an, Inode wird jedoch nicht verändert.
+
+cat symlink.txt hardlink.txt
+Beide Dateien zeigen nun "Neuer Inhalt" an. Der Softlink folgt einfach der Originaldatei und der hardlink direkt auf die unveränderte Inode zeigt.
+
+mv original.txt ../original.txt
+Nach dem verschieben von "original.txt" wird der Softlink invalid, da die Datei nicht mehr dort ist, wo sie initial war. Der Hardlink zeigt jedoch weiterhin auf die gleiche Inode verweist der Datei.
+
+cat symlink.txt hardlink.txt 2>&1
+hier wird einfach der obere Satz noch visualisiert, dass der symlink eine Fehlermeldung ausgibt, da der "Wegweiser" nicht mehr zum Haus (original.txt) zeigen kann. Der Hardlink kann die Datei jedoch weiterhin ausgeben.
+
+
+Bonus-Frage:
+Hardlinks sind nicht in der Lage auf Dateien zu Verweisen, welche auf anderen Partitionen liegen.
+Hingegen Softlinks können es, insofern die Datei nicht verschoben wird. Sonst trifft es auf das gleiche Problem wie oben.
