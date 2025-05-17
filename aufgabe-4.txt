@@ -1,0 +1,11 @@
+Virtuelle Adresse 12300 
+12300 / 4096 = Seite 3, Offset 12 
+Seite 3 → physische Seite 6 → Physische Adresse: 6 × 4096 + 12 = 24588 
+
+Virtuelle Adresse 16384 
+16384 / 4096 = Seite 4, Offset 0 
+Seite 4 → physische Seite 4 → Physische Adresse: 4 × 4096 + 0 = 16384 
+
+Virtuelle Adresse 32800 
+32800 / 4096 = Seite 8, Offset 32 
+Seite 8 ist nicht geladen (X in der Page Table) → Page Fault, Zugriff nicht möglich

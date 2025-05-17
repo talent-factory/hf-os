@@ -1,0 +1,16 @@
+Speicheradressanalyse:
+-----------------------
+Stack-Variable:    0x7fffbc885bc0
+Heap-Variable:     0x6472688d22a0
+Statische Variable:0x64726762c010
+
+Adressunterschiede:
+Stack - Heap:      30293813311776 Bytes
+Heap - Statisch:   19554960 Bytes
+Stack - Statisch:  30293832866736 Bytes
+
+Wachstumsrichtungen:
+Adresse von a:     0x7fffbc885b88
+Adresse von b:     0x7fffbc885b8c
+Stack wächst nach oben.
+

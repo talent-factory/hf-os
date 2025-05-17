@@ -1,0 +1,5 @@
+Die Ausgabe zeigt, dass Stack-, Heap- und statische Variablen in ganz unterschiedlichen Speicherbereichen liegen. Die Adressunterschiede sind sehr gross, was die Trennung bestätigt. In dieser Ausführung wächst der Stack nach oben, da die Adresse der später deklarierten Variable b höher ist als die von a.
+
+Die Speicherbereiche sind getrennt, weil sie vom System unterschiedlich verwaltet werden. Statische Variablen sind fest reserviert, Heap wird bei Bedarf aufgebaut, der Stack ist für lokale Variablen gedacht.
+
+Das Speicherleck bleibt bestehen, da der Speicher aus dem Loop nie freigegeben wird. Das Betriebssystem erkennt das nicht während der Laufzeit. Der Speicher wird erst beim Programmende automatisch freigegeben. Solche Lecks können langfristig zu Problemen führen.
