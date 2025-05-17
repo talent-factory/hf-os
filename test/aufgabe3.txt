@@ -36,11 +36,20 @@ Neuer Inhalt
 mit cat kann man den Inhalt des Datei lesen.
 
 ➜  test git:(hfi2024a/madalina-luca) ✗ mv original.txt ../original.txt
+
 mit mv kann man der Verzeichniss verschieben
 
 ➜  test git:(hfi2024a/madalina-luca) ✗ cat symlink.txt hardlink.txt 2>&1
 
 cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
 Neuer Inhalt
-- das heisst das die Datei verschoben oder geloescht wurde, daher bekommt man auch die Meldung von oben. 
+- das heisst das die Datei symlink.txt verschoben oder geloescht wurde, daher bekommt man auch die Meldung von oben. 
 
+
+
+
+Bonus-Frage:
+
+Wie würde sich das Verhalten ändern, wenn die Dateien auf unterschiedlichen Dateisystemen (Partitionen) liegen würden?
+- Hardlinks funktionieren nur innerhalb desselben Dateisystems.
+- Symlinks funktionieren auch über Dateisystem-Grenzen hinweg, da sie nur einen Pfad speichern.
