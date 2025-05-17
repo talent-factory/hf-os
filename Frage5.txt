@@ -1,0 +1,22 @@
+Beschreibung der Ausgabe
+Das Programm gibt die Adressen von drei Speicherarten aus:
+Stack: typischerweise hoher Adressbereich.
+Heap: mittlerer Bereich.
+Statische Variablen: im Daten-Segment (niedriger oder konstanter Bereich).
+Die Differenzen zeigen, wie weit die Speicherarten physisch/logisch auseinander liegen.
+Die Stack-Wachstumsrichtung ergibt sich durch Vergleich lokaler Variablen → oft „nach unten“.
+
+Erklärung zu den Adressbereichen
+Stack: temporäre Speicherregion für Funktionsaufrufe, wächst oft nach unten.
+Heap: dynamisch zur Laufzeit reservierter Speicher, wächst meist nach oben.
+Statische Variablen: fixiert im Data-Segment und bei Programmstart reserviert.
+Diese Trennung ermöglicht Schutz, Effizienz und das einfache Wiederfreigeben (z. B. Stack-Frames bei Rücksprung).
+
+Auswirkungen des Speicherlecks
+Die malloc()-Zuweisungen im Loop werden nie mit free() freigegeben → Speicherleck.
+Im kleinen Maß (wie hier) unkritisch – aber bei langlaufenden Programmen führt das zu:
+Speicherverknappung
+Abstürzen
+Leistungsverlust
+Betriebssysteme können solche Lecks nur begrenzt erkennen; sie räumen i. d. R. beim Beenden des Prozesses den Speicher frei. Tools wie valgrind helfen, Lecks zu erkennen.
+

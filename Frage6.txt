@@ -1,0 +1,29 @@
+Beschreibung der Programmausgabe und beobachtete Metadatenänderungen:
+Vor dem Anhängen ist die Datei 96 Bytes groß, nach dem Anhängen 150 Bytes.
+Die Inode-Nummer (533396) bleibt gleich, da es sich um dieselbe Datei handelt.
+Auch der Änderungszeitpunkt (mtime) ändert sich nicht sichtbar – vermutlich, weil die Änderungen sehr schnell aufeinander folgen und vom Dateisystem nicht mit höherer Präzision erfasst werden.
+Die Anzahl der Hardlinks steigt nach dem link()-Aufruf auf 2, sichtbar in den Metadaten des Hardlinks.
+
+
+Inode-Nummer vs. Dateiname und Bedeutung gleicher Inodes:
+Der Dateiname ist nur ein Label im Dateisystem, das auf einen Inode verweist.
+
+Die Inode-Nummer (z. B. 533396) identifiziert die Datei eindeutig innerhalb eines Dateisystems.
+Wenn zwei Dateien (z. B. testdatei.txt und testdatei_hardlink.txt) die gleiche Inode-Nummer haben, dann sind sie keine Kopien – sie sind dieselbe Datei, nur mit zwei verschiedenen Namen.
+Änderungen über einen Namen sind sofort im anderen sichtbar.
+
+
+Unterschiedliches Verhalten bei Verwendung eines symbolischen Links (Symlink):
+Ein Symlink speichert nur den Pfad zur Zieldatei und hat eine eigene Inode, eigene Metadaten.
+
+Wird die Originaldatei gelöscht, bleibt der Symlink bestehen, verweist aber auf einen nicht mehr existierenden Pfad („broken link“).
+Im Gegensatz dazu bleibt ein Hardlink voll funktionsfähig, solange mindestens ein Name zur Datei existiert.
+Bei stat() auf einen Symlink sieht man die Daten der Zieldatei; bei lstat() sieht man die Metadaten des Links selbst.
+Diese Unterschiede sind entscheidend für Dateiverwaltung, Backups und Link-Nutzung in Dateisystemen.
+
+
+
+
+
+
+
