@@ -1,0 +1,55 @@
+
+
+Aufgaben nach der Ausführung:    
+Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+-> 
+
+Das Programm gibt die Adressen von drei Variablentypen aus:
+- Stack-Variable: Hohe Adresse im Adressraum (0x7fff...)
+- Heap-Variable: Mittlerer Adressbereich (0x5a50...)
+- Statische Variable: Ähnlich wie Heap, aber meist früher reserviert (0x5a50...)
+
+Ausserdem wird die Differenz der Adressen berechnet und die Richtung des Stack-Wachstums 
+analysiert. Standardmäßig sollte der Stack nach unten wachsen, aber die genaue Richtung 
+hängt von der Reihenfolge der Variablendeklaration und der Systemarchitektur ab.
+   
+Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+->
+
+Jede Variable liegt in einem eigenen Speicherbereich, weil moderne Betriebssysteme Speicher 
+segmentieren:
+ 
+- Stack :Automatische lokale Variablen (z. B. int x; in einer Funktion)
+- Heap: Dynamisch zur Laufzeit zugewiesener Speicher (z. B. malloc())
+- Data/BSS: Statische Daten (initialisiert oder nicht) (z. B. static int x = 5;)
+- Text: Programmcode (nicht im Beispiel sichtbar)	Funktionen, Anweisungen
+   
+Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+
+In der Schleife werden fünfmal Speicherbereiche mit malloc() reserviert, aber nie freigegeben:
+for (int i = 0; i < 5; i++) {
+    int* leak = (int*)malloc(sizeof(int));
+    *leak = i * 10;
+}
+
+Folgen:
+- Der Prozess belegt immer mehr Heap-Speicher, der nicht zurückgegeben wird.
+- Bei wiederholtem oder langem Lauf kann es zu Speichererschöpfung kommen.
+- Speicherlecks sind besonders kritisch bei Diensten, Hintergrundprozessen und langen Berechnungen.
+
+Wie kann das OS Damit umgehen?
+- Gar nicht direkt während der Laufzeit: Das Betriebssystem erkennt keine Speicherlecks 
+innerhalb eines laufenden Prozesses.
+- Nach Prozessende: Alle Speicherbereiche des Prozesses werden beim Beenden freigegeben 
+(z. B. durch den Kernel).
+- Werkzeuge wie valgrind helfen beim Erkennen solcher Lecks zur Entwicklungszeit.
+- Moderne Sprachen (z. B. Java, Rust) verwenden Garbage Collection oder Ownership-Modelle, um 
+Lecks zu verhindern.
+
+Fazit:
+- Das Programm zeigt Stack, Heap und statische Variablen liegen getrennt im Speicher
+- Das Leck demonstriert Probleme bei unachstamer Speicherverwaltung
+- Das OS schützt sich durch Prozessisolierung, aber die Entwickler tragen die Verantwortung
+zu Vermeidung von Lecks
