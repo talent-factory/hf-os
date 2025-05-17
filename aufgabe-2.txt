@@ -1,0 +1,33 @@
+Interne Fragemtierung tritt auf, wenn ein zugewiesener Speicherblock oder Prozess grösser ist als der tatsächlich benötigte Speicher. Dies kann Passieren, da ein Speichermanager immer eine feste grösse an Speicherblöcken reserviert. Zum Beispiel 4KB. Wenn jetzt ein Prozess nur 7.5KB Speicher benötigt, bleibt 0.5KB frei. Diese nennt man interne Fragemntierung. Dies kann bei Paging-Systemen oft vorkommen.
+
+Externe Fragemtierung entsteht, wenn zwischen belegten Speicherblöcken viele kleine freie Speicherbereiche existieren, die zusammen zwar genug Platz für einen neuen Prozess hätten aber nicht zusammenhängend genug sind um den SPeicherplatz dem Prozess zuzuweisen.
+In einem System mit dynamischer Speicherverwaltung können durch häufiges Allokieren und Freigeben von Speicher kleine Lücken entstehen, die nicht wieder effizient genutzt werden können. Wenn ein Programm z. B. 10 MB Speicher benötigt, aber nur 10 MB fragmentierter Speicher in mehreren 1MB Blöcken verfügbar sind, kann der Speicher nicht genutzt werden – ein klassischer Fall von externer Fragmentierung.
+
+
+
+
+
+Eine Strategie ist das Paging:
+Der virtuelle Speicher wird in feste, gleich grosse Blöcke (Seiten/Pages) aufgeteilt, die im physischen Speicher beliebig platziert werden können.
+
+Vorteile:
+- Vermeidung externenr Fragemtierung
+- Einfaches Speichermanagement, da die Speicheranforderungen in Seiten umgesetzt sind. DIes standartisiert die Zuweisung und Rückgabe des Speichers.
+- Effektive nutzung des RAM. Pages können auf vorhandene freie Stellen verteilt werden, ohne zusammenhängende Speicherblöcke zu benötigen.
+
+Nachteile:
+- Interne Fragmentierung
+- Komplexität und Overhead: Verwaltung durch Seitentabellen und ggf. mehrstufige Tabellen erzeugt Verwaltungsaufwand.
+- Leistungsprobleme: Seitenwechsel (Page Faults) können teuer sein, insbesondere bei vielen Zugriffen auf nicht im RAM befindliche Seiten.
+
+
+Speicherkompaktierung (Memory Compaction)
+Freier Speicher wird durch Verschieben belegter Blöcke zusammengefasst, um größere zusammenhängende Bereiche zu schaffen.
+Vorteile:
+- Beseitigung externer Fragmentierung: Speicherlücken werden durch Umsortierung geschlossen.
+- Effiziente Nutzung bei großen, zusammenhängenden Anforderungen: Kompaktierter Speicher kann große Blöcke bereitstellen.
+
+Nachteile:
+- Hoher Rechenaufwand: Verschieben aktiver Prozesse ist zeitaufwendig und erfordert oft Prozessunterbrechungen.
+- Leistungsbelastung: Besonders in Systemen mit wenig freiem Speicher oder vielen laufenden Prozessen kann es zu Verzögerungen kommen.
+- Komplexe Implementierung: Betriebssysteme müssen Prozesskontext und Speicherverweise aktualisieren.
