@@ -1,0 +1,17 @@
+Voraussetzung
+1. Seitengröße (Page Size): 4 KB = 4096 Bytes
+2. Virtuelle Adresse besteht aus:
+3. Page Number (obere Bits)
+4. Offset innerhalb der Seite (untere 12 Bits, weil 2¹² = 4096)
+
+
+Vorgehen
+5. Berechne die Seitenzahl: page = virt_addr / 4096
+6. Berechne den Offset: offset = virt_addr % 4096
+7. Hole den Frame aus der Page Table (z. B. Seite 0 → Frame 2)
+8. Phys. Adresse = frame * 4096 + offset
+
+Virtuelle Adresse	Seite	Offset	Frame	Phys. Adresse
+12300	3	12	5	20492
+16384	4	0	1	4096
+32800	8	32	6	24608

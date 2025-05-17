@@ -1,0 +1,38 @@
+Dateisystembefehle und Konzepte – Zusammenfassung
+**Befehle und Konzepte:**
+•	mkdir -p test/subdir && cd test – Erstellt Verzeichnisstruktur. Navigiert in 'test'. Konzept: Verzeichnisstruktur.
+•	echo "Inhalt-$(date +%s)" > original.txt – Erstellt Datei mit Zeitstempel. Konzept: Schreiben, mtime.
+•	ln -s original.txt symlink.txt – Erstellt symbolischen Link. Konzept: Pfadbasierte Verlinkung.
+•	ln original.txt hardlink.txt – Erstellt harten Link. Konzept: Inode-Sharing.
+•	chmod 640 original.txt – Setzt Rechte (rw-r-----). Konzept: Zugriffskontrolle.
+•	touch -d "2 days ago" original.txt – Ändert mtime. Konzept: Zeitstempelmanipulation.
+•	ls -la – Zeigt Dateiinformationen. Konzept: Inodes, Rechte, Links, Größe, Zeit.
+
+➜  LB2 git:(hfi24a/lukas-wenger) ✗ ls -la
+insgesamt 92
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai 17 11:15 .
+drwxr-xr-x 3 vmadmin vmadmin  4096 Mai  9 22:58 ..
+-rw-r--r-- 1 root    root     1162 Mai 17 11:05 Frage2.txt
+-rw-r--r-- 1 root    root       29 Mai 17 11:12 Frage3.txt
+-rw-r--r-- 1 root    root     1024 Mai 17 11:15 .Frage3.txt.swp
+-rw-r--r-- 1 root    root      520 Mai 17 11:12 Frage4.txt
+drwxr-xr-x 8 vmadmin vmadmin  4096 Mai 17 11:05 .git
+-rw-rw-r-- 1 vmadmin vmadmin 53944 Mai 17 11:01 LB2-FS25.html
+-rw-r--r-- 1 vmadmin vmadmin     7 Mai  9 22:58 README.md
+-rw-r--r-- 1 root    root        5 Mai 17 10:59 testdatei.txt
+Analyse von 'ls -la':
+- Spalten: Rechte, Links, User, Gruppe, Größe, Zeit, Name
+- original.txt und hardlink.txt: gleiche Inode
+- symlink.txt: eigene Inode, verweist auf Pfad
+- Unterschied: Symlink kann brechen, Hardlink nicht
+
+Weitere Befehle:
+•	echo "Neuer Inhalt" > original.txt – Überschreibt Inhalt. Hardlink zeigt selben Inhalt, Symlink auch (solange Ziel existiert).
+•	cat symlink.txt hardlink.txt – Gibt 2× 'Neuer Inhalt' aus.
+•	mv original.txt ../original.txt – Verschiebt Datei. Symlink wird ungültig, Hardlink bleibt.
+•	cat symlink.txt hardlink.txt 2>&1 – symlink.txt: Fehler, hardlink.txt: Ausgabe ok.
+Symlink vs. Hardlinks
+- Symlink verweist auf Pfad, bricht bei Verschiebung.
+- Hardlink bleibt gültig, da Inode geteilt wird.
+- Hardlinks funktionieren nicht über Dateisysteme.
+- Symlinks funktionieren, da nur Pfad gespeichert wird.
