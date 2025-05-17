@@ -1,0 +1,23 @@
+2.1
+
+Interne Fragmentierung: Diese passiert wenn einem Prozess mehr Speicherplatz zugewiesen wird als er benötigt. Der übriggebliebene Speicher im zugewiesenen Block bleibt dann ungenutzt.
+Beispiel: Man hat eine grosse Komode und eine Sticknadel. Die Sticknadel verwendet fast keinen Platz, jedoch bleibt der Rest der Komode weiterhin leer.
+
+Externe Fragmentierung: Diese geschieht wenn der gesamte freie Speicher im System aus vielen kleinen Blöcken besteht, welche nicht miteinander zusammenhängen. Auch wenn der Speicher als ganzes gross genug wäre um einen Prozess durchführen zu können, wird dieses dennoch nicht getan, weil dieser in Einzelteile "zerhackt" und nicht am stück verfügbar ist.
+Beispiel: Man trägt in allen seinen Hosentaschen Kleingeld mit sich und will sich ein Wasser kaufen. Jedoch befindet sich in keiner der einzelnen Hosentaschen genug Geld um das Wasser zu kaufen, also passiert es nicht. Das System sieht schlicht und ergreifend nicht, dass es insgesamt genug Speicher, bzw. in dem Beispiel Geld hätte.
+
+2.2
+
+Paging: Bei dieser Technik wird sowohl der physische, als auch die logische Adressraum in Blöcke mit einer festen Grösse Unterteilt.
+Der Physische Teil wird hierbei als "Franes" bezeichnet und der Logische als "Seiten". Hierbei muss ein Prozess keine zusammenhängende Speicherregion erhalten. Statdessen werden die Seiten in beliebige, freie Frames im Speicher verteilt.
+Hierbei bildet eine Seitentabelle die Zuordnung zwischen den Seitenadressen und Frameadressen.
+
+Vorteile / Nachteile: 
+
++ Die externe Fragmentierung wird reduziert; Da der Speicher in kleine, gleichgrosse Frames unterteilt ist, ist es einfacher freie Frames für die Seiten des Prozesses zu finden.
++ Ermöglicht nicht-kontinuierliche Speicherzuweisung; Prozesse können weiterhin Speicher erhalten, auch wenn kein zusammenhängender Speicherblock zur Verfügung stehen würde.
++ Unterstützt von virtuellem Speicher; Prozesse können dank Pagings mehr Speicher verwenden, als er physisch vorhanden ist.
+
+- Interne Fragmentierung; Speicher wird in festen Seitengrössen zugewiesen und dadurch kann es dazu kommen, dass der Prozess weniegr Speicher benötigt als eine ganze Seite
+- Overhead der Seitentabelle; Für die Verwaltung werden Seitentabellen erstellt, welcher zusätzlich Speicherplatz und Rechenzeit kostet. Bei grösseren Adressräumen können diese sehr umfangreich werden.
+- Translation Lookaside Buffer (oder auch TLB) Misses; Moderne Prozessoren haben heutzutage einen Cache (TLB) den sie benutzen für die Übersetzung von virtuellen zu physischen Adressen. Wenn jedoch keine Seitentabelle im TLB vorhanden ist, muss ein Hauptspeicherzugriff erfolgen, was die Leistung beeinträchtigen kann.
