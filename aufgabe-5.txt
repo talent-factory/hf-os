@@ -1,0 +1,90 @@
+Aufgabe Programm:
+➜  LB2 git:(hfi2024a/lukas-neuenschwander) ✗ ./memory_layout 
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7ffd154011b0
+Heap-Variable:     0x610a69ba62a0
+Statische Variable:0x610a67cc9010
+
+Adressdifferenzen (Bytes):
+Stack - Heap:     34027608583952
+Stack - Static:   34027640947104
+Heap  - Static:   32363152
+
+Wachstumsrichtungen:
+Stack wächst nach oben (steigende Adressen)
+
+Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+
+Das Programm gibt die Adressen von drei Variablen aus unterschiedlichen Speicherbereichen aus:
+Stack-Variable:    0x7ffd154011b0
+Heap-Variable:     0x610a69ba62a0
+Statische Variable:0x610a67cc9010
+
+Die Adressen zeigen deutlich, dass Stack, Heap und statische Variablen in getrennten Bereichen des virtuellen Speichers liegen.
+
+Der Stack liegt im höheren Adressbereich (nahe 0x7ffd...), was typisch ist für moderne Betriebssysteme.
+
+Heap und statische Variablen liegen im niedrigeren Adressbereich, jeweils in unterschiedlichen Segmenten.
+
+
+
+
+
+Warum liegen Stack, Heap und statische Variablen in getrennten Bereichen?
+
+Gründe:
+
+    Isolation und Fehlervermeidung: Trennung reduziert die Gefahr, dass ein Überlauf in einem Segment (z. B. Stack Overflow) versehentlich andere Datenbereiche beschädigt.
+
+    Speicherverwaltung:
+
+        Der Stack wird vom System automatisch verwaltet, typischerweise mit fester Größe, wachsend von oben nach unten.
+
+        Der Heap wird vom Programmierer über malloc / free verwaltet. Er wächst typischerweise von unten nach oben.
+
+        Statische Variablen werden beim Programmstart einmalig im Daten- oder BSS-Segment abgelegt.
+
+    Effizienz: Unterschiedliche Verwaltungstechniken (automatisch vs. dynamisch) benötigen unterschiedliche Speicherverwaltung.
+
+Diese Trennung ist zentraler Bestandteil des virtuellen Speichermodells, das Prozesse voneinander abschottet und Speicher effizient nutzt.
+
+
+
+
+
+Auswirkungen des absichtlich erzeugten Speicherlecks
+
+Was passiert:
+
+    Im for-Loop werden fünfmal Speicherblöcke mit malloc() allokiert.
+
+    Keine der Adressen wird gespeichert oder später freigegeben → Speicherleck.
+
+Folgen:
+
+    Der Speicher wird weiterhin vom Prozess beansprucht, obwohl er nicht mehr nutzbar ist.
+
+    Wenn dies häufig oder in großen Mengen passiert (z. B. in einer Schleife), kann es zu einem Heap-Wachstum kommen und letztlich zu einem Out-Of-Memory (OOM)-Zustand.
+
+Wie kann das Betriebssystem damit umgehen:
+
+    Kurzfristig:
+
+        Das OS kann das Leck nicht direkt erkennen, da die Speicherblöcke formal gültig sind.
+
+        Erst beim Programmende wird der gesamte Speicher wieder freigegeben (durch das Betriebssystem).
+
+    Langfristig:
+
+        Einige Betriebssysteme (z. B. Linux mit OOM-Killer) beenden Prozesse, wenn der freie Speicher knapp wird.
+
+        Entwickler können Werkzeuge wie valgrind, asan oder AddressSanitizer einsetzen, um Lecks zu erkennen.
+
+Best Practice:
+
+    Jeder mit malloc() reservierte Speicher muss mit free() wieder freigegeben werden.
+
+    Speicherlecks sind gefährlich in Langzeitprozessen (z. B. Servern), weil sie zu schleichendem Ressourcenverlust führen.
+
+
