@@ -1,0 +1,694 @@
+Aufgabe 2
+
+Frage: Beschreiben Sie den Unterschied zwischen interner und externer Speicherfragmentierung. Geben Sie für beide Arten jeweils ein konkretes Beispiel aus der Praxis.
+
+Antwort:
+Interne Speicherfragmentierung: 
+Interne Speicherfragmentierung entsteht, wenn einem Programm ein fester Speicherblock zugewiesen wird, der größer ist als tatsächlich benötigt. Der überschüssige, ungenutzte Teil innerhalb dieses Blocks bleibt unbrauchbar und kann von keinem anderen Programm verwendet werden. Das bedeutet, dass Speicher vergeben, aber nicht vollständig genutzt wird.
+
+Externer Speicherfragmentierung:
+Externe Speicherfragmentierung entsteht dagegen, wenn Programme starten und beendet werden, wodurch viele kleine freie Speicherbereiche entstehen, die nicht direkt nebeneinander liegen. Obwohl insgesamt genug freier Speicher vorhanden ist, kann kein größerer, zusammenhängender Bereich gebildet werden, den ein neues Programm nutzen könnte. Der Speicher ist also zwar frei, aber nicht am Stück nutzbar.
+
+Konkretes Beispiel aus der Praxis:
+
+Beispiel für interne Speicherfragmentierung:
+Antwort: Ein Unternehmen betreibt einen Webserver, der viele kleine Anfragen verarbeitet. Das Betriebssystem verwendet feste Speicherblöcke mit einer Größe von 4 KB. Wenn eine Anfrage nur 2,5 KB Daten benötigt, wird ihr trotzdem ein kompletter 4-KB-Block zugewiesen. Die restlichen 1,5 KB innerhalb dieses Blocks bleiben ungenutzt, obwohl sie bereits reserviert sind. Bei Tausenden solcher Anfragen entsteht auf diese Weise ein erheblicher Speicherverlust das ist ein Beispiel für interne Speicherfragmentierung.
+
+Beispiel für externe Speicherfragmentierung:
+Antwort:
+Ein Unternehmen betreibt einen Webserver, der viele kleine Anfragen verarbeitet. Das Betriebssystem verwendet feste Speicherblöcke mit einer Größe von 4 KB. Wenn eine Anfrage nur 2,5 KB Daten benötigt, wird ihr trotzdem ein kompletter 4-KB-Block zugewiesen. Die restlichen 1,5 KB innerhalb dieses Blocks bleiben ungenutzt, obwohl sie bereits reserviert sind. Bei Tausenden solcher Anfragen entsteht auf diese Weise ein erheblicher Speicherverlust das ist ein Beispiel für interne Speicherfragmentierung.
+
+Aufgabe 3:
+
+Frage: Was genau macht jeder dieser Befehle und welche Konzepte des Dateisystems werden dabei angewendet?
+
+Antwort:
+
+Befehl mkdir -p test/subdir && cd test:  Der Befehl mkdir -p erstellt zunächst den Ordner test samt dem Unterordner subdir mit der Option -p werden eventuell fehlende Zwischenverzeichnisse automatisch angelegt, und es gibt keinen Fehler, falls sie bereits vorhanden sind. Danach wechselt cd test in das neu angelegte Verzeichnis test. Damit wird das Regel der Ordnerhierarchie im Dateisystem genutzt.
+
+Befehl echo "Inhalt-$(date +%s)" > original.txt: Der Befehl echo schreibt eine Textzeile in die Datei original.txt. Das Zeichen > sorgt dafür, dass entweder eine neue Datei erstellt oder eine vorhandene Datei vollständig überschrieben wird. Dabei legt das Dateisystem neue Daten an.
+
+Befehl ln -s original.txt symlink.txt: Der Befehl legt eine neue Datei namens symlink.txt an, die nur als symbolischer Verweis auf original.txt dient. Dieser symbolische Link speichert lediglich den Pfad zur Zieldatei in einem eigenen Inode und zeigt nicht auf deren Datenblöcke. 
+
+Befehl ln original.txt hardlink.txt: Der Befehl ln ohne die Option -s erstellt einen Hardlink mit dem Namen hardlink.txt.Dadurch zeigen beide Dateinamen auf dieselbe Datei mit denselben Daten. Wenn man einen der beiden Namen löscht, bleibt die Datei erhalten, solange mindestens ein weiterer Hardlink darauf verweist.
+
+Befehl chmod 640 original.txt: Mit diesem Befehl werden die Zugriffsrechte der Datei original.txt geändert, wodurch auch hardlink.txt die gleichen Rechte erhält, da beide auf dieselbe Datei verweisen. Der Besitzer darf die Datei lesen und bearbeiten, die Gruppe darf sie nur lesen, und alle anderen haben keinen Zugriff. 
+
+Befehl touch -d "2 days ago" original.txt: 
+Der Befehl touch verändert die Zeitangaben der Datei. Mit -d "2 days ago" setzt er die Zugriffs- und Änderungszeit auf vor genau zwei Tagen. So zeigt sich, dass man die Zeitstempel einer Datei verändern kann.
+
+Befehl ls -la: Der Befehl ls -la zeigt alle Dateien im Ordner mit vielen Details an. Man sieht unter anderem Dateityp, Rechte, Besitzer, Größe und Zeitstempel. So erkennt man, dass hardlink.txt und original.txt dieselbe Inode-Nummer teilen, während symlink.txt als symbolischer Link mit eigenem Inode angezeigt wird.
+
+Frage: Kopiere die Ausgabe des letzten Befehles als Anhang zu der Lösung.
+Ausgabe:
+
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ ls -la
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:21 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:20 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:21 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:21 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:20 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:21 symlink.txt -> original.txt
+
+Frage: Analysiere die Ausgabe im Detail:
+
+Frage: Erkläre die Bedeutung jeder Spalte in der Ausgabe?
+Antwort: 
+
+1.Spalte: drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:21 .
+Antwort: 
+
+d am Anfang zeigt:
+Es handelt sich um ein Verzeichnis (engl. directory).
+
+rwxrwxr-x sind die Zugriffsrechte:
+
+- Der Besitzer darf lesen, schreiben und betreten (rwx).
+
+- Die Gruppe darf auch lesen, schreiben und betreten (rwx).
+
+- Andere Benutzer dürfen lesen und betreten, aber nicht schreiben (r-x).
+
+3 ist die Anzahl der Verweise (Links) auf dieses Verzeichnis:
+Das bedeutet, dass dieses Verzeichnis dreimal im Dateisystem verlinkt ist – meistens durch:
+
+1. sich selbst (.),
+
+2. vom Elternverzeichnis (..),
+
+3. und eventuell ein Unterverzeichnis.
+
+- vmadmin ist der Benutzer, dem dieses Verzeichnis gehört.
+
+- vmadmin ist auch die Gruppe, der das Verzeichnis zugeordnet ist.
+
+- 4096 ist die Größe des Verzeichniseintrags in Bytes.
+Das ist bei Verzeichnissen unter Linux fast immer 4096 Byte – das ist normal.
+
+- Mai 17 11:21 ist das Datum und die Uhrzeit, wann zuletzt etwas in diesem Verzeichnis geändert wurde.
+Das kann z. B. passieren, wenn eine Datei hinzugefügt oder gelöscht wird.
+
+- . steht für das aktuelle Verzeichnis selbst.
+
+2. Spalte: drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:20 ..
+
+d am Anfang bedeutet:
+Es handelt sich um ein Verzeichnis.
+
+rwxr-xr-x sind die Rechte:
+
+- Der Besitzer darf lesen, schreiben und betreten (rwx).
+
+- Die Gruppe darf lesen und betreten, aber nicht schreiben (r-x).
+
+- Andere Benutzer dürfen ebenfalls lesen und betreten, aber nicht schreiben (r-x).
+
+- 4 ist die Anzahl der Verweise auf dieses Verzeichnis.
+Bei Verzeichnissen zählt man:
+
+1. sich selbst (.),
+
+2. den Eintrag im Elternverzeichnis,
+
+3. und alle Unterverzeichnisse (jeweils als .. in diesen).
+
+- vmadmin ist der Benutzer, dem das Verzeichnis gehört.
+
+- vmadmin ist auch die Gruppe, der das Verzeichnis zugeordnet ist.
+
+- 4096 ist die Größe des Verzeichniseintrags, was bei Verzeichnissen standardmäßig 4096 Byte ist.
+
+- Mai 17 11:20 ist der Zeitpunkt, an dem zuletzt etwas im übergeordneten Verzeichnis verändert wurde (z. B. ein neues Verzeichnis oder eine Datei wurde darin erstellt oder gelöscht).
+
+- .. ist der Pfad zum übergeordneten Verzeichnis (also eins höher in der Verzeichnisstruktur).
+
+3. Spalte: -rw-r----- 2 vmadmin vmadmin 18 Mai 15 11:21 hardlink.txt
+
+- am Anfang zeigt:
+Es handelt sich um eine ganz normale Datei (keine Verknüpfung oder ein Verzeichnis).
+
+rw-r----- sind die Zugriffsrechte:
+
+- Der Besitzer darf die Datei lesen und schreiben (rw-).
+
+- Die Gruppe darf die Datei nur lesen (r--).
+
+- Alle anderen dürfen gar nichts (---).
+
+2 ist die Anzahl der Verweise (Hardlinks) auf diese Datei.
+Das bedeutet, dass zwei Dateinamen im Dateisystem (in diesem Fall hardlink.txt und original.txt) denselben Inhalt nutzen – sie zeigen auf dieselbe Datei im Hintergrund (gleiche Inode).
+
+vmadmin ist der Benutzer, dem die Datei gehört.
+
+vmadmin ist auch die Gruppe, der die Datei zugeordnet ist.
+
+18 zeigt die Größe der Datei in Bytes an – sie ist also 18 Zeichen lang (sehr klein).
+
+Mai 15 11:21 ist der Zeitpunkt, an dem der Inhalt der Datei zuletzt geändert wurde.
+
+hardlink.txt ist der Name dieser Datei, unter dem sie im Verzeichnis sichtbar ist.
+
+4. Spalte: -rw-r----- 2 vmadmin vmadmin 18 Mai 15 11:21 original.txt
+
+- am Anfang zeigt:
+Es handelt sich um eine ganz normale Datei (keine Verknüpfung oder ein Verzeichnis).
+
+rw-r----- sind die Zugriffsrechte:
+
+Der Besitzer darf die Datei lesen und schreiben (rw-).
+
+Die Gruppe darf sie nur lesen (r--).
+
+Alle anderen dürfen nichts tun (---).
+
+2 bedeutet, dass es zwei Hardlinks auf diese Datei gibt.
+Das heißt: original.txt und hardlink.txt sind zwei verschiedene Namen, die denselben Dateiinhalt im Hintergrund teilen.
+
+vmadmin ist der Benutzer, dem die Datei gehört.
+
+vmadmin ist auch die Gruppe, der die Datei gehört.
+
+18 ist die Größe der Datei – sie ist also 18 Bytes groß (sehr klein, z. B. ein kurzer Text).
+
+Mai 15 11:21 ist der Zeitpunkt, wann der Inhalt der Datei zuletzt geändert wurde.
+
+original.txt ist der Name dieser Datei, unter dem sie im Verzeichnis sichtbar ist.
+
+Spalte 5: drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:20 subdir
+d am Anfang zeigt:
+Es handelt sich um ein Verzeichnis (also einen Ordner, kein normales Dokument).
+
+rwxrwxr-x sind die Zugriffsrechte:
+
+Der Besitzer darf lesen, schreiben und betreten (rwx).
+
+Die Gruppe darf ebenfalls lesen, schreiben und betreten (rwx).
+
+Andere Benutzer dürfen lesen und betreten, aber nicht schreiben (r-x).
+
+2 ist die Anzahl der Verweise auf dieses Verzeichnis.
+Bei Verzeichnissen sind das fast immer:
+
+der Eintrag für sich selbst (.) und
+
+der Eintrag im Elternverzeichnis (..).
+
+vmadmin ist der Benutzer, dem dieses Verzeichnis gehört.
+
+vmadmin ist auch die Gruppe, der das Verzeichnis zugeordnet ist.
+
+4096 ist die Größe des Verzeichniseintrags in Bytes – das ist bei Linux-Verzeichnissen der Standardwert.
+
+Mai 17 11:20 zeigt, wann zuletzt etwas in diesem Verzeichnis verändert wurde – z. B. eine Datei wurde hinzugefügt oder gelöscht.
+
+subdir ist der Name des Verzeichnisses.
+
+Spalte 5: lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:21 symlink.txt -> original.txt
+
+l ganz vorne bedeutet:
+Es handelt sich um einen symbolischen Link (auch „Symlink“ oder „Verknüpfung“ genannt).
+So ein Link zeigt auf eine andere Datei, in diesem Fall auf original.txt.
+
+rwxrwxrwx sind die Zugriffsrechte – hier:
+
+Alle Benutzer dürfen lesen, schreiben und den Link nutzen.
+Diese Rechte beziehen sich nur auf den Link selbst, nicht auf die Zieldatei.
+
+1 bedeutet:
+Es gibt einen Verweis auf diesen Link – also genau diese eine Verknüpfung.
+
+vmadmin ist der Benutzer, der den Link besitzt.
+
+vmadmin ist auch die Gruppe, der der Link zugeordnet ist.
+
+12 ist die Länge des Pfads, auf den der Link zeigt – original.txt hat genau 12 Zeichen.
+
+Mai 17 11:21 ist der Zeitpunkt, an dem der Link zuletzt erstellt oder verändert wurde.
+
+symlink.txt -> original.txt bedeutet:
+Die Datei symlink.txt ist ein symbolischer Link, der auf die Datei original.txt zeigt.
+Wenn man symlink.txt öffnet, wird in Wirklichkeit original.txt verwendet.
+
+
+
+
+Frage: Welche Unterschiede bestehen zwischen den drei Dateien bezüglich Inode, Berechtigungen und Zeitstempel?
+Antwort: 
+Inode (Dateiidentität im Dateisystem):
+Die Datei original.txt besitzt eine eigene Inode-Nummer, unter der ihr Inhalt im Dateisystem gespeichert ist.
+
+Die Datei hardlink.txt teilt sich genau dieselbe Inode wie original.txt, was bedeutet, dass beide Dateinamen auf denselben Speicherort und denselben Inhalt zeigen.
+
+Die Datei symlink.txt hingegen besitzt eine eigene, separate Inode, weil sie nicht den Inhalt von original.txt, sondern lediglich den Pfad zu dieser Datei speichert.
+
+Berechtigungen (Zugriffsrechte):
+Die Datei original.txt hat bestimmte Zugriffsrechte, z. B. lesen und schreiben für den Besitzer, lesen für die Gruppe, und keinen Zugriff für andere.
+
+Da hardlink.txt dieselbe Datei wie original.txt ist (aus Sicht des Dateisystems), gelten exakt dieselben Berechtigungen – ein Hardlink ist keine Kopie, sondern ein zweiter Name für dieselbe Datei.
+
+symlink.txt hat eigene Rechte, die sich nur auf den Link selbst beziehen (z. B. lesen des Pfads), aber beim Zugriff auf die verlinkte Datei gelten die Rechte von original.txt.
+
+Zeitstempel (Datum der letzten Änderung):
+Die Datei original.txt zeigt den Zeitstempel der letzten Änderung des Dateiinhalts an.
+
+Da hardlink.txt denselben Inhalt verwendet, zeigt sie denselben Änderungszeitpunkt wie original.txt.
+
+Der symbolische Link symlink.txt hingegen zeigt den Zeitpunkt an, wann der Link selbst erstellt oder zuletzt geändert wurde – nicht wann die Zieldatei verändert wurde.
+
+Frage: Warum haben bestimmte Dateien die gleiche Inode-Nummer und andere nicht?
+
+Warum haben manche Dateien die gleiche Inode-Nummer?
+Antwort: Manche Dateien haben die gleiche Inode-Nummer, weil sie im Dateisystem physisch dieselbe Datei sind, nur mit unterschiedlichen Namen. Das passiert, wenn man einen sogenannten Hardlink erstellt.
+
+Ein Hardlink ist wie ein zweiter Name für dieselbe Datei. Beide Namen zeigen auf denselben Speicherort auf der Festplatte – also auf dieselbe Inode. Deshalb haben z. B. original.txt und hardlink.txt im Screenshot die gleiche Inode-Nummer, weil sie technisch ein und dieselbe Datei sind.
+
+Und warum haben andere Dateien nicht die gleiche Inode-Nummer?
+Antwort: Dateien, die unabhängig voneinander erstellt werden – etwa mit Befehlen wie touch, cp oder echo > datei.txt – erhalten eigene Inode-Nummern, weil sie jeweils separat im Dateisystem gespeichert werden.
+
+Ein symbolischer Link (Symlink) hingegen verweist nur auf den Pfad einer anderen Datei und besteht selbst aus einem kleinen Dateieintrag, der diesen Pfad speichert. Deshalb bekommt ein Symlink immer seine eigene Inode, unabhängig von der Datei, auf die er zeigt.
+
+Erkläre für jeden Befehl:
+
+Befehl echo "Neuer Inhalt" > original.txt: Dieser Befehl überschreibt den Inhalt der Datei original.txt mit dem Text "Neuer Inhalt".
+Wenn die Datei noch nicht existiert, wird sie neu erstellt.
+
+Befehl cat symlink.txt hardlink.txt: 
+symlink.txt ist ein symbolischer Link auf original.txt
+
+hardlink.txt ist ein Hardlink – also ein weiterer Name für dieselbe Datei wie original.txt
+
+Da original.txt zuvor mit dem Text "Neuer Inhalt" beschrieben wurde, zeigen beide (symlink.txt und hardlink.txt) diesen Text.
+
+Ergebnis: "Neuer Inhalt" wird zweimal angezeigt – einmal über den Symlink, einmal über den Hardlink.
+
+Befehl mv original.txt ../original.txt: 
+Die Datei original.txt wird in das übergeordnete Verzeichnis (..) verschoben.
+Damit befindet sich original.txt nicht mehr im aktuellen Verzeichnis.
+
+cat symlink.txt hardlink.txt 2>&1
+
+Diesmal wird wieder versucht, den Inhalt von symlink.txt und hardlink.txt anzuzeigen.
+
+Der Symlink symlink.txt zeigt immer noch auf original.txt im alten Pfad, aber diese Datei existiert dort nicht mehr. Daher kommt die Fehlermeldung:
+
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+
+Der Hardlink hardlink.txt funktioniert weiterhin, weil er nicht vom Pfad abhängig ist. Er zeigt immer noch auf den gleichen Inhalt im Dateisystem – also wird "Neuer Inhalt" erneut angezeigt.
+
+2>&1 sorgt dafür, dass Fehlermeldungen (Stderr) auch angezeigt werden, nicht nur reguläre Ausgaben (Stdout).
+
+Mit echo wurde original.txt beschrieben.
+
+Der Inhalt war über den Symlink und den Hardlink abrufbar.
+
+Danach wurde original.txt verschoben.
+
+Der Symlink ist nun "kaputt", weil er auf eine Datei zeigt, die nicht mehr am ursprünglichen Ort liegt.
+
+Der Hardlink funktioniert weiterhin, da er direkt auf die Datei im Dateisystem zeigt, unabhängig vom Dateinamen.
+
+Was wird ausgegeben und warum?
+Ausgabe:
+
+  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ echo "Neuer Inhalt" > original.txt
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗                                     
+
+cat symlink.txt hardlink.txt
+
+Neuer Inhalt
+Neuer Inhalt
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ 
+
+mv original.txt ../original.txt
+
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ cat symlink.txt hardlink.txt 2>&1
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ 
+
+Ausgabe nach dem Befehl cat symlink.txt hardlink.txt:
+Ausgabe: 
+Neuer Inhalt
+Neuer Inhalt
+
+Warum?
+Antwort: 
+Beide Dateien – symlink.txt und hardlink.txt – zeigen zu diesem Zeitpunkt auf den gleichen Inhalt, nämlich auf die Datei original.txt.
+
+symlink.txt ist ein symbolischer Link, der auf original.txt verweist.
+
+hardlink.txt ist ein Hardlink, der direkt mit dem Speicherort (Inode) von original.txt verbunden ist.
+Da original.txt kurz zuvor mit dem Inhalt "Neuer Inhalt" überschrieben wurde, zeigen beide Zugriffe denselben Text an.
+
+Nach dem Befehl mv original.txt ../original.txt
+
+Warum?
+Der Befehl mv original.txt ../original.txt verschiebt die Datei original.txt aus dem aktuellen Verzeichnis in das übergeordnete Verzeichnis (also ..).
+
+Das bedeutet:
+
+Die Datei ist nicht mehr im aktuellen Ordner vorhanden.
+
+Sie befindet sich nun eine Ebene höher im Verzeichnisbaum.
+
+Ausgabe nach dem Befehl cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden  
+Neuer Inhalt
+
+symlink.txt kann nicht mehr auf original.txt zugreifen, weil der Symlink nur den Pfad speichert – und der Pfad zeigt auf eine Datei, die verschoben wurde. Deshalb erscheint die Fehlermeldung:
+
+"Datei oder Verzeichnis nicht gefunden"
+
+hardlink.txt funktioniert trotzdem weiter, weil ein Hardlink unabhängig vom Pfad direkt auf den Inhalt zeigt. Da dieser Inhalt im Dateisystem noch existiert, wird "Neuer Inhalt" wie gewohnt angezeigt.
+
+
+
+Welche Auswirkungen haben die Befehle auf die Inode-Tabelle?
+Antwort:
+echo "Neuer Inhalt" > original.txt:
+Die Inode von original.txt bleibt gleich, aber der Inhalt und der Zeitstempel werden in der Inode-Tabelle aktualisiert.
+
+cat symlink.txt hardlink.txt
+Dieser Befehl verändert die Inode-Tabelle nicht, weil nur lesend auf die Dateien zugegriffen wird.
+
+mv original.txt ../original.txt
+Die Inode selbst bleibt unverändert, aber der Verzeichniseintrag wird verschoben.
+Die Inode-Tabelle merkt sich jetzt, dass derselbe Inode unter einem anderen Pfad erreichbar ist.
+
+ symlink.txt (symbolischer Link)
+ Die Inode von symlink.txt bleibt erhalten, aber ihr gespeicherter Pfad zeigt jetzt ins Leere, weil das Ziel verschoben wurde.
+Die Inode-Tabelle der Zieldatei wird dabei nicht verändert.
+
+hardlink.txt
+Der Hardlink zeigt weiterhin auf denselben Inode wie vorher, ohne Änderung.
+Die Inode-Tabelle bleibt unverändert.
+
+
+
+
+Wie unterscheidet sich das Verhalten von symbolischen und harten Links in diesem Szenario?
+Antwort:
+In diesem Szenario zeigt sich, dass sich das Verhalten von symbolischen Links (Symlinks) und harten Links (Hardlinks) deutlich unterscheidet.
+
+Ein symbolischer Link wie symlink.txt speichert lediglich den Pfad zur Zieldatei (original.txt). Als original.txt durch den Befehl mv original.txt ../original.txt verschoben wurde, war der Pfad im Symlink nicht mehr gültig. Deshalb konnte symlink.txt danach nicht mehr auf die Datei zugreifen und führte zu einer Fehlermeldung beim Öffnen.
+
+Ein harter Link wie hardlink.txt dagegen zeigt nicht auf den Pfad, sondern direkt auf denselben Inode wie original.txt. Da sich der Inode durch das Verschieben nicht ändert, bleibt der Zugriff über den Hardlink voll funktionsfähig, selbst nachdem original.txt aus dem Verzeichnis entfernt wurde.
+
+
+
+Welche Fehler könnten auftreten und warum?
+Antwort:
+Dieser Fehler entsteht, weil der symbolische Link symlink.txt auf einen Pfad zeigt, der nicht mehr existiert. Nachdem die Datei original.txt mit mv verschoben wurde, ist sie nicht mehr im ursprünglichen Verzeichnis. Der Symlink speichert aber genau diesen alten Pfad.
+Da dieser Pfad jetzt ins Leere führt, kann der Link nicht mehr auf die Datei zugreifen – das nennt man einen "broken link".
+
+
+Aufgabe 4:
+
+12300(10): 
+Die virtuelle Seite (graue Kästen links) ist 4 KB = 4096 Bytes groß.
+
+Die virtuelle Adresse ist 12300 (dezimal).
+
+Virtuelle Seite = 12300/4096 = 3,0003 = 3
+
+Offset = 12300 mod 4096 = 12300 - 12288 = 12
+
+Physische Adresse berechnen:
+
+Physische Adresse = 20480 + 12 = 20492
+
+Anhand Bild:
+
+Virtuelle Seite 3 = Seitenrahmen 5
+Seitenrahmen 5 entpsricht 20 KB - 24 KB, also beginnt bei 20 KB = 20480
+
+16384(10) 
+
+Die Seitengrösse = 4KB = 4096 KB
+Virtuelle Adresse = 16384 (dezimal)
+
+Virtuelle Seite = 16384/4096 = 4
+Offset = 16384 mod 4096 = 0
+
+Virtuelle Seite 4 = Seitenrahmen 3
+Seitenrahmen 3 entspricht dem physischen Bereich: 12KB – 16KB
+Startadresse = 12KB = 12288 (dezimal)
+
+Physische Adresse berechnen:
+
+Physische Adresse = 12288 + 0 = 12288
+
+32800(10)
+
+Seitengröße = 4 KB = 4096 Bytes
+Virtuelle Adresse = 32800
+
+Virtuelle Seite = 32800/4096 = 8
+Offset = 32800 mod 4096 = 32800 - (8 * 4096) = 32800 - 32768 = 32
+
+Virtuelle Seite 8 = Seitenrahmen 1
+Seitenrahmen 1 = 4 KB – 8 KB = Startadresse 4096
+
+Physische Adresse berechnen:
+Physische Adresse: 4096 + 32 = 4128
+
+Aufgabe 5
+Ausgabe:
+
+  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ sudo nano speichervisualisierung.c                    
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ gcc speichervisualisierung.c -o speichervisualisierung
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ ./speichervisualisierung                      
+Speicheradressanalyse:
+---------------------
+Stack-Variable: 0x7fffb1951600
+Heap-Variable: 0x5b629061c2a0
+Statische Variable: 0x5b628f5b2010
+Differenz Stack - Heap: 40257285477216 Bytes
+Differenz Stack - Static: 40257302689264 Bytes
+
+Wachstumsrichtungen:
+Adresse von a: 0x7fffb19515d0
+Adresse von b: 0x7fffb19515d4
+Stack wächst nach oben.
+
+
+
+
+
+Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+Antwort:
+
+Statische Variable: Adresse beginnt mit 0x5b628f5b2010 = befindet sich im Data Segment (für globale/statische Daten).
+
+Heap-Variable: Adresse 0x5b629061c2a0 = im Heap-Bereich, also dynamisch allokierter Speicher.
+
+Stack-Variable: Adresse 0x7fffb1951600 = im Stack-Bereich, typisch für lokale Variablen innerhalb von Funktionen.
+
+Die Speicherbereiche liegen weit voneinander entfernt, was typisch für ein modernes 64-Bit Betriebssystem mit großem virtuellem Adressraum ist.
+
+
+Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+
+Antwort:
+1. Stack (0x7fff...) – oberer Speicherbereich
+Wird vom Betriebssystem als LIFO-Speicher verwendet: jede Funktion speichert lokale Variablen, Rücksprungadressen etc.
+
+Wächst typischerweise nach unten (in deinem Fall ausnahmsweise nach oben).
+
+Muss geschützt sein: z. B. vor Buffer Overflows oder Überlappung mit dem Heap.
+
+Eigener Bereich verhindert ungewollte Kollisionen.
+
+2. Heap (0x5b62...) – mittlerer Bereich
+Dynamisch verwalteter Speicher (z. B. durch malloc()).
+
+Wächst nach oben, also zu höheren Adressen.
+
+Vom Betriebssystem getrennt verwaltet, damit dynamisch reservierter Speicher nicht in andere Speicherbereiche „hineinläuft“.
+
+3. Statische Variable (0x5b628f...) – unterer Bereich (Data Segment)
+Statische Variablen (wie static int) werden zur Compile-Zeit zugewiesen.
+
+Liegen im sogenannten Data Segment, das bereits beim Start des Programms festgelegt ist.
+
+Dieser Bereich ist fest reserviert und ändert sich während der Laufzeit nicht.
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+Antwort:
+
+Die Stack-Variable hat eine Adresse, die mit 0x7fffb1951600 beginnt.
+
+Die Heap-Variable liegt bei etwa 0x5b629061c2a0.
+
+Die statische Variable liegt bei 0x5b628f5b2010.
+
+Diese Unterschiede in den Adressen zeigen, dass jede dieser Variablenarten in einem eigenen Speicherbereich liegt.
+
+Das Betriebssystem teilt den Speicher in Bereiche auf, damit jede Art von Variable ihren eigenen "Platz" hat:
+
+Stack (für lokale Variablen):
+Wird automatisch verwaltet, z. B. bei Funktionsaufrufen.
+
+Muss schnell wachsen und wieder freigegeben werden.
+
+Liegt deshalb im oberen Teil des Speichers (hier 0x7fff...).
+
+Heap (für dynamische Speicherzuweisung):
+Wird benutzt, wenn man z. B. mit malloc Speicher zur Laufzeit reserviert.
+
+Muss flexibel sein und bekommt daher einen eigenen Bereich im mittleren Speicherbereich (hier 0x5b6290...).
+
+Statische Variablen:
+Sie werden beim Start des Programms einmal angelegt und bleiben bis zum Ende erhalten.
+
+Deshalb speichert das System sie ganz unten im sogenannten Data Segment (hier 0x5b628f...).
+
+Frage: Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? 
+Antwort: 
+Ein Speicherleck entsteht, wenn Speicher im Heap (z. B. durch malloc) reserviert wird, aber nicht mehr freigegeben wird – und der Zeiger darauf verloren geht oder ignoriert wird. Hier wird fünfmal Speicher reserviert, aber nie freigegeben. Dieser Speicher bleibt belegt, obwohl er nicht mehr benutzt wird.
+
+Die Auswirkungen:
+Der belegte Speicher bleibt reserviert, auch wenn das Programm ihn nicht mehr braucht.
+
+Bei langen oder dauerhaft laufenden Programmen (z. B. Servern) kann das zu Speicherknappheit führen.
+
+Wenn das Programm immer weiter Speicher „verliert“, kann es langsamer werden oder sogar abstürzen.
+
+Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Antwort:
+1. Automatische Speicherfreigabe beim Programmende
+Wenn ein Programm beendet wird, räumt das Betriebssystem den ganzen Speicher des Prozesses automatisch auf.
+
+Das schützt vor langfristigen Schäden – aber während der Laufzeit hilft das nicht.
+
+2. Werkzeuge zur Speicherüberwachung
+Entwickler können Tools wie Valgrind oder AddressSanitizer verwenden, um Speicherlecks zu finden.
+
+Das Betriebssystem selbst kann über Logs oder Monitoring Hinweise liefern.
+
+3. Virtuelle Speicherverwaltung
+Speicherlecks können zwar Speicher belegen, aber das Betriebssystem kann durch virtuellen Speicher (z. B. mit Auslagerungsdateien) dafür sorgen, dass andere Programme trotzdem weiterlaufen können.
+
+Das schützt das System, ist aber nur ein Notbehelf.
+
+Aufgabe 6:
+Ausgabe:
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ sudo nano speichervisualisierung.c                    
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ sudo nano Dateioperationen.c   
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ gcc Dateioperationen.c -o Dateioperationen
+➜  test git:(hfi2024a/Sugeevan-Sureshkumar) ✗ ./Dateioperationen
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+-----------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546213
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: Sat May 17 12:50:29 2025
+Letzte Änderung: Sat May 17 12:50:29 2025
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+-----------------------------
+Dateigröße: 130 Bytes
+Inode-Nummer: 546213
+Anzahl der Hardlinks: 1
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: Sat May 17 12:50:29 2025
+Letzte Änderung: Sat May 17 12:50:29 2025
+
+Hardlink erstellt: testdatei_hardlink.txt
+
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+-----------------------------
+Dateigröße: 130 Bytes
+Inode-Nummer: 546213
+Anzahl der Hardlinks: 2
+Zugriffsrechte: 664 (oktal)
+Letzter Zugriff: Sat May 17 12:50:29 2025
+Letzte Änderung: Sat May 17 12:50:29 2025
+
+Beschreiben Sie die Ausgabe des Programms. 
+Antwort:
+Das Programm erstellt zunächst eine Textdatei und schreibt einen kurzen Text hinein. Anschließend zeigt es die Metadaten der Datei an. Dazu gehören unter anderem die Dateigröße, die Inode-Nummer, die Anzahl der Hardlinks, die Zugriffsrechte sowie der Zeitpunkt des letzten Zugriffs und der letzten Änderung.
+
+Danach öffnet das Programm dieselbe Datei erneut im Anhangsmodus („append“) und fügt eine weitere Zeile Text hinzu. Im Anschluss werden die Metadaten erneut ausgegeben. Dabei lässt sich erkennen, dass sich die Dateigröße erhöht hat, da neuer Inhalt hinzugefügt wurde. Auch der Zeitstempel der letzten Änderung (st_mtime) hat sich verändert, weil der Inhalt der Datei geändert wurde. Die Inode-Nummer und die Zugriffsrechte bleiben hingegen unverändert, da es sich immer noch um dieselbe Datei handelt und die Dateiberechtigungen nicht angepasst wurden.
+
+Abschließend wird ein Hardlink zur Originaldatei erstellt. Das Programm zeigt auch die Metadaten dieses Hardlinks an. Dabei ist auffällig, dass der Hardlink die gleiche Inode-Nummer wie die Originaldatei besitzt. Das zeigt, dass es sich technisch gesehen um dieselbe Datei handelt, nur mit einem zusätzlichen Namen im Dateisystem. Die Anzahl der Hardlinks (st_nlink) ist nun um eins erhöht, weil dieselben Dateiinhalte über zwei unterschiedliche Dateinamen erreichbar sind.
+
+Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+Antwort:
+
+Die Dateigröße nimmt zu
+Da dem bestehenden Inhalt neuer Text hinzugefügt wird, vergrößert sich die Datei. Das sieht man in der Metadaten-Ausgabe daran, dass der Wert für „Dateigröße“ (st_size) steigt.
+
+Der Änderungszeitpunkt wird aktualisiert
+Die Metadaten enthalten einen Zeitstempel für die letzte Änderung (st_mtime). Dieser wird aktualisiert, sobald der Inhalt der Datei verändert wird – also auch beim Anhängen von Text. Der neue Zeitstempel zeigt an, wann zuletzt etwas geschrieben wurde.
+
+Der Zugriffszeitpunkt kann sich ändern
+Der Zugriffszeitpunkt (st_atime) gibt an, wann die Datei zuletzt gelesen wurde. Auf manchen Systemen wird dieser auch beim Schreiben oder Öffnen im Lesemodus geändert, auf anderen Systemen bleibt er gleich (abhängig von Mount-Optionen oder Performance-Einstellungen).
+
+Was sich nicht ändert?
+Antwort:
+Inode-Nummer (st_ino): bleibt gleich, da es immer noch dieselbe Datei ist.
+
+Anzahl der Hardlinks (st_nlink): ändert sich nur, wenn ein neuer Hardlink erstellt oder gelöscht wird.
+
+Zugriffsrechte (st_mode): bleiben unverändert, solange man sie nicht aktiv ändert (z. B. mit chmod).
+
+Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+Antwort:
+Was ist die Inode-Nummer?
+Die Inode-Nummer ist eine eindeutige Kennung für eine Datei im Dateisystem.
+Sie zeigt nicht den Namen, sondern beschreibt die eigentliche Datei selbst – also:
+
+wo die Daten auf der Festplatte gespeichert sind,
+
+wie groß die Datei ist,
+
+wem sie gehört (Benutzer, Gruppe),
+
+welche Berechtigungen sie hat (Lesen, Schreiben usw.),
+
+wann sie zuletzt geändert wurde.
+
+Was ist der Dateiname?
+Der Dateiname ist einfach nur ein Verweis (ein "Label") im Verzeichnis, unter dem man die Datei findet.
+Man kann ihn sich wie einen Spitznamen für den Inode vorstellen.
+
+Unterschied:
+Der Inode beschreibt den Inhalt der Datei und bleibt gleich, solange die Datei nicht gelöscht oder überschrieben wird.
+
+Der Dateiname ist nur ein Verzeichniseintrag, der auf den Inode zeigt – und kann geändert oder mehrfach vergeben werden.
+
+Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+Antwort:
+Verhalten beim Löschen der Originaldatei:
+Hardlink:
+Wenn du den Originalnamen löschst, bleibt die Datei weiterhin vollständig erhalten, solange der Hardlink noch existiert.
+Die Daten gehen nicht verloren.
+
+Symlink:
+Wenn du die Originaldatei löschst, zeigt der Symlink ins Leere – er wird zu einem sogenannten „Broken Link.
+Der Symlink bleibt, aber funktioniert nicht mehr.
+
+ymlinks können über verschiedene Dateisysteme hinweg zeigen, sogar auf Verzeichnisse oder entfernte Dateien.
+
+Hardlinks funktionieren nur innerhalb desselben Dateisystems und normalerweise nicht für Verzeichnisse (wegen Schleifen-Gefahr).
+
+in Symlink ist wie ein Hinweiszettel: "Die Datei ist dort!"
+
+Ein Hardlink ist wie ein zweiter Name für denselben Speicherplatz.
+
+Wenn man die Originaldatei löscht:
+
+Hardlink: Datei bleibt nutzbar, weil sie wirklich da ist.
+
+Symlink: Link funktioniert nicht mehr – zeigt ins Leere.
+
+
+
