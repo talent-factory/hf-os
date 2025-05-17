@@ -33,8 +33,7 @@ mit echo der inhalt von original.txt wird vollstaendig durch den text Neuer Inha
 Neuer Inhalt
 Neuer Inhalt
 
-mit cat kann man den Inhalt lesen.
-
+mit cat kann man den Inhalt des Datei lesen.
 
 ➜  test git:(hfi2024a/madalina-luca) ✗ mv original.txt ../original.txt
 mit mv kann man der Verzeichniss verschieben
