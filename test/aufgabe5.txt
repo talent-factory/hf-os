@@ -1,0 +1,33 @@
+➜  test git:(hfi2024a/madalina-luca) nano speichervisualisierung.c
+➜  test git:(hfi2024a/madalina-luca) ✗ gcc speichervisualisierung.c -o speichervisualisierung  
+➜  test git:(hfi2024a/madalina-luca) ✗ ./speichervisualisierung 
+Speicheradressanalyse:
+---------------------
+Stack-Variable:    0x7fff26330a90
+Heap-Variable:     0x5cfecc0f62a0
+Statische Variable:0x5cfeca47d010
+
+Adressdifferenzen:
+Stack - Heap:      38484419258352 Bytes
+Stack - Static:    38484449114752 Bytes
+Heap  - Static:    29856400 Bytes
+
+Wachstumsrichtungen:
+Adresse von a:     0x7fff26330a58
+Adresse von b:     0x7fff26330a5c
+Stack wächst nach oben (aufsteigende Adressen)
+
+
+Aufgaben nach der ausfuhrung:
+1. Beschreiben Sie die Ausgabe des Programms. Was sagt sie über die Organisation des Speichers in Ihrem Betriebssystem aus?
+Das BS organisiert den Speicher in verschieden Segmente mit getrennten Speicherbereichen fur unterschiedliche variablen typen
+
+2. Erklären Sie, warum die Adressen der verschiedenen Variablentypen (Stack, Heap, statisch) in unterschiedlichen Speicherbereichen liegen.
+Auf das Stack speicherbereich (lokale variable) wo schneller Zugriff hat und automatische Freigabe. Das Heap Speicherbereich ist dynamisch alloziert. Diese Trennung dient der  Sicherheit, Effizienz und Wartbarkeit.
+
+3. Welche Auswirkungen hat das absichtlich erzeugte Speicherleck? Wie könnte ein Betriebssystem mit solchen Situationen umgehen?
+Der reservierte Speicher bleibt belegt, obwohl das Programm ihn nicht mehr benutzt. Das nennt man ein Speicherleck.
+-	Bei kleinen Programmen passiert vielleicht nichts Auffälliges.
+-	Bei langen Programmen oder in einer Dauerschleife kann der Speicherverbrauch immer weiter steigen → Programm oder sogar ganzes System wird langsamer oder stürzt ab.
+Das Programm verbraucht immer mehr RAM → Memory Leak
+In Programmen mit vielen dynamischen Zuweisungen ist das unsauber und ineffizient.
