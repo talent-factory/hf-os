@@ -1,23 +1,23 @@
 1.Befehl mkdir -p test/subdir && cd test
-Mkdir erstellt das verzeichis subdir durch die -p Option erstellen wir auch die Parentdirectory also das test.
+Mkdir erstellt das Verzeichis test. Der Befehl subdir mit der Option -p wird ebenfalls eine Parentdirectory erstellt.
 
 2. Befehl echo "Inhalt-$(date +%s)" > original.txt
-Der Befehl echo gibt aus was dahinter steht und wird mit > in die datei original.txt kopiert. Mit der Funktion $(date +%s) wird die aktuelle Zeit ausgegebn. Also im Origin wird ungefähr Inhalt-Zeit in sekunden ausgegeben.
+Der Befehl echo gibt aus was dahinter steht und wird mit > in die Datei original.txt kopiert. Mit der Funktion $(date +%s) wird die aktuelle Zeit ausgegeben. Also im Origin wird ungefähr die Inhalt-Zeit in Sekunden ausgegeben.
 
 3. Befehl ln -s original.txt symlink.txt
-hier wird ein symlink erstellt welcher von symlink.txt auf original.txt geht. Ein symlink ist eine verlinkung, bei einer veränderung von einem Dokument wird auch das andere verändert.
+Hier wird ein symlink erstellt, welcher von symlink.txt auf original.txt geht. Der symlink ist die Verlinkung, bei der Veränderung von einem Dokument wird auch das andere Dokument abgeändert.
 
 4. Befehl ln original.txt hardlink.txt
-Dies erstellte einen Hardlink von hardlink.txt zu original.txt. Das heisst es ist exakt die gleiche Fatei weil beides auf den gleichen Speicherort zeigt.
+Dieser Befehl  erstellt einen Hardlink von hardlink.txt zu original.txt. Das heisst es ist dieselbe Datei, weil beides auf den gleichen Speicherort verweist.
 
 5. Befehl chmod 640 original.txt
-damit wird die berechtigung von Original.txt verändert. Der Besitzer hat read/write berechtigung die gruppe read Berechtigung und alle anderen keine.
+Damit wird die Berechtigung von original.txt verändert. Der Besitzer hat lesen/schreiben Berechtigung, die Gruppe hat read Berechtigungen und alle anderen keinen Zugriff auf die Datei original.txt.
 
 6. Befehl touch -d "2 days ago" original.txt
-Ändert den Zeitstempel der Datei auf ein Datum vor zwei Tagen (Modifikationszeit).
+Ändert den Zeitstempel der Datei auf ein Datum von vor zwei Tagen (Modifikationszeit).
 
 7. Befehl ls -la
-ls gibt die verzeichnisstruktur aus wie sie jetzt ist.
+ls gibt die Verzeichnisstruktur aus, wie sie jetzt ist.
 
 insgesamt 20
 drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 10 08:47 .
@@ -29,13 +29,13 @@ lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 10 08:34 symlink.txt -> original.txt
 
 
 8. Befehl echo "Neuer Inhalt" > original.txt
-Überschreibt den Inhalt der Datei original.txt mit dem String "Neuer Inhalt". Da original.txt und hardlink.txt dieselbe Inode teilen, ändert sich der Inhalt in beiden. Der symbolische Link symlink.txt zeigt immer noch auf den Pfad original.txt
+Überschreibt den Inhalt der Datei original.txt mit dem String "Neuer Inhalt". Da original.txt und hardlink.txt dieselbe Inode teilen, ändert sich der Inhalt in beiden Dateien. Der symbolische Link symlink.txt zeigt immer noch auf den Pfad original.txt
 
 9. Befehl cat symlink.txt hardlink.txt
 Cat gibt die Inhalte des symlink.txt sowie des hardlink.txt an. Die Ausgabe, zeigt 2 mal "Neuer Inhalt" an.
 
 10. Befehl mv original.txt ../original.txt
-Verschiebt die Datei original.txt eine Ebene höher. Im selben Dateisystem ist mv ein Verzeichnisoperation (kein Kopieren): Entfernt den Eintrag original.txt aus test/ (verringert Link-Zähler). Erstellt einen neuen Eintrag in ../.
+Verschiebt die Datei original.txt eine Ebene höher. Im selben Dateisystem ist mv ein Verzeichnisoperation (kein kopieren): Entfernt den Eintrag original.txt aus test/ (verringert Link-Zähler). Erstellt einen neuen Eintrag in ../.
 
 Der Link-Count sinkt in test/, bleibt aber gleich, da hardlink.txt in test/ bleibt. Hardlink (hardlink.txt) bleibt intakt.
 
@@ -47,9 +47,9 @@ cat: symlink.txt: No such file or directory
 Neuer Inhalt
 
 Unterschied:
-Hardlinks sind robust, weil sie direkt mit dem Dateisystem verbunden sind – sie zeigen auf die Inode der Datei, also auf deren eigentlichen Speicherplatz. Solange die Inode existiert, bleibt der Hardlink gültig, egal wie oft der ursprüngliche Dateiname oder Pfad verschoben wird.
+Hardlinks sind robust, weil sie direkt mit dem Dateisystem verbunden sind – sie zeigen direkt auf eine Inode der Datei, also auf deren eigentlichen Speicherplatz. Solange die Inode existiert, bleibt der Hardlink gültig, egal wie oft der ursprüngliche Dateiname oder Pfad verschoben wird.
 
-Symlinks dagegen sind Pfadverweise. Wenn sich der Pfad ändert oder gelöscht wird, zeigt der symbolische Link ins Leere. Sie sind flexibler, weil sie auch auf Verzeichnisse oder entfernte Systeme zeigen können – aber eben auch fehleranfälliger.
+Symlinks dagegen sind Pfadverweise. Wenn der Pfad geändert oder gelöscht wird, zeigt der symbolische Link ins Nichts. Da er in diesem Nichts keine Datei findet gibt der Symlink danach einen Fehler aus. Symlinks sind flexibler, weil sie auch auf Verzeichnisse oder entfernte Systeme zeigen können – aber Symlinks sind ebenfalls fehleranfälliger.
 
 Mögliche Fehler:
 Der wichtigste Fehler hier ist, dass symlink.txt nicht mehr funktioniert, weil sein Zielpfad nicht mehr existiert. Wenn man cat oder andere Programme darauf anwendet, bekommt man einen "No such file or directory"-Fehler. Der Hardlink bleibt dagegen völlig unbeeindruckt.
