@@ -4,9 +4,21 @@ Anhand dieser Page Table sind die folgenden physischen Adressen zu den virtuelle
 
     12300₁₀
 
+seitennummer: 12300 / 4096 = 3
+offset: 12300 % 4096 = 12300 - (3 * 4096) = 12300 - 12288 = 12
+virtuelle seite 3
+Laut tabelle: Physische Adresse: (3 * 4096) + 12 = 12288 + 12 = 12300 
+
     16384₁₀
+
+seitennummer: 16384 / 4096 = 4
+Offset: 16384 % 4096 = 0
+virtuelle seite 4
+Laut Tabelle: Physische Adresse: (4 * 4096) + 0 = 16384 + 0 = 16384
 
     32800₁₀
 
-
-
+Seitennummer: 32800 / 4096 = 8 
+Offset: 32800 % 4096 = 32800 - (8 * 4096) = 32800 - 32768 = 32
+vietuelle seite 8
+Laut Tabelle: Physische Adresse: (6 * 4096) + 32 = 24576 + 32 = 24608
