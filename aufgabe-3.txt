@@ -144,3 +144,54 @@ symlink.txt
 Er zeigt auf einen anderen Inode, ist aber nicht derselbe.
 
 
+echo "Neuer Inhalt" > original.txt
+Was passiert:
+Der Text „Neuer Inhalt“ wird in original.txt geschrieben.
+Der alte Inhalt wird überschrieben.
+
+Auswirkungen:
+hardlink.txt zeigt auf denselben Inhalt, also sieht man dort auch „Neuer Inhalt“.
+symlink.txt zeigt noch auf original.txt, also ebenfalls „Neuer Inhalt“ (noch funktioniert alles).
+
+cat symlink.txt hardlink.txt
+Was wird angezeigt:
+Neuer Inhalt
+Neuer Inhalt
+
+Warum:
+Beide Dateien zeigen auf denselben Inhalt:
+symlink.txt zeigt über den Namen auf original.txt.
+hardlink.txt zeigt direkt auf dieselbe Datei (nicht über den Namen).
+mv original.txt ../original.txt
+
+Was passiert:
+Die Datei original.txt wird verschoben in das übergeordnete Verzeichnis (..).
+Sie heißt jetzt dort auch original.txt.
+
+Auswirkungen:
+Der Inhalt bleibt erhalten.
+hardlink.txt funktioniert weiterhin → zeigt immer noch auf die Datei.
+symlink.txt funktioniert nicht mehr, weil er auf original.txt im aktuellen Verzeichnis zeigt – aber dort gibt’s die Datei nun nicht mehr.
+
+
+cat symlink.txt hardlink.txt 2>&1
+Was wird angezeigt:
+
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+Warum:
+symlink.txt kann die Datei nicht finden → zeigt auf einen nicht mehr vorhandenen Pfad.
+hardlink.txt zeigt direkt auf die Datei → zeigt ganz normal „Neuer Inhalt“.
+
+Zusammenfassung:
+| Datei          | Was passiert?                                       | Funktioniert noch?    |
+| -------------- | --------------------------------------------------- | ----------------------|
+| `original.txt` | Wird überschrieben, dann verschoben                 | Nein (verschoben)     |
+| `hardlink.txt` | Zeigt direkt auf die Datei, funktioniert immer      | Ja                    |
+| `symlink.txt`  | Zeigt auf Dateinamen – wenn der fehlt, geht’s nicht | Nein nach Verschieben |
+
+
+Hardlink = zweiter Name für dieselbe Datei. Egal, wie sie heißt oder wo sie ist.
+Symlink = eine Art Verknüpfung (wie eine Verknüpfung in Windows). Wenn das Ziel verschwindet oder verschoben wird, geht der Link kaputt.
+
