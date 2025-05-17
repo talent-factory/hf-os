@@ -1,0 +1,44 @@
+Ausgabe:
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546354
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-17 12:50:04
+Letzte Änderung: 2025-05-17 12:50:04
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 118 Bytes
+Inode-Nummer: 546354
+Anzahl Hardlinks: 1
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-17 12:50:04
+Letzte Änderung: 2025-05-17 12:50:04
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 118 Bytes
+Inode-Nummer: 546354
+Anzahl Hardlinks: 2
+Zugriffsrechte: 664
+Letzter Zugriff: 2025-05-17 12:50:04
+Letzte Änderung: 2025-05-17 12:50:04
+
+BESCHREIBEN SIE DIE AUSGABE DES PROGRAMMS. WELCHE ÄNDERUNGEN AN DEN METADATEN BEOBACHTEN SIE NACH DEM ANHÄNGEN VON TEXT?
+Die Ausgabe zeigt, dass sich nach dem Anhängen von Text die Dateigröße erhöht, aber Inode-Nummer und andere Metadaten gleich bleiben. Beim Erstellen eines Hardlinks verweist dieser auf dieselbe Inode wie das Original. Beide Dateien sind somit identisch, und die Anzahl der Hardlinks steigt auf zwei. Änderungen an einer wirken sich auch auf die andere aus.
+
+Die Dateigrösse ist gestiegen. 
+
+ERKLÄREN SIE DEN UNTERSCHIED ZWISCHEN DER INODE-NUMMER UND DEM DATEINAMEN. WAS BEDEUTET ES, WENN ZWEI DATEIEN DIE GLEICHE INODE-NUMMER HABEN?
+Inode-Nummer ist ein Identifikator im Dateisystem für eine Datei und speichert alle Metadaten. Der Dateiname ist nur ein Verweis auf eine Inoden Nummer.
+Gleiche Inode bedeutet das eine ändernug beim einen Datei immer auch den anderen verändert.
+
+WIE WÜRDE SICH DAS VERHALTEN ÄNDERN, WENN SIE STATT EINES HARDLINKS EINEN SYMBOLISCHEN LINK (SYMLINK) ERSTELLEN WÜRDEN? BESCHREIBEN SIE DIE UNTERSCHIEDE IN BEZUG AUF METADATEN UND VERHALTEN BEIM LÖSCHEN DER ORIGINALDATEI
+
+Ein Symlink deren Metadaten betreffen nur den Link Selbst und nicht die Originaldatei. Wenn man die Originaldatei löscht verliert er den Link also er geht ins leere. Eigene Inode als andere Metadaten. 
