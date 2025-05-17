@@ -1,0 +1,45 @@
+Metadaten vor der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 96 Bytes
+Inode-Nummer: 546309
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 17.05.2025 11:54:04
+Letzte Änderung: 17.05.2025 11:54:04
+
+Metadaten nach der Änderung:
+Metadaten für Datei: testdatei.txt
+------------------------
+Dateigröße: 206 Bytes
+Inode-Nummer: 546309
+Anzahl der Hardlinks: 1
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 17.05.2025 11:54:04
+Letzte Änderung: 17.05.2025 11:54:04
+
+Hardlink erstellt: testdatei_hardlink.txt
+Metadaten des Hardlinks:
+Metadaten für Datei: testdatei_hardlink.txt
+------------------------
+Dateigröße: 206 Bytes
+Inode-Nummer: 546309
+Anzahl der Hardlinks: 2
+Zugriffsrechte (oktal): 664
+Letzter Zugriff: 17.05.2025 11:54:04
+Letzte Änderung: 17.05.2025 11:54:04
+
+
+
+1. Beschreiben Sie die Ausgabe des Programms. Welche Änderungen an den Metadaten beobachten Sie nach dem Anhängen von Text?
+
+Die Dateigrösse ist angestiegen, was ziemlich wahrscheinlich mit dem angehängten Text in Verbindung liegt. Würde die Datei nun erneut angepasst werden oder das Programm erneut durchgeführt würde sich der Zeitstempel der letzten Dateiänderung, sowie des letzten Zugriffs anpassen.
+
+2. Erklären Sie den Unterschied zwischen der Inode-Nummer und dem Dateinamen. Was bedeutet es, wenn zwei Dateien die gleiche Inode-Nummer haben?
+
+Die Inode ist eine Datenstruktur, die alle Metadaten einer Datei speichert. Zu diesen Metadaten zählen die Zugriffsrechte, Besitzer, Gruppe, Größe, Zeitstempel und Zeiger auf die tatsächlichen Datenblöcke.
+Die Inode-Nummer ist ein eindeutiger Bezeichner für diese Datenstruktur im Dateisystem.
+
+3. Wie würde sich das Verhalten ändern, wenn Sie statt eines Hardlinks einen symbolischen Link (Symlink) erstellen würden? Beschreiben Sie die Unterschiede in Bezug auf Metadaten und Verhalten beim Löschen der Originaldatei.
+
+Wird eine Datei mit einem Hardlink erstellt und danach gelöscht bleibt der Hardlink unverändert und die Datei ist immernoch unter dem Hardlinknamen zu finden. Bei einem Symlink verhält es sich jedoch anders. Wird eine Datei mit Symlink erstellt und danach gelöscht, so macht diese den Link kaputt und die Datei kann nicht mehr gefunden werden. 
