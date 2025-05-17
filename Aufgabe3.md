@@ -39,7 +39,7 @@ rw-r ->	Berechtigungen: Besitzer rw, Gruppe r, andere -
 2 ->	Link-Count: Anzahl harter Verweise (Hardlinks) auf denselben Inode
 vmadmin	Besitzer uid
 vmadmin	Gruppe gid
-18 ->	Dateigröße in Bytes (nur bei regulären Dateien)
+18 ->	Dateigrösse in Bytes (nur bei regulären Dateien)
 Mai 15 11:19->letzter Modifikationszeitpunkt (mtime)
 original.txt-> Dateiname
 -> original.txt	(bei Symlink) Pfad-Ziel des Links
@@ -69,7 +69,7 @@ Mögliche Fehler:
 
 
 Bonus Frage: 
-Auf unterschiedlichen Dateisystemen funktionieren symbolische Links problemlos, da sie nur Pfade speichern. Harte Links hingegen sind nicht erlaubt, weil sie auf denselben Inode verweisen müssten – dieser ist nur innerhalb eines Dateisystems eindeutig. Ein mv über Dateisystemgrenzen bewirkt intern eine Dateikopie mit anschließendem Löschen, wodurch sich der Inode der Datei ändert.
+Auf unterschiedlichen Dateisystemen funktionieren symbolische Links problemlos, da sie nur Pfade speichern. Harte Links hingegen sind nicht erlaubt, weil sie auf denselben Inode verweisen müssten – dieser ist nur innerhalb eines Dateisystems eindeutig. Ein mv über Dateisystemgrenzen bewirkt intern eine Dateikopie mit anschliessendem Löschen, wodurch sich der Inode der Datei ändert.
 
 
  
