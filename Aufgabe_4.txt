@@ -1,0 +1,23 @@
+Logische- und Physische Adressen | 6P | 10'
+
+12300₁₀
+- Die Seitengrösse beträgt 4096 Byte.
+- Die virtuelle Adresse 12300 liegt im Bereich von 12288 bis 16383. Dieser Bereich entspricht der virtuellen Seite 3 (da 12288 = 3 * 4096).
+- Der Offset innerhalb dieser Seite beträgt 12300 - 12288 = 12.
+- Der physische Seitenrahmen 4 beginnt bei Adresse 16384 (4 * 4096).
+- Die resultierende physische Adresse ist Startadresse des Rahmens + Offset = 16384 + 12 = 16396₁₀.
+
+
+16384₁₀
+- Die Seitengrösse beträgt 4096 Byte.
+- Die virtuelle Adresse 16384 liegt im Bereich von 16384 bis 20479. Dieser Bereich entspricht der virtuellen Seite 4 (da 16384 = 4 * 4096).
+- Der Offset innerhalb dieser Seite beträgt 16384 - 16384 = 0.
+- Der physische Seitenrahmen 3 beginnt bei Adresse 12288 (3 * 4096).
+- Die resultierende physische Adresse ist Startadresse des Rahmens + Offset = 12288 + 0 = 12288₁₀.
+
+
+32800₁₀
+- Die Seitengrösse beträgt 4096 Byte.
+- Die virtuelle Adresse 32800 liegt im Bereich von 32768 bis 36863. Dieser Bereich entspricht der virtuellen Seite 8 (da 32768 = 8 * 4096).
+- Gemäß der Tabelle ist die virtuelle Seite 8 mit einem Kreuz (X) markiert. Dies bedeutet, dass diese Seite nicht dem physischen Speicher zugeordnet ist.
+- Der Zugriff auf diese Adresse führt zu einem Seitenfehler (page fault). In diesem Fall gibt es keine direkte physische Adresse, die von der MMU sofort zurückgegeben wird. Das Betriebssystem müsste eingreifen, um die Seite gegebenenfalls von der Festplatte in einen Seitenrahmen zu laden und dann die Instruktion erneut auszuführen
