@@ -1,0 +1,38 @@
+Aufgabe 3
+Anhang aus der Konsole:
+
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:25 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:24 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:26 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:26 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:24 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:25 symlink.txt -> original.txt
+
+Bedeutung jeder Spalte in der Ausgabe:
+Erste Spalte: Dateityp und Berechtigungen
+Zweite Spalte: Anzahl der Hardlinks
+Dritte + vierte Spalte: Besitzer und Gruppe
+Fünfte Spalte: Dateigröße in Bytes
+Sechste + siebte Spalte: Datum und Uhrzeit der letzten Änderung
+Letzte Spalte: Dateiname (bei Symlink zusätzlich → Ziel)
+
+Unterschiede zwischen den drei Dateien:
+original.txt und hardlink.txt haben denselben Inode, gleiche Rechte und gleichen Zeitstempel.
+symlink.txt hat einen eigenen Inode, andere Rechte (lrwxrwxrwx) und einen anderen Zeitstempel.
+
+Warum haben manche Dateien denselben Inode?
+Hardlinks (original.txt und hardlink.txt) zeigen auf denselben Inode.
+Symbolische Links (symlink.txt) sind eigene Dateien mit eigenem Inode.
+
+echo schreibt „Neuer Inhalt“ in original.txt, dadurch wird auch hardlink.txt aktualisiert, weil beide denselben Inode haben.
+cat zeigt zweimal „Neuer Inhalt“, weil symlink.txt noch gültig auf original.txt zeigt und hardlink.txt den gleichen Inhalt hat.
+mv verschiebt original.txt in das übergeordnete Verzeichnis, der Inode bleibt gleich, aber symlink.txt zeigt nun ins Leere.
+cat symlink.txt hardlink.txt zeigt einen Fehler für symlink.txt (Pfad nicht gefunden) und dann „Neuer Inhalt“ von hardlink.txt.
+Symbolische Links zeigen auf Pfade und können bei Verschiebung ungültig werden, harte Links zeigen direkt auf den Inode und bleiben funktionsfähig.
+Fehler: symlink.txt funktioniert nicht mehr, weil das Ziel verschoben wurde.
+
+Bonusfrage: 
+Harte Links würden nicht funktionieren, da ein Hardlink nur innerhalb eines Dateisystems erstellt werden kann (Inodes gelten nur lokal im Dateisystem).
+
+Der Befehl ln original.txt hardlink.txt würde mit einem Fehler abbrechen.

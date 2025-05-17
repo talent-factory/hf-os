@@ -1,0 +1,17 @@
+Unterschied: interne vs. externe Fragmentierung
+Interne Fragmentierung:
+Nicht der gesamte zugewiesene Speicher wird genutzt, weil der Block größer ist als benötigt.
+Beispiel: Ein Prozess benötigt 6 KB, aber der Speicher wird nur in 8 KB Blöcken vergeben. 2 KB bleiben ungenutzt. das ist interne Fragmentierung.
+
+Externe Fragmentierung:
+Es gibt ausreichend freien Gesamtspeicher, aber er ist zerstückelt, sodass kein zusammenhängender Block groß genug ist.
+Beispiel: Nach mehreren Prozessen bleiben viele kleine freie Speicherbereiche zurück, aber keiner ist groß genug für einen neuen großen Prozess.
+
+Paging (virtueller Speicher) ist eine Strategie, wo moderne Bertriebssysteme speicherfragmentierung reduzieren können.
+vermeidet externe Fragmentierung komplett.
+Gute Ausnutzung des RAM, da nur benötigte Pages geladen werden
+Ermöglicht parallele Prozesseweil der Speicher effizient aufgeteilt wird
+Nachteil: kann zu interne Fragmentierung führen
+Bei häufigem Page Faulting (z. B. wenn viele neue Seiten nachgeladen werden müssen) kann es zu Verlangsamungen kommen
+
+
