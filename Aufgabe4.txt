@@ -1,0 +1,3 @@
+Die physische Adresse für die virtuelle Adresse 12300(10) ist 12(10)
+Die physische Adresse für die virtuelle Adresse 16384(10) ist 12288(10)
+Die physische Adresse für die virtuelle Adresse 32800(10) ist 24608(10)
