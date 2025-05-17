@@ -1,0 +1,56 @@
+
+
+    mkdir -p test/subdir && cd test
+Erstellt ein Verzeichnis test und darin ein Unterverzeichnis subdir. Die Option -p sorgt dafür, dass auch übergeordnete Verzeichnisse automatisch angelegt werden.
+cd test: Wechselt ins test-Verzeichnis.
+Konzepte: Verzeichnisse sind spezielle Dateien, die Namen auf Inodes abbilden.
+
+
+    echo "Inhalt-$(date +%s)" > original.txt
+echo: Gibt einen Text aus – hier dynamisch mit aktuellem Unix-Timestamp ($(date +%s)).
+">": Leitet die Ausgabe in die Datei original.txt um (neu anlegen oder überschreiben).
+
+Konzepte:
+- Erzeugt eine regulaere Datei mit Inhalt.
+- original.txt bekommt einen Inode mit Datenblock, Zugriffszahl 1, Zeitstempeln etc.
+- Inhalt liegt auf der Datenebene, Metadaten (z. B. mtime, Rechte) im Inode
+
+
+    ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link (symlink.txt), der auf original.txt zeigt.
+Der Symlink speichert den Pfad der Datei "original.txt" als Text.
+
+Konzepte:
+- Symlinks haben eigenen Inode mit eigenem Typ: „symbolischer Link“.
+- Sie verweisen nicht auf den Inode, sondern auf den Pfadnamen der Zieldate
+
+    ln original.txt hardlink.txt
+Erstellt einen Hardlink: hardlink.txt zeigt auf denselben Inode wie original.txt
+
+Konzepte:
+- Beide Dateien sind gleichwertig: es gibt zwei Namen (Verzeichniseintraege), aber nur ein Inode, ein Datenblock.
+- Inode-Zugriffszahl (link count) erhöht sich auf 2
+
+    chmod 640 original.txt
+Setzt die Dateirechte: rw- r-- ---
+- Besitzer darf lesen/schreiben
+- Gruppe darf lesen
+- Andere haben keinen Zugriff
+
+Konzepte:
+- Unix-Dateisysteme speichern Rechte im Inode.
+- Rechte betreffen Besitzer, Gruppe und andere.
+- Geregelt durch das Zugriffsbitsystem (3 Gruppen je 3 Bits)
+
+
+    touch -d "2 days ago" original.txt
+Ändert den Zeitstempel (atime, mtime) der Datei "original.txt" auf ein Datum vor 2 Tagen.
+
+Dateisysteme speichern für jede Datei:
+- atime (letzter Zugriff)
+- mtime (letzte Änderung am Inhalt)
+- ctime (letzte Änderung der Metadaten, z. B. Rechte)
+Diese liegen im Inode
+
+    ls -la
+

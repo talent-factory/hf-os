@@ -1,0 +1,120 @@
+
+
+    mkdir -p test/subdir && cd test
+Erstellt ein Verzeichnis test und darin ein Unterverzeichnis subdir. Die Option -p sorgt dafür, dass auch übergeordnete Verzeichnisse automatisch angelegt werden.
+cd test: Wechselt ins test-Verzeichnis.
+Konzepte: Verzeichnisse sind spezielle Dateien, die Namen auf Inodes abbilden.
+
+
+    echo "Inhalt-$(date +%s)" > original.txt
+echo: Gibt einen Text aus – hier dynamisch mit aktuellem Unix-Timestamp ($(date +%s)).
+">": Leitet die Ausgabe in die Datei original.txt um (neu anlegen oder überschreiben).
+
+Konzepte:
+- Erzeugt eine regulaere Datei mit Inhalt.
+- original.txt bekommt einen Inode mit Datenblock, Zugriffszahl 1, Zeitstempeln etc.
+- Inhalt liegt auf der Datenebene, Metadaten (z. B. mtime, Rechte) im Inode
+
+
+    ln -s original.txt symlink.txt
+Erstellt einen symbolischen Link (symlink.txt), der auf original.txt zeigt.
+Der Symlink speichert den Pfad "original.txt" als Text.
+
+
+Konzepte:
+- Symlinks haben eigenen Inode mit eigenem Typ: „symbolischer Link“.
+- Sie verweisen nicht auf den Inode, sondern auf den Pfadnamen der Zieldate
+
+    ln original.txt hardlink.txt
+Erstellt einen Hardlink: hardlink.txt zeigt auf denselben Inode wie original.txt
+
+Konzepte:
+- Beide Dateien sind gleichwertig: es gibt zwei Namen (Verzeichniseintraege), aber nur ein Inode, ein Datenblock.
+- Inode-Zugriffszahl (link count) erhöht sich auf 2
+
+    chmod 640 original.txt
+Setzt die Dateirechte: rw- r-- ---
+- Besitzer darf lesen/schreiben
+- Gruppe darf lesen
+- Andere haben keinen Zugriff
+
+Konzepte:
+- Unix-Dateisysteme speichern Rechte im Inode.
+- Rechte betreffen Besitzer, Gruppe und andere.
+- Geregelt durch das Zugriffsbitsystem (3 Gruppen je 3 Bits)
+
+
+    touch -d "2 days ago" original.txt
+Ändert den Zeitstempel (atime, mtime) der Datei "original.txt" auf ein Datum vor 2 Tagen.
+
+Dateisysteme speichern für jede Datei:
+- atime (letzter Zugriff)
+- mtime (letzte Änderung am Inhalt)
+- ctime (letzte Änderung der Metadaten, z. B. Rechte)
+Diese liegen im Inode
+
+
+
+ls -la
+Listet alle Dateien im Verzeichnis (auch versteckte) mit Details:
+Rechte, Anzahl Links, Besitzer, Gruppe, Dateigröße, Zeitstempel, Dateiname
+
+Konzepte:
+- Anzeige basiert auf den Metadaten im Inode.
+- Link-Anzahl zeigt Anzahl Hardlinks.
+- Symlinks werden mit -> angezeigt (Zielpfad als Inhalt).
+
+
+
+---
+
+Ausgabe des letzten Befehls:
+insgesamt 20
+drwxrwxr-x 3 vmadmin vmadmin 4096 Mai 17 11:11 .
+drwxr-xr-x 4 vmadmin vmadmin 4096 Mai 17 11:23 ..
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:11 hardlink.txt
+-rw-r----- 2 vmadmin vmadmin   18 Mai 15 11:11 original.txt
+drwxrwxr-x 2 vmadmin vmadmin 4096 Mai 17 11:11 subdir
+lrwxrwxrwx 1 vmadmin vmadmin   12 Mai 17 11:11 symlink.txt -> original.txt
+
+--
+Erklärung Spalten:
+1: Diese Spalte zeigt, was für eine Datei es ist (Folder, Symlink oder Datei) und es zeigt die Linux Berechtigungen darauf.
+2: Anzahl der Hardlinks (auf den Inode) - LInk count.
+3. User der das file besitzt.
+4. Gruppe die das file besitzt
+5. Dateigrösse in Bytes
+6. Änderungszeit (mtime)
+7. Dateiname
+
+
+---
+1. echo "Neuer Inhalt" > original.txt
+Inhalt von original.txt wird überschrieben.
+Inode bleibt gleich.
+hardlink.txt zeigt auf denselben Inode → gleicher Inhalt.
+symlink.txt bleibt gültig (zeigt auf Pfad original.txt).
+
+2. cat symlink.txt hardlink.txt
+Ausgabe:
+Neuer Inhalt
+Neuer Inhalt
+Beide Dateien zeigen auf denselben Inhalt.
+
+Keine Änderungen an Inodes.
+
+3. mv original.txt ../original.txt
+original.txt wird in das übergeordnete Verzeichnis verschoben.
+
+Inode bleibt, Link-Count sinkt auf 1.
+hardlink.txt bleibt gültig.
+
+symlink.txt zeigt auf ungültigen Pfad (original.txt existiert in test/ nicht mehr).
+
+4. cat symlink.txt hardlink.txt 2>&1
+Ausgabe:
+cat: symlink.txt: Datei oder Verzeichnis nicht gefunden
+Neuer Inhalt
+
+symlink.txt schlägt fehl (Pfad existiert nicht).
+hardlink.txt funktioniert, da Inode erhalten ist.

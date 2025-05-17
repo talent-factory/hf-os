@@ -1,0 +1,50 @@
+Interne Fragmentierung:
+
+Definition: Speicher wird in Blöcken fester Grösse zugewiesen. Wenn ein Prozess weniger Speicher braucht als ein Block gross ist, bleibt der ungenutzte Rest innerhalb des Blocks unbrauchbar – das ist interne Fragmentierung.
+
+Beispiel: Ein Prozess benötigt 30 KB, bekommt aber wegen der Blockgrösse einen 32 KB Block. 2 KB bleiben ungenutzt (aber reserviert) – verschwendeter Speicher im Block.
+
+Externe Fragmentierung:
+
+Definition: Speicher wird dynamisch vergeben. Über die Zeit entstehen zwischen belegten Speicherbereichen kleine Lücken (Free Spaces), die zu klein sind, um genutzt zu werden.
+
+Beispiel: Nach dem Beenden mehrerer Prozesse bleiben viele kleine Lücken im RAM. Ein neuer Prozess braucht 50 KB, aber es gibt nur 10 + 15 + 20 KB Lücken, also genug insgesamt, aber nicht zusammenhängend.
+
+---
+
+Strategien zur Reduktion / Vermeidung:
+1) Paging
+Speicher wird in gleich grosse Seiten (z. B. 4 KB) aufgeteilt. Prozesse bekommen so viele Seiten, wie sie brauchen, und diese Seiten können nicht zusammenhängend im physischen Speicher liegen.
+
+Vorteile:
+
+Verhindert externe Fragmentierung vollständig.
+
+Einfaches Speichermanagement.
+
+Nachteile:
+
+Führt zu interner Fragmentierung auf der letzten Seite eines Prozesses.
+
+Zusätzlicher Verwaltungsaufwand durch Seitentabellen.
+
+Performance-Einbussen durch häufige Speicherzugriffe → Lösung: TLB (Translation Lookaside Buffer).
+
+2) Speicherkompaktierung
+Funktionsweise: Das Betriebssystem verschiebt Speicherblöcke im RAM aktiv, um freie Bereiche zusammenzufassen.
+
+Vorteile:
+
+Reduziert externe Fragmentierung effektiv.
+
+Macht grosse zusammenhängende Speicherblöcke wieder nutzbar.
+
+Nachteile:
+
+Sehr aufwendig in Bezug auf Zeit und CPU-Ressourcen.
+
+Prozesse müssen unterbrochen oder kopiert werden.
+
+Nur bei nicht-laufenden Prozessen sinnvoll oder mit spezieller Hardwareunterstützung.
+
+

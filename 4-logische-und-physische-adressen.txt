@@ -1,0 +1,4 @@
+Adressen virtual Memory --> physische Adresse
+12300(10) --> Im Adresseblock 0-4KB = 0
+16384(10) --> Im Adressblock 16KB-20KB = 16384
+32800(10) --> ist nicht Arbeitsspeicher.
