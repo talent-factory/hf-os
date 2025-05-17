@@ -1,0 +1,10 @@
+1. Das Program zeigt die Metadaten einer neuen Datei. Es werden die Daten angezeigt bevor und nachdem Inhalt hinzugefügt worden wurde, sowie die Metadaten eines hardlinks.
+Nachdem Text angehängt wurde, wurde auch die Dateigrösse und der Zeitpunkt der letzten Änderung aktualisiert.
+
+2. Die Inode Nummer kann man wie eine Hausnummer betrachten, welche den Speicherort auf der Festplatte anzeigt.
+Der Dateiname hingegen macht es nur für uns Menschen möglich, sich die Hausnummer einfacher zu merken und damit wir diese einfacher finden. Schluss am ende gibt es mehrere wege um auf die gleiche Datei zuzugreifen.
+
+3. Machen wir weiter mit dem Beispiel von Häusern.
+Der Hardlink kann wie eine zweite Haustür betrachtet werden. Egal welche Tür man öffnet oder schliesst, das Haus (die Datei) bleibt bestehen.
+Hingegen beim Softlink kann man sich nicht eine weitere Haustür vorstellen, sondern eher einen Wegweiser. Sowohl der Wegweiser (Symlink) als auch das Haus (Die Datei) sind beides eigenständige "Gegenstände". Auch wenn das Haus nicht mehr da ist, Zeigt der Wegweiser weiterhin zum Haus, jedoch wird dort nichts mehr sein.
+
